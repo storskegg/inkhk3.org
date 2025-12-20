@@ -1,0 +1,264 @@
+// The following google font does not support the necessary utf characters for Egyptological transliteration
+//@import url(https://fonts.googleapis.com/css?family=Nixie+One|Trocchi|Special+Elite);
+
+@import "variables";
+
+$screen-xs-min: map-get($grid-breakpoints, "xs") !default;
+$screen-sm-min: map-get($grid-breakpoints, "sm") !default;
+$screen-md-min: map-get($grid-breakpoints, "md") !default;
+$screen-lg-min: map-get($grid-breakpoints, "lg") !default;
+$screen-xl-min: map-get($grid-breakpoints, "xl") !default;
+$screen-xxl-min: map-get($grid-breakpoints, "xxl") !default;
+
+$screen-xs-max: ($screen-sm-min - 1) !default;
+$screen-sm-max: ($screen-md-min - 1) !default;
+$screen-md-max: ($screen-lg-min - 1) !default;
+$screen-lg-max: ($screen-xl-min - 1) !default;
+$screen-xl-max: ($screen-xxl-min - 1) !default;
+
+$art-wid: 85vmin;
+$art-pad-w: 5vmin;
+
+$article-xs-width: $art-wid;
+$article-xs-pad-w: $art-pad-w;
+
+$article-sm-width: $art-wid;
+$article-sm-pad-w: $art-pad-w;
+
+$article-md-width: $art-wid;
+$article-md-pad-w: 2.5vmin;
+
+$article-lg-width: $art-wid;
+$article-lg-pad-w: $art-pad-w;
+
+$article-xl-width: $art-wid;
+$article-xl-pad-w: $art-pad-w;
+
+//$nav-height: 50px;
+//
+//$quote-height: 100px;
+//$quote-width: 100px;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+
+  padding-top: 50px;
+  margin: 0;
+
+  background: gray url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/102862/binding_dark2.png);
+}
+
+article {
+  position: absolute;
+  width: $art-wid;
+  max-width: $art-wid;
+  max-height: 90vmin;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  padding: 1vmin $art-pad-w;
+  overflow: hidden;
+
+  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/102862/paper_fff.jpg);
+
+  font-family: 'Special Elite', serif;
+  color: #333;
+
+  h1 {
+    margin: 0;
+    //font-family: 'Trocchi', serif;
+    font-size: 5.25vmin;
+    //text-transform: uppercase;
+    text-align: justify;
+  }
+
+  blockquote {
+    margin: 0;
+    position: relative;
+    padding-top: 4vmin;
+
+    &::after,
+    &::before {
+      display: block;
+      position: relative;
+      margin: 0;
+      padding: 0;
+    }
+
+    &::after {
+      content: "”";
+      float: right;
+    }
+
+    &::before {
+      content: "“";
+      float: left;
+    }
+
+    p {
+      font-weight: 900;
+      font-size: 3.5vmin;
+      margin: 0;
+    }
+
+    cite {
+      display: block;
+      text-align: justify;
+      margin-top: 1rem;
+
+      &::before {
+        content: "—";
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
+
+//footer {
+//  margin-top: 2vmin;
+//
+//  cite {
+//    font-size: 1.75vmin;
+//  }
+//}
+
+//.to-lower {
+//  text-transform: lowercase;
+//}
+
+@media only screen and (max-width: $screen-xs-max) {
+  article {
+    width: $article-sm-width;
+    max-width: $article-sm-width;
+    padding: 3vmin $article-sm-pad-w;
+    font-size: 4vmin;
+
+    h1 {
+      font-size: 9vmin;
+    }
+
+    blockquote {
+      &::before, &::after {
+        font-size: 15vmin;
+        line-height: 5vmin;
+      }
+
+      &::before {
+        top: 2vmin;
+      }
+
+      &::after {
+        bottom: 8vmin;
+        margin-bottom: -8vmin;
+      }
+
+      p {
+        display: block;
+        margin: 0 7vmin;
+        font-size: 5.25vmin;
+      }
+
+      cite {
+        margin-top: 1rem;
+        padding-left: 6.5vmin;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: $screen-sm-min) {
+  article {
+    width: $article-sm-width;
+    max-width: $article-sm-width;
+    padding: 1vmin $article-sm-pad-w;
+    font-size: 4vmin;
+
+    h1 {
+      font-size: 9vmin;
+    }
+
+    blockquote {
+      &::before, &::after {
+        font-size: 15vmin;
+        line-height: 5vmin;
+      }
+
+      &::before {
+        top: 2vmin;
+      }
+
+      &::after {
+        bottom: 7vmin;
+        margin-bottom: -7vmin;
+      }
+
+      p {
+        display: block;
+        margin: 0 7vmin;
+        font-size: 5.25vmin;
+      }
+
+      cite {
+        margin-top: 2rem;
+        padding-left: 6.5vmin;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: $screen-md-min) {
+  article {
+    width: $article-md-width;
+    max-width: $article-md-width;
+    padding: 1vmin $article-md-pad-w;
+    font-size: 4vmin;
+
+    h1 {
+      font-size: 9vmin;
+    }
+
+    blockquote {
+      &::before, &::after {
+        font-size: 15vmin;
+        line-height: 5vmin;
+      }
+
+      &::before {
+        top: 2vmin;
+      }
+
+      &::after {
+        bottom: 7vmin;
+        margin-bottom: -7vmin;
+      }
+
+      p {
+        display: block;
+        margin: 0 7vmin;
+        font-size: 5.25vmin;
+      }
+
+      cite {
+        margin-top: 2rem;
+        padding-left: 6.5vmin;
+      }
+    }
+  }
+}
+
+//@media only screen and (min-width: $screen-lg-min) {
+//  article {
+//    width: $art-wid;
+//    max-width: $art-wid;
+//    padding: 1vmin $art-pad-w;
+//  }
+//}

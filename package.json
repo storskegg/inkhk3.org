@@ -1,0 +1,39 @@
+{
+  "name": "inkhk3.org",
+  "version": "1.0.0",
+  "description": "Source for inkhk3.org website.",
+  "main": "index.js",
+  "scripts": {
+    "build:sass": "sass  --no-source-map src/scss:public/css",
+    "copy:html": "copyfiles -u 1 ./src/*.html public",
+    "copy": "npm-run-all --parallel copy:*",
+    "watch:html": "onchange 'src/*.html' -- npm run copy:html",
+    "watch:sass": "sass  --no-source-map --watch src/scss:public/css",
+    "watch": "npm-run-all --parallel watch:*",
+    "serve": "browser-sync start --server public --files public",
+    "start": "npm-run-all copy --parallel watch serve",
+    "build": "npm-run-all copy:html build:*",
+    "postbuild": "postcss public/css/*.css -u autoprefixer cssnano -r --no-map",
+    "dev:serve": "npm-run-all --parallel watch serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/storskegg/inkhk3.org.git"
+  },
+  "author": "Liam Conrad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/storskegg/inkhk3.org/issues"
+  },
+  "homepage": "https://inkhk3.org",
+  "devDependencies": {
+    "autoprefixer": "^10.4.2",
+    "browser-sync": "^3.0.4",
+    "copyfiles": "^2.4.1",
+    "cssnano": "^5.0.17",
+    "npm-run-all": "^4.1.5",
+    "onchange": "^7.1.0",
+    "postcss-cli": "^9.1.0",
+    "sass": "^1.97.0"
+  }
+}

@@ -1,0 +1,163 @@
+@charset "UTF-8";
+* {
+  box-sizing: border-box;
+}
+
+body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  padding-top: 50px;
+  margin: 0;
+  background: gray url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/102862/binding_dark2.png);
+}
+
+article {
+  position: absolute;
+  width: 85vmin;
+  max-width: 85vmin;
+  max-height: 90vmin;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  padding: 1vmin 5vmin;
+  overflow: hidden;
+  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/102862/paper_fff.jpg);
+  font-family: "Special Elite", serif;
+  color: #333;
+}
+article h1 {
+  margin: 0;
+  font-size: 5.25vmin;
+  text-align: justify;
+}
+article blockquote {
+  margin: 0;
+  position: relative;
+  padding-top: 4vmin;
+}
+article blockquote::after, article blockquote::before {
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+article blockquote::after {
+  content: "”";
+  float: right;
+}
+article blockquote::before {
+  content: "“";
+  float: left;
+}
+article blockquote p {
+  font-weight: 900;
+  font-size: 3.5vmin;
+  margin: 0;
+}
+article blockquote cite {
+  display: block;
+  text-align: justify;
+  margin-top: 1rem;
+}
+article blockquote cite::before {
+  content: "—";
+  margin-right: 0.5rem;
+}
+
+@media only screen and (max-width: 575px) {
+  article {
+    width: 85vmin;
+    max-width: 85vmin;
+    padding: 3vmin 5vmin;
+    font-size: 4vmin;
+  }
+  article h1 {
+    font-size: 9vmin;
+  }
+  article blockquote::before, article blockquote::after {
+    font-size: 15vmin;
+    line-height: 5vmin;
+  }
+  article blockquote::before {
+    top: 2vmin;
+  }
+  article blockquote::after {
+    bottom: 8vmin;
+    margin-bottom: -8vmin;
+  }
+  article blockquote p {
+    display: block;
+    margin: 0 7vmin;
+    font-size: 5.25vmin;
+  }
+  article blockquote cite {
+    margin-top: 1rem;
+    padding-left: 6.5vmin;
+  }
+}
+@media only screen and (min-width: 576px) {
+  article {
+    width: 85vmin;
+    max-width: 85vmin;
+    padding: 1vmin 5vmin;
+    font-size: 4vmin;
+  }
+  article h1 {
+    font-size: 9vmin;
+  }
+  article blockquote::before, article blockquote::after {
+    font-size: 15vmin;
+    line-height: 5vmin;
+  }
+  article blockquote::before {
+    top: 2vmin;
+  }
+  article blockquote::after {
+    bottom: 7vmin;
+    margin-bottom: -7vmin;
+  }
+  article blockquote p {
+    display: block;
+    margin: 0 7vmin;
+    font-size: 5.25vmin;
+  }
+  article blockquote cite {
+    margin-top: 2rem;
+    padding-left: 6.5vmin;
+  }
+}
+@media only screen and (min-width: 768px) {
+  article {
+    width: 85vmin;
+    max-width: 85vmin;
+    padding: 1vmin 2.5vmin;
+    font-size: 4vmin;
+  }
+  article h1 {
+    font-size: 9vmin;
+  }
+  article blockquote::before, article blockquote::after {
+    font-size: 15vmin;
+    line-height: 5vmin;
+  }
+  article blockquote::before {
+    top: 2vmin;
+  }
+  article blockquote::after {
+    bottom: 7vmin;
+    margin-bottom: -7vmin;
+  }
+  article blockquote p {
+    display: block;
+    margin: 0 7vmin;
+    font-size: 5.25vmin;
+  }
+  article blockquote cite {
+    margin-top: 2rem;
+    padding-left: 6.5vmin;
+  }
+}
