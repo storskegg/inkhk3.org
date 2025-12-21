@@ -2,6 +2,7 @@
 //@import url(https://fonts.googleapis.com/css?family=Nixie+One|Trocchi|Special+Elite);
 
 @import "variables";
+@import "mixins";
 
 $screen-xs-min: map-get($grid-breakpoints, "xs") !default;
 $screen-sm-min: map-get($grid-breakpoints, "sm") !default;
@@ -70,7 +71,8 @@ article {
 
   background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/102862/paper_fff.jpg);
 
-  font-family: 'Special Elite', serif;
+  font-family: serif;
+  //font-family: 'Special Elite', serif;
   color: #333;
 
   h1 {
