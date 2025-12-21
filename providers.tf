@@ -9,9 +9,9 @@ terraform {
 
 provider "aws" {
   alias  = "acm"
-  region = "us-east-1"
+  region = "us-east-2"
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "us-east-2"
 }
