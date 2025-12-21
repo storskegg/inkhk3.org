@@ -24,4 +24,9 @@ module "route53" {
   domain_name            = local.r53_domain_name
   cloudfront_domain_name = module.cloudfront.domain_name
   cloudfront_zone_id     = module.cloudfront.zone_id
+
+  providers = {
+    aws     = aws
+    aws.acm = aws.acm
+  }
 }

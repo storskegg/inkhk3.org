@@ -12,7 +12,7 @@ body {
   overflow: hidden;
   padding-top: 50px;
   margin: 0;
-  background: gray url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/102862/binding_dark2.png);
+  background: gray url("https://inkhk3.org/binding_dark2.png");
 }
 
 article {
@@ -25,7 +25,7 @@ article {
   transform: translate3d(-50%, -50%, 0);
   padding: 1vmin 5vmin;
   overflow: hidden;
-  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/102862/paper_fff.jpg);
+  background: url("https://inkhk3.org/paper_fff.jpg");
   font-family: serif;
   color: #333;
 }

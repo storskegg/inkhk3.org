@@ -3,11 +3,7 @@ terraform {
     aws = {
       source  = "hashicorp/aws"
       version = "~> 6.0"
+      configuration_aliases = [ aws.acm ]
     }
   }
-}
-
-provider "aws" {
-  alias  = "acm"
-  region = "us-east-1"
 }
