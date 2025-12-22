@@ -15,3 +15,8 @@ I'm entertained that, given the utter simplicity of the website itself, the terr
 - The quote on the page is from the ancient Egyptian "Book of Amduat," as translated by Robert K. Ritner in his 
   "The Mechanics of Ancient Egyptian Magical Practice," which itself cites Hornung, 1963. I find this statement quite 
   lovely. "May your words occur; may your magic shine."
+
+## TODO
+
+- Implement automatic Cloudfront invalidations for paths of changed files, on successful deploy.
+- Implement something esoteric.
