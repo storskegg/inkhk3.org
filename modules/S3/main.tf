@@ -39,7 +39,9 @@ resource "aws_s3_object" "object" {
     "gif"  = "image/gif",
     "svg"  = "image/svg+xml",
     "ico"  = "image/x-icon",
-    "txt"  = "text/plain"
+    "txt"  = "text/plain",
+    "ttf"  = "font/ttf",
+    "TTF"  = "font/ttf"
   }, split(".", each.value)[length(split(".", each.value)) - 1], "application/octet-stream")
 }
 
