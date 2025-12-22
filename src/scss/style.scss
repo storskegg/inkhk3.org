@@ -1,8 +1,14 @@
 // The following google font does not support the necessary utf characters for Egyptological transliteration
 //@import url(https://fonts.googleapis.com/css?family=Nixie+One|Trocchi|Special+Elite);
 
-@import "variables";
-@import "mixins";
+$grid-breakpoints: (
+        xs: 0,
+        sm: 576px,
+        md: 768px,
+        lg: 992px,
+        xl: 1200px,
+        xxl: 1400px
+) !default;
 
 $screen-xs-min: map-get($grid-breakpoints, "xs") !default;
 $screen-sm-min: map-get($grid-breakpoints, "sm") !default;
@@ -22,6 +28,7 @@ $art-pad-w: 5vmin;
 
 $article-xs-width: $art-wid;
 $article-xs-pad-w: $art-pad-w;
+
 
 $article-sm-width: $art-wid;
 $article-sm-pad-w: $art-pad-w;
