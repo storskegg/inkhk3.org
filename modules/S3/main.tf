@@ -29,19 +29,20 @@ resource "aws_s3_object" "object" {
   source = "${local.path_to_files}/${each.value}"
   etag = filemd5("${local.path_to_files}/${each.value}")
   content_type = lookup({
-    "html" = "text/html",
-    "css"  = "text/css",
-    "js"   = "application/javascript",
-    "json" = "application/json",
-    "png"  = "image/png",
-    "jpg"  = "image/jpeg",
-    "jpeg" = "image/jpeg",
-    "gif"  = "image/gif",
-    "svg"  = "image/svg+xml",
-    "ico"  = "image/x-icon",
-    "txt"  = "text/plain",
-    "ttf"  = "font/ttf",
-    "TTF"  = "font/ttf"
+    "html"        = "text/html",
+    "css"         = "text/css",
+    "js"          = "application/javascript",
+    "json"        = "application/json",
+    "webmanifest" = "application/json"
+    "png"         = "image/png",
+    "jpg"         = "image/jpeg",
+    "jpeg"        = "image/jpeg",
+    "gif"         = "image/gif",
+    "svg"         = "image/svg+xml",
+    "ico"         = "image/x-icon",
+    "txt"         = "text/plain",
+    "ttf"         = "font/ttf",
+    "TTF"         = "font/ttf"
   }, split(".", each.value)[length(split(".", each.value)) - 1], "application/octet-stream")
 }
 

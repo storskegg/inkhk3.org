@@ -20,3 +20,13 @@ I'm entertained that, given the utter simplicity of the website itself, the terr
 
 - Implement automatic Cloudfront invalidations for paths of changed files, on successful deploy.
 - Implement something esoteric.
+
+## Credits
+
+Please find, below, a list of open source projects that I've used in this project. All copyrights belong to their
+respective owners. Anything listed below that is incorporated into this repo may have been modified from its original
+form to suit the needs of this project.
+
+- Mark-Jan Nederhof's excellent [ResJS](https://github.com/nederhof/resjs) library to render hieroglyphs beautifully.
+- Mark-Jan Nederhof's excellent fonts for hieroglyphs, transliteration, etc. All fonts found in Nederhof's ResJS repo
+  have been incorporated in their original form into this repo.

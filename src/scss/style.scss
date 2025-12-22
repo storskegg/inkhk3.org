@@ -119,9 +119,9 @@ article {
   header {
     h1 {
       margin: 0;
-      font-size: 5.25vmin;
-      //text-transform: uppercase;
       text-align: justify;
+
+      border-bottom: 2px solid black;
     }
   }
 
@@ -217,18 +217,6 @@ article {
   }
 }
 
-//footer {
-//  margin-top: 2vmin;
-//
-//  cite {
-//    font-size: 1.75vmin;
-//  }
-//}
-
-//.to-lower {
-//  text-transform: lowercase;
-//}
-
 @media only screen and (max-width: $screen-xs-max) {
   article {
     width: $article-sm-width;
@@ -236,8 +224,12 @@ article {
     padding: 3vmin $article-sm-pad-w;
     font-size: 4vmin;
 
-    h1 {
-      font-size: 9vmin;
+    header {
+      border-bottom: 1px solid black;
+
+      h1 {
+        font-size: 9vmin;
+      }
     }
 
     blockquote {
@@ -273,86 +265,131 @@ article {
   article {
     width: $article-sm-width;
     max-width: $article-sm-width;
-    padding: 1vmin $article-sm-pad-w;
+    padding: 3vmin $article-sm-pad-w;
     font-size: 4vmin;
 
-    h1 {
-      font-size: 9vmin;
+    header {
+      border-bottom: 1px solid black;
+
+      h1 {
+        font-size: 7.5vmin;
+      }
     }
 
     blockquote {
       &::before, &::after {
-        font-size: 15vmin;
+        font-size: 11vmin;
         line-height: 5vmin;
       }
 
       &::before {
-        top: 2vmin;
+        top: 1.5vmin;
       }
 
       &::after {
-        bottom: 7vmin;
-        margin-bottom: -7vmin;
+        bottom: 7.5vmin;
+        margin-bottom: -7.5vmin;
       }
 
       p {
         display: block;
         margin: 0 7vmin;
-        font-size: 5.25vmin;
+        font-size: 6vmin;
+        //border: 1px solid red;
       }
 
       cite {
-        margin-top: 2rem;
+        margin-top: 1rem;
         padding-left: 6.5vmin;
       }
     }
   }
 }
 
-@media only screen and (min-width: $screen-md-min) {
-  article {
-    width: $article-md-width;
-    max-width: $article-md-width;
-    padding: 1vmin $article-md-pad-w;
-    font-size: 4vmin;
-
-    h1 {
-      font-size: 9vmin;
-    }
-
-    blockquote {
-      &::before, &::after {
-        font-size: 15vmin;
-        line-height: 5vmin;
-      }
-
-      &::before {
-        top: 2vmin;
-      }
-
-      &::after {
-        bottom: 7vmin;
-        margin-bottom: -7vmin;
-      }
-
-      p {
-        display: block;
-        margin: 0 7vmin;
-        font-size: 5.25vmin;
-      }
-
-      cite {
-        margin-top: 2rem;
-        padding-left: 6.5vmin;
-      }
-    }
-  }
-}
+//@media only screen and (min-width: $screen-md-min) {
+//  article {
+//    width: $article-sm-width;
+//    max-width: $article-sm-width;
+//    padding: 3vmin $article-sm-pad-w;
+//    font-size: 4vmin;
+//
+//    header {
+//      border-bottom: 1px solid black;
+//
+//      h1 {
+//        font-size: 9vmin;
+//      }
+//    }
+//
+//    blockquote {
+//      &::before, &::after {
+//        font-size: 15vmin;
+//        line-height: 5vmin;
+//      }
+//
+//      &::before {
+//        top: 2vmin;
+//      }
+//
+//      &::after {
+//        bottom: 8vmin;
+//        margin-bottom: -8vmin;
+//      }
+//
+//      p {
+//        display: block;
+//        margin: 0 7vmin;
+//        font-size: 6.15vmin;
+//      }
+//
+//      cite {
+//        margin-top: 1rem;
+//        padding-left: 6.5vmin;
+//      }
+//    }
+//  }
+//}
 
 //@media only screen and (min-width: $screen-lg-min) {
 //  article {
-//    width: $art-wid;
-//    max-width: $art-wid;
-//    padding: 1vmin $art-pad-w;
+//    width: $article-sm-width;
+//    max-width: $article-sm-width;
+//    padding: 3vmin $article-sm-pad-w;
+//    font-size: 4vmin;
+//
+//    header {
+//      border-bottom: 1px solid black;
+//
+//      h1 {
+//        font-size: 9vmin;
+//      }
+//    }
+//
+//    blockquote {
+//      &::before, &::after {
+//        font-size: 15vmin;
+//        line-height: 5vmin;
+//      }
+//
+//      &::before {
+//        top: 2vmin;
+//      }
+//
+//      &::after {
+//        bottom: 8vmin;
+//        margin-bottom: -8vmin;
+//      }
+//
+//      p {
+//        display: block;
+//        margin: 0 7vmin;
+//        font-size: 6.15vmin;
+//      }
+//
+//      cite {
+//        margin-top: 1rem;
+//        padding-left: 6.5vmin;
+//      }
+//    }
 //  }
 //}

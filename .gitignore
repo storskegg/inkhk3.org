@@ -1,7 +1,6 @@
 # built files
 public/index.html
-public/style.css
-public/style.min.css
+public/*.css
 public/app.js
 public/app.min.js
 
