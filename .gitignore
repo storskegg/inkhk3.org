@@ -1,3 +1,10 @@
+# built files
+public/index.html
+public/style.css
+public/style.min.css
+public/app.js
+public/app.min.js
+
 # Ignore local .env to prevent commiting secrets
 .env
 .aws/credentials
