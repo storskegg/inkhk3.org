@@ -1,3 +1,3 @@
 locals {
-  path_to_files = "${path.module}/../../public"
+  path_to_files = "${path.module}/../../dist"
 }
