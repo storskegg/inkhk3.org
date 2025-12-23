@@ -1,81 +1,6 @@
-// The following google font does not support the necessary utf characters for Egyptological transliteration
-//@import url(https://fonts.googleapis.com/css?family=Nixie+One|Trocchi|Special+Elite);
-
-@use "sass:map";
-
-@font-face {
-  font-family: 'Umschrift';
-  font-weight: normal;
-  font-style: normal;
-  src: url("/UMSCH_S.TTF") format('truetype');
-}
-
-@font-face {
-  font-family: 'Umschrift';
-  font-weight: bold;
-  font-style: normal;
-  src: url("/UMSCH_SB.TTF") format('truetype');
-}
-
-@font-face {
-  font-family: 'Umschrift';
-  font-weight: normal;
-  font-style: italic;
-  src: url("/UMSCH_I.TTF") format('truetype');
-}
-
-@font-face {
-  font-family: 'Umschrift';
-  font-weight: bold;
-  font-style: italic;
-  src: url("/UMSCH_IB.TTF") format('truetype');
-}
-
-$grid-breakpoints: (
-        xs: 0,
-        sm: 576px,
-        md: 768px,
-        lg: 992px,
-        xl: 1200px,
-        xxl: 1400px
-) !default;
-
-$screen-xs-min: map.get($grid-breakpoints, "xs") !default;
-$screen-sm-min: map.get($grid-breakpoints, "sm") !default;
-$screen-md-min: map.get($grid-breakpoints, "md") !default;
-$screen-lg-min: map.get($grid-breakpoints, "lg") !default;
-$screen-xl-min: map.get($grid-breakpoints, "xl") !default;
-$screen-xxl-min: map.get($grid-breakpoints, "xxl") !default;
-
-$screen-xs-max: ($screen-sm-min - 1) !default;
-$screen-sm-max: ($screen-md-min - 1) !default;
-$screen-md-max: ($screen-lg-min - 1) !default;
-$screen-lg-max: ($screen-xl-min - 1) !default;
-$screen-xl-max: ($screen-xxl-min - 1) !default;
-
-$art-wid: 85vmin;
-$art-pad-w: 5vmin;
-
-$article-xs-width: $art-wid;
-$article-xs-pad-w: $art-pad-w;
-
-
-$article-sm-width: $art-wid;
-$article-sm-pad-w: $art-pad-w;
-
-$article-md-width: $art-wid;
-$article-md-pad-w: 2.5vmin;
-
-$article-lg-width: $art-wid;
-$article-lg-pad-w: $art-pad-w;
-
-$article-xl-width: $art-wid;
-$article-xl-pad-w: $art-pad-w;
-
-//$nav-height: 50px;
-//
-//$quote-height: 100px;
-//$quote-width: 100px;
+@use "vars" as vars;
+@use "fonts";
+@use "res";
 
 * {
   box-sizing: border-box;
@@ -101,20 +26,21 @@ body {
 
 article {
   position: absolute;
-  width: $art-wid;
-  max-width: $art-wid;
+  width: vars.$art-wid;
+  max-width: vars.$art-wid;
   max-height: 90vmin;
   top: 50%;
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
-  padding: 1vmin $art-pad-w;
+  padding: 1vmin vars.$art-pad-w;
   overflow: hidden;
 
   background: url("https://inkhk3.org/paper_fff.jpg");
 
-  font-family: serif;
-  //font-family: 'Special Elite', serif;
-  color: #333;
+  &, &::after, &::before {
+    font-family: "Caslon Roman", serif;
+    color: #333;
+  }
 
   header {
     h1 {
@@ -217,11 +143,11 @@ article {
   }
 }
 
-@media only screen and (max-width: $screen-xs-max) {
+@media only screen and (max-width: vars.$screen-xs-max) {
   article {
-    width: $article-sm-width;
-    max-width: $article-sm-width;
-    padding: 3vmin $article-sm-pad-w;
+    width: vars.$article-sm-width;
+    max-width: vars.$article-sm-width;
+    padding: 3vmin vars.$article-sm-pad-w;
     font-size: 4vmin;
 
     header {
@@ -261,11 +187,11 @@ article {
   }
 }
 
-@media only screen and (min-width: $screen-sm-min) {
+@media only screen and (min-width: vars.$screen-sm-min) {
   article {
-    width: $article-sm-width;
-    max-width: $article-sm-width;
-    padding: 3vmin $article-sm-pad-w;
+    width: vars.$article-sm-width;
+    max-width: vars.$article-sm-width;
+    padding: 3vmin vars.$article-sm-pad-w;
     font-size: 4vmin;
 
     header {
@@ -306,11 +232,11 @@ article {
   }
 }
 
-//@media only screen and (min-width: $screen-md-min) {
+//@media only screen and (min-width: vars.$screen-md-min) {
 //  article {
-//    width: $article-sm-width;
-//    max-width: $article-sm-width;
-//    padding: 3vmin $article-sm-pad-w;
+//    width: vars.$article-sm-width;
+//    max-width: vars.$article-sm-width;
+//    padding: 3vmin vars.$article-sm-pad-w;
 //    font-size: 4vmin;
 //
 //    header {
@@ -350,11 +276,11 @@ article {
 //  }
 //}
 
-//@media only screen and (min-width: $screen-lg-min) {
+//@media only screen and (min-width: vars.$screen-lg-min) {
 //  article {
-//    width: $article-sm-width;
-//    max-width: $article-sm-width;
-//    padding: 3vmin $article-sm-pad-w;
+//    width: vars.$article-sm-width;
+//    max-width: vars.$article-sm-width;
+//    padding: 3vmin vars.$article-sm-pad-w;
 //    font-size: 4vmin;
 //
 //    header {

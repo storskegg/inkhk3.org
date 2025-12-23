@@ -1,0 +1,47 @@
+@use "sass:map";
+
+$grid-breakpoints: (
+        xs: 0,
+        sm: 576px,
+        md: 768px,
+        lg: 992px,
+        xl: 1200px,
+        xxl: 1400px
+) !default;
+
+$screen-xs-min: map.get($grid-breakpoints, "xs") !default;
+$screen-sm-min: map.get($grid-breakpoints, "sm") !default;
+$screen-md-min: map.get($grid-breakpoints, "md") !default;
+$screen-lg-min: map.get($grid-breakpoints, "lg") !default;
+$screen-xl-min: map.get($grid-breakpoints, "xl") !default;
+$screen-xxl-min: map.get($grid-breakpoints, "xxl") !default;
+
+$screen-xs-max: ($screen-sm-min - 1) !default;
+$screen-sm-max: ($screen-md-min - 1) !default;
+$screen-md-max: ($screen-lg-min - 1) !default;
+$screen-lg-max: ($screen-xl-min - 1) !default;
+$screen-xl-max: ($screen-xxl-min - 1) !default;
+
+$art-wid: 85vmin;
+$art-pad-w: 5vmin;
+
+$article-xs-width: $art-wid;
+$article-xs-pad-w: $art-pad-w;
+
+
+$article-sm-width: $art-wid;
+$article-sm-pad-w: $art-pad-w;
+
+$article-md-width: $art-wid;
+$article-md-pad-w: 2.5vmin;
+
+$article-lg-width: $art-wid;
+$article-lg-pad-w: $art-pad-w;
+
+$article-xl-width: $art-wid;
+$article-xl-pad-w: $art-pad-w;
+
+//$nav-height: 50px;
+//
+//$quote-height: 100px;
+//$quote-width: 100px;

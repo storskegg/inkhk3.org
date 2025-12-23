@@ -1,0 +1,54 @@
+// The following google font does not support the necessary utf characters for Egyptological transliteration
+//@import url(https://fonts.googleapis.com/css?family=Nixie+One|Trocchi|Special+Elite);
+
+@font-face {
+  font-family: 'Umschrift';
+  font-weight: normal;
+  font-style: normal;
+  src: url("/UMSCH_S.TTF") format('truetype');
+}
+
+@font-face {
+  font-family: 'Umschrift';
+  font-weight: bold;
+  font-style: normal;
+  src: url("/UMSCH_SB.TTF") format('truetype');
+}
+
+@font-face {
+  font-family: 'Umschrift';
+  font-weight: normal;
+  font-style: italic;
+  src: url("/UMSCH_I.TTF") format('truetype');
+}
+
+@font-face {
+  font-family: 'Umschrift';
+  font-weight: bold;
+  font-style: italic;
+  src: url("/UMSCH_IB.TTF") format('truetype');
+}
+
+@font-face {
+  font-family: 'Caslon Roman';
+  font-weight: normal;
+  font-style: normal;
+  src: url("/CaslonRoman.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'Hieroglyphic';
+  src: url('/NewGardiner.woff2') format('woff2'), url('/NewGardiner.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'HieroglyphicAux';
+  src: url('/HieroglyphicAux.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'HieroglyphicPlain';
+  src: url('/CaslonRoman.ttf') format('truetype');;
+}
+@font-face {
+  font-family: 'Transliteration';
+  src: url('/DejaVuSans-Bold.ttf') format('truetype');;
+}
