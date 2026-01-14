@@ -3,7 +3,7 @@
 @use "res";
 
 * {
-  box-sizing: border-box;
+  box-sizing: border-box !important;
 }
 
 body {
@@ -46,20 +46,65 @@ article {
       margin: 0;
       text-align: justify;
     }
+  }
 
-    border-bottom: 2px solid black;
+  blockquote {
+    margin: 0;
+    position: relative;
+    padding-top: 4vmin;
+    font-family: serif;
+
+    border-top: 2px solid black;
+
+    &::after,
+    &::before {
+      display: block;
+      position: relative;
+      margin: 0;
+      padding: 0;
+    }
+
+    &::after {
+      content: "”";
+      float: right;
+    }
+
+    &::before {
+      content: "“";
+      float: left;
+    }
+
+    p {
+      font-weight: 900;
+      font-size: 3.5vmin;
+      margin: 0;
+    }
+
+    cite {
+      display: block;
+      text-align: justify;
+      margin-top: 1rem;
+      font-size: 0.7em;
+
+      &::before {
+        content: "—";
+        margin-right: 0.5rem;
+      }
+    }
   }
 
   div.amduat {
-    margin: 0;
     padding: 0.2em 0;
     font-size: 6vmin;
     overflow: hidden;
-    text-align: center;
     line-height: 0.4em;
 
     border-top: 2px solid black;
     border-bottom: 2px solid black;
+
+    .res {
+      margin: 0 7vmin;
+    }
   }
 
   footer {
@@ -108,47 +153,6 @@ article {
       }
     }
   }
-
-  blockquote {
-    margin: 0;
-    position: relative;
-    padding-top: 4vmin;
-
-    &::after,
-    &::before {
-      display: block;
-      position: relative;
-      margin: 0;
-      padding: 0;
-    }
-
-    &::after {
-      content: "”";
-      float: right;
-    }
-
-    &::before {
-      content: "“";
-      float: left;
-    }
-
-    p {
-      font-weight: 900;
-      font-size: 3.5vmin;
-      margin: 0;
-    }
-
-    cite {
-      display: block;
-      text-align: justify;
-      margin-top: 1rem;
-
-      &::before {
-        content: "—";
-        margin-right: 0.5rem;
-      }
-    }
-  }
 }
 
 @media only screen and (max-width: vars.$screen-xs-max) {
@@ -190,7 +194,13 @@ article {
       cite {
         margin-top: 1rem;
         padding-left: 6.5vmin;
+
+        font-size: 0.8em;
       }
+    }
+
+    div.amduat {
+      font-size: 7.25vmin;
     }
   }
 }
@@ -229,13 +239,17 @@ article {
         display: block;
         margin: 0 7vmin;
         font-size: 6vmin;
-        //border: 1px solid red;
       }
 
       cite {
         margin-top: 1rem;
         padding-left: 6.5vmin;
+        font-size: 0.75em;
       }
+    }
+
+    div.amduat {
+      font-size: 6.25vmin;
     }
   }
 }

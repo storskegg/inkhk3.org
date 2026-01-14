@@ -45,6 +45,7 @@
     "onchange": "^7.1.0",
     "postcss-cli": "^9.1.0",
     "sass": "^1.97.0",
-    "vite": "^7.3.0"
+    "vite": "^7.3.0",
+    "vite-plugin-clean": "^2.0.1"
   }
 }
