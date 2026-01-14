@@ -11,9 +11,9 @@ function ResPoint(x, y) {
 }
 ResPoint.fromAngle =
 function(angle, dist) {
-	var theta = 2 * Math.PI * angle;
-	var x = dist * Math.cos(theta);
-	var y = dist * Math.sin(theta);
+	const theta = 2 * Math.PI * angle;
+	const x = dist * Math.cos(theta);
+	const y = dist * Math.sin(theta);
 	return new ResPoint(x, y);
 };
 
@@ -29,18 +29,18 @@ function(width) {
 };
 ResRectangle.prototype.intersect =
 function(other) {
-	var xLeft = Math.max(this.x, other.x);
-	var xRight = Math.min(this.x + this.width, other.x + other.width);
-	var yTop = Math.max(this.y, other.y);
-	var yBottom = Math.min(this.y + this.height, other.y + other.height);
-	var w = Math.max(xRight - xLeft, 0);
-	var h = Math.max(yBottom - yTop, 0);
+	const xLeft = Math.max(this.x, other.x);
+	const xRight = Math.min(this.x + this.width, other.x + other.width);
+	const yTop = Math.max(this.y, other.y);
+	const yBottom = Math.min(this.y + this.height, other.y + other.height);
+	const w = Math.max(xRight - xLeft, 0);
+	const h = Math.max(yBottom - yTop, 0);
 	return new ResRectangle(xLeft, yTop, w, h);
 };
-ResRectangle.prototype.includes =
-function(x, y) {
-	return this.x <= x && x < this.x+this.width && this.y <= y && y < this.y+this.height;
-};
+// ResRectangle.prototype.includes =
+// function(x, y) {
+// 	return this.x <= x && x < this.x+this.width && this.y <= y && y < this.y+this.height;
+// };
 ResRectangle.prototype.chopStartH =
 function(x) {
 	return new ResRectangle(this.x, this.y, x - this.x, this.height);
@@ -59,8 +59,8 @@ function(y) {
 };
 ResRectangle.prototype.chopPattern =
 function(pattern) {
-	var r = this;
-	for (var i = 0; i < pattern.length; i++) {
+	let r = this;
+	for (const i = 0; i < pattern.length; i++) {
 		if (pattern.charAt(i) === 't') {
 			r = new ResRectangle(r.x, r.y, r.width, r.height / 2);
 		} else if (pattern.charAt(i) === 'b') {
@@ -75,10 +75,10 @@ function(pattern) {
 };
 ResRectangle.prototype.center =
 function(other) {
-	var horSurplus = this.width - other.width;
-	var vertSurplus = this.height - other.height;
-	var x = this.x + horSurplus / 2 - other.x;
-	var y = this.y + vertSurplus / 2 - other.y;
+	const horSurplus = this.width - other.width;
+	const vertSurplus = this.height - other.height;
+	const x = this.x + horSurplus / 2 - other.x;
+	const y = this.y + vertSurplus / 2 - other.y;
 	return new ResRectangle(x, y, other.width, other.height);
 };
 
@@ -95,7 +95,7 @@ function ResContext() {
 
 	// separation between groups
 	this.opSepEm = 0.15; // normal separation for operators
-	this.boxSepEm = 0.04; // separation in box 
+	this.boxSepEm = 0.04; // separation in box
 	this.paddingFactor = 1.0; // as factor of unpadded separation between groups
 	this.paddingAllowed = false;
 
@@ -144,7 +144,7 @@ function(sizePx) {
 
 function ResEnv(context) {
 	this.resContext = context;
-	var initialMarginPx = context.marginPx;
+	const initialMarginPx = context.marginPx;
 	this.minLeftMarginPx = initialMarginPx;
 	this.minTopMarginPx = initialMarginPx;
 	this.minRightMarginPx = initialMarginPx;
@@ -154,10 +154,10 @@ function ResEnv(context) {
 // Ensure that rectangle fits. If not, adjust dimensions for next time.
 ResEnv.prototype.ensureRect =
 function(rect) {
-	var xMin = rect.x;
-	var xMax = rect.x + rect.width;
-	var yMin = rect.y;
-	var yMax = rect.y + rect.height;
+	const xMin = rect.x;
+	const xMax = rect.x + rect.width;
+	const yMin = rect.y;
+	const yMax = rect.y + rect.height;
 	this.ensureLeftMargin(this.leftMarginPx-xMin);
 	this.ensureRightMargin(this.rightMarginPx+xMax-this.totalWidthPx);
 	this.ensureTopMargin(this.topMarginPx-yMin);
@@ -203,7 +203,7 @@ function ResCanvas() {
 // Make canvas with sizes, which must be at least 1.
 ResCanvas.make =
 function(width, height) {
-	var canvas = document.createElement("canvas");
+	const canvas = document.createElement("canvas");
 	canvas.width = Math.max(Math.round(width), 1);
 	canvas.height = Math.max(Math.round(height), 1);
 	return canvas;
@@ -235,7 +235,7 @@ function(ctx, w, h) {
 	var external = new Array(w);
 	for (var x = 0; x < w; x++) {
 		external[x] = new Array(h);
-		for (var y = 0; y < h; y++) 
+		for (var y = 0; y < h; y++)
 			external[x][y] = false;
 	}
 	if (w === 0 || h === 0)
@@ -254,12 +254,12 @@ function(ctx, w, h) {
 	var changed = true;
 	while (changed) {
 		changed = false;
-		for (var y = 1; y < h-1; y++) 
-			for (var x = 1; x < w-1; x++) 
+		for (var y = 1; y < h-1; y++)
+			for (var x = 1; x < w-1; x++)
 				if (external[x][y-1])
 					changed |= ResCanvas.externalPixelsSideways(data, w, x, y, external);
-		for (var y = h-2; y > 0; y--) 
-			for (var x = 1; x < w-1; x++) 
+		for (var y = h-2; y > 0; y--)
+			for (var x = 1; x < w-1; x++)
 				if (external[x][y+1])
 					changed |= ResCanvas.externalPixelsSideways(data, w, x, y, external);
 	}
@@ -267,26 +267,26 @@ function(ctx, w, h) {
 };
 ResCanvas.externalPixelsSideways =
 function(data, w, x, y, external) {
-	if (external[x][y] || ResCanvas.isNotBlank(data, w, x, y)) 
+	if (external[x][y] || ResCanvas.isNotBlank(data, w, x, y))
 		return false;
-	external[x][y] = true; 
+	external[x][y] = true;
 	for (var x2 = x-1; x2 >= 1; x2--) {
-		if (!external[x2][y] && !ResCanvas.isNotBlank(data, w, x2, y)) 
-			external[x2][y] = true; 
+		if (!external[x2][y] && !ResCanvas.isNotBlank(data, w, x2, y))
+			external[x2][y] = true;
 		else
 			break;
 	}
 	for (var x2 = x+1; x2 < w-1; x2++) {
-		if (!external[x2][y] && !ResCanvas.isNotBlank(data, w, x2, y)) 
-			external[x2][y] = true; 
+		if (!external[x2][y] && !ResCanvas.isNotBlank(data, w, x2, y))
+			external[x2][y] = true;
 		else
 			break;
 	}
 	return true;
 };
 
-// Erase pixels that are not valid. 
-// valids: 2-dimensional boolean array 
+// Erase pixels that are not valid.
+// valids: 2-dimensional boolean array
 ResCanvas.erasePixels =
 function(ctx, w, h, valids) {
 	var white = ctx.createImageData(1,1);
@@ -295,9 +295,9 @@ function(ctx, w, h, valids) {
 	data[1] = 0;
 	data[2] = 0;
 	data[3] = 0;
-	for (var x = 0; x < w; x++) 
-		for (var y = 0; y < h; y++) 
-			if (!valids[x][y]) 
+	for (var x = 0; x < w; x++)
+		for (var y = 0; y < h; y++)
+			if (!valids[x][y])
 				ctx.putImageData(white, x, y);
 };
 
@@ -370,7 +370,7 @@ function(ctx, x, y, testRect, str, size, xScale, font, color, rotate, mirror) {
 	ctx.textBaseline = "alphabetic";
 	var width = Math.max(1, Math.round(ctx.measureText(str).width));
 	var height = Math.max(1, Math.round(size));
-	if (rotate === 0 && !mirror && xScale === 1) 
+	if (rotate === 0 && !mirror && xScale === 1)
 		ctx.fillText(str, x - testRect.x, y - testRect.y + testRect.height);
 	else {
 		var l = testRect.x;
@@ -455,8 +455,8 @@ function(ctx1, ctx2, w1, w2, h, sepInit, sepMax) {
 	canvas.width = w;
 	canvas.height = h;
 	var ctx = canvas.getContext("2d");
-	for (var y = 0; y < h; y++) 
-		for (var x = 0; x < w2; x++) 
+	for (var y = 0; y < h; y++)
+		for (var x = 0; x < w2; x++)
 			if (ResCanvas.isNotBlank(data2, w2, x, y)) {
 				ctx.fillStyle = "black";
 				ctx.beginPath();
@@ -487,8 +487,8 @@ function(ctx1, ctx2, w, h1, h2, sepInit, sepMax) {
 	canvas.width = w;
 	canvas.height = h;
 	var ctx = canvas.getContext("2d");
-	for (var x = 0; x < w; x++) 
-		for (var y = 0; y < h2; y++) 
+	for (var x = 0; x < w; x++)
+		for (var y = 0; y < h2; y++)
 			if (ResCanvas.isNotBlank(data2, w, x, y)) {
 				ctx.beginPath();
 				ctx.arc(x, sepInit + y, Math.max(0.5,sepInit), 1.0*Math.PI, 2.0*Math.PI);
@@ -533,7 +533,7 @@ function(ctx1, ctx2, w, h) {
 	return true;
 };
 
-// Internal space in horizontal box. 
+// Internal space in horizontal box.
 ResCanvas.internalHor =
 function(ctx, w, h) {
 	var data = w > 0 && h > 0 ? ctx.getImageData(0, 0, w, h).data : null;
@@ -591,7 +591,7 @@ function(ctx, w, h, rect, width) {
 			n++;
 			if (n >= width)
 				return new ResPoint(x, rect.y);
-		} else 
+		} else
 			n = 0;
 	}
 	return false;
@@ -611,7 +611,7 @@ function(ctx, w, h, rect, width) {
 			n++;
 			if (n >= width)
 				return new ResPoint(x-width, rect.y);
-		} else 
+		} else
 			n = 0;
 	}
 	return false;
@@ -631,7 +631,7 @@ function(ctx, w, h, rect, height) {
 			n++;
 			if (n >= height)
 				return new ResPoint(rect.x, y);
-		} else 
+		} else
 			n = 0;
 	}
 	return false;
@@ -651,7 +651,7 @@ function(ctx, w, h, rect, height) {
 			n++;
 			if (n >= height)
 				return new ResPoint(rect.x, y-height);
-		} else 
+		} else
 			n = 0;
 	}
 	return false;
@@ -660,7 +660,7 @@ function(ctx, w, h, rect, height) {
 /////////////////////////////////////////////////////////////////////////////
 // Shading.
 
-// Maps x coordinate (on x axis) to list of pairs of x coordinates 
+// Maps x coordinate (on x axis) to list of pairs of x coordinates
 // each delimiting a line segment of shading (hatching).
 // context: ResContext
 // mirror: boolean (whether mirrored)
@@ -2405,7 +2405,7 @@ function(name1, name2) {
 			return 1;
 		else
 			return 0;
-	} else 
+	} else
 		return ResContext.categories.indexOf(cat1) - ResContext.categories.indexOf(cat2);
 };
 
@@ -2509,7 +2509,7 @@ function() {
 			this.string.charAt(this.pos).replace(/^\s+|\s+$/gm,'').length !== 0)
 		this.pos++;
 };
-ParseBuffer.prototype.readToEnd = 
+ParseBuffer.prototype.readToEnd =
 function() {
 	while (!this.isEmpty() && this.string.charAt(this.pos) !== 'e')
 		this.pos++;
@@ -2665,11 +2665,11 @@ function(resLite, buffer) {
 	if (!buffer.readSingleChar("e")) {
 		console.log("RESlite missing end");
 		return false;
-	} else 
+	} else
 		return true;
 };
 
-// Parse zero or more groups. 
+// Parse zero or more groups.
 // return: pointer to list, possibly null
 ResLite.parseGroups =
 function(buffer) {
@@ -2700,7 +2700,7 @@ function(buffer) {
 	return groups;
 };
 
-// Parse zero or more expressions. 
+// Parse zero or more expressions.
 // return: pointer to list, possibly null.
 ResLite.parseExprs =
 function(buffer) {
@@ -2798,7 +2798,7 @@ function(buffer) {
 	return pair;
 };
 
-// Parse zero or more notes. 
+// Parse zero or more notes.
 // return: pointer to list, possibly null
 ResLite.parseNotes =
 function(buffer) {
@@ -2833,7 +2833,7 @@ function(buffer) {
 	return notes;
 };
 
-// Parse zero or more shades. 
+// Parse zero or more shades.
 // return: pointer to list, possibly null
 ResLite.parseShades =
 function(buffer) {
@@ -2914,23 +2914,23 @@ function() {
 	return this.original.isLR() && this.resContext.dir === undefined ||
 		this.resContext === "lr";
 };
-ResLiteDivision.prototype.getWidthMilEm = 
+ResLiteDivision.prototype.getWidthMilEm =
 function() {
 	var pad = this.initialNumber > 1 ? this.padMilEm * (this.initialNumber-1) : 0;
 	return this.isH() ? this.initialSizeMilEm + pad : this.original.sizeMilEm;
 };
-ResLiteDivision.prototype.getHeightMilEm = 
+ResLiteDivision.prototype.getHeightMilEm =
 function() {
 	var pad = this.initialNumber > 1 ? this.padMilEm * (this.initialNumber-1) : 0;
 	return this.isH() ? this.original.sizeMilEm : this.initialSizeMilEm + pad;
 };
-ResLiteDivision.prototype.getWidthPx = 
+ResLiteDivision.prototype.getWidthPx =
 function() {
-	return Math.round(this.resContext.milEmToPx(this.getWidthMilEm())); 
+	return Math.round(this.resContext.milEmToPx(this.getWidthMilEm()));
 };
 ResLiteDivision.prototype.getHeightPx =
 function() {
-	return Math.round(this.resContext.milEmToPx(this.getHeightMilEm())); 
+	return Math.round(this.resContext.milEmToPx(this.getHeightMilEm()));
 };
 // Process input until length limit is reached.
 // Limit can be infinite (= no limit).
@@ -2980,9 +2980,9 @@ function(div, lenMilEm) {
 /////////////////////////////////////////////////////////////
 // Rendering.
 
-// Render with initial margin. If things were printed outside margin 
+// Render with initial margin. If things were printed outside margin
 // (so if margin became bigger) do again.
-ResLiteDivision.prototype.render = 
+ResLiteDivision.prototype.render =
 function(canvas) {
 	this.env = new ResEnv(this.resContext);
 	while (true) {
@@ -3005,11 +3005,11 @@ function(canvas) {
 			break;
 		} else
 			this.env.updateMargins();
-	}		
+	}
 };
 ResLiteDivision.prototype.renderGroups =
 function(groups, n, p) {
-	if (n <= 0 || groups === null) 
+	if (n <= 0 || groups === null)
 		return;
 	var lenPx = this.resContext.milEmToPx(groups.lengthMilEm);
 	var rect = this.makeRect(p, lenPx);
@@ -3029,7 +3029,7 @@ function(exprs, rect) {
 		return;
 	if (exprs instanceof ResLiteGlyph)
 		this.renderGlyph(exprs, rect);
-	else 
+	else
 		this.renderPair(exprs, rect);
 	this.renderExprs(exprs.tl, rect);
 };
@@ -3089,10 +3089,10 @@ function(glyph, rect) {
 	var y = rect.y + this.resContext.milEmToPx(glyph.yMilEm);
 	var gRect = ResCanvas.glyphRect(str, size, 1, font, 0, false);
 	if (glyph.rotate === 0 && !glyph.mirror && glyph.xscaleMil === glyph.yscaleMil) {
-		var printedRect = new ResRectangle(x - gRect.width/2, y - gRect.height/2, 
+		var printedRect = new ResRectangle(x - gRect.width/2, y - gRect.height/2,
 					gRect.width, gRect.height);
 		var cutOut = this.cutOutRect(glyph, printedRect);
-		if (cutOut === undefined) 
+		if (cutOut === undefined)
 			this.env.ensureRect(printedRect);
 		else {
 			this.ctx.beginPath();
@@ -3111,7 +3111,7 @@ function(glyph, rect) {
 		var vDiff = (t-b) / 2;
 		var xDiff = -gRect.x - gRect.width/2;
 		var yDiff = -gRect.y + gRect.height/2;
-		var printedRect = new ResRectangle(x-hDiff - rotRect.width/2, y-vDiff - rotRect.height/2, 
+		var printedRect = new ResRectangle(x-hDiff - rotRect.width/2, y-vDiff - rotRect.height/2,
 						rotRect.width, rotRect.height);
 		var cutOut = this.cutOutRect(glyph, printedRect);
 		if (cutOut === undefined)
@@ -3156,7 +3156,7 @@ function(notes, rect) {
 		this.ctx.scale(-1, 1);
 	this.ctx.fillText(notes.string, xDiff, yDiff);
 	this.ctx.restore();
-	this.env.ensureRect(new ResRectangle(x - gRect.width/2, y - gRect.height/2, 
+	this.env.ensureRect(new ResRectangle(x - gRect.width/2, y - gRect.height/2,
 				gRect.width, gRect.height));
 };
 ResLiteDivision.prototype.renderShades =
@@ -3191,7 +3191,7 @@ function(rect, adv) {
 };
 ResLiteDivision.prototype.cutOutRect =
 function(glyph, rect) {
-	if (glyph.xMinMil === 0 && glyph.yMinMil === 0 && 
+	if (glyph.xMinMil === 0 && glyph.yMinMil === 0 &&
 			glyph.widthMil === 1000 && glyph.heightMil === 1000)
 		return undefined;
 	var subX = rect.x + glyph.xMinMil * rect.width / 1000;
@@ -3259,19 +3259,19 @@ function() {
 	return ResGlobals.isRL(this.direction);
 };
 ResGlobals.properties = ['color','shade','sep','fit','mirror'];
-ResGlobals.isH = 
+ResGlobals.isH =
 function(d) {
 	return d === "hlr" || d === "hrl";
 };
-ResGlobals.isV = 
+ResGlobals.isV =
 function(d) {
 	return d === "vlr" || d === "vrl";
 };
-ResGlobals.isLR = 
+ResGlobals.isLR =
 function(d) {
 	return d === "hlr" || d === "vlr";
 };
-ResGlobals.isRL = 
+ResGlobals.isRL =
 function(d) {
 	return d === "hrl" || d === "vrl";
 };
@@ -3320,7 +3320,7 @@ ResFragment.prototype.toString =
 function() {
 	var s = this.headerString();
 	s += this.switchs.toString();
-	if (this.hiero !== null) 
+	if (this.hiero !== null)
 		s += this.hiero.toString();
 	return s;
 };
@@ -3359,19 +3359,19 @@ function ResHieroglyphic(args) {
 ResHieroglyphic.prototype.toString =
 function() {
 	var s = this.groups[0].toString();
-	for (var i = 0; i < this.ops.length; i++) 
+	for (var i = 0; i < this.ops.length; i++)
 		s += "-" + this.ops[i].toString(false) + this.switches[i].toString() +
 				this.groups[i+1].toString();
 	return s;
 };
-ResHieroglyphic.prototype.addGroup = 
+ResHieroglyphic.prototype.addGroup =
 function(group, argList, switchs) {
 	this.groups.unshift(group);
 	this.ops.unshift(new ResOp({l:argList}, false));
 	this.switches.unshift(switchs);
 	return this;
 };
-ResHieroglyphic.prototype.addGroupAt = 
+ResHieroglyphic.prototype.addGroupAt =
 function(group, i) {
 	this.groups.splice(i, 0, group);
 	this.ops.splice(Math.min(i, this.ops.length), 0, new ResOp(null));
@@ -3451,7 +3451,7 @@ function(groups, ops, switches) {
 ResVertgroup.prototype.toString =
 function() {
 	var s = this.groups[0].toString();
-	for (var i = 0; i < this.ops.length; i++) 
+	for (var i = 0; i < this.ops.length; i++)
 		s += ":" + this.ops[i].toString(i === 0) + this.switches[i].toString() +
 			this.groups[i+1].toString();
 	return s;
@@ -3463,7 +3463,7 @@ function(argList, switchs, group) {
 	this.groups.push(group);
 	return this;
 };
-ResVertgroup.prototype.addGroupAt = 
+ResVertgroup.prototype.addGroupAt =
 function(group, i) {
 	this.groups.splice(i, 0, new ResVertsubgroup({b: group}));
 	this.ops.splice(Math.min(i, this.ops.length), 0, new ResOp(null));
@@ -3587,7 +3587,7 @@ function(groups, ops, switches) {
 ResHorgroup.prototype.toString =
 function() {
 	var s = this.groups[0].toString();
-	for (var i = 0; i < this.ops.length; i++) 
+	for (var i = 0; i < this.ops.length; i++)
 		s += "*" + this.ops[i].toString(i === 0) + this.switches[i].toString() +
 			this.groups[i+1].toString();
 	return s;
@@ -3599,7 +3599,7 @@ function(argList, switchs, group) {
 	this.groups.push(group);
 	return this;
 };
-ResHorgroup.prototype.addGroupAt = 
+ResHorgroup.prototype.addGroupAt =
 function(group, i) {
 	this.groups.splice(i, 0, new ResHorsubgroup({b: group}));
 	this.ops.splice(Math.min(i, this.ops.length), 0, new ResOp(null));
@@ -3654,7 +3654,7 @@ function() {
 };
 
 function ResHorsubgroup(args) {
-	if (args.g) { 
+	if (args.g) {
 		this.switchs1 = args.sw1;
 		this.group = args.g;
 		this.switchs2 = args.sw2;
@@ -3674,7 +3674,7 @@ function() {
 		return "(" + this.switchs1.toString() + this.group.toString() + ")" +
 			this.switchs2.toString();
 	else
-		return this.switchs1.toString() + this.group.toString() + 
+		return this.switchs1.toString() + this.group.toString() +
 			this.switchs2.toString();
 };
 ResHorsubgroup.prototype.propagateBack =
@@ -3721,7 +3721,7 @@ function ResOp(args, isFirst) {
 			else if (arg.isPattern())
 				this.shades.push(arg.getLhs());
 			else if (isFirst) {
-				if (arg.hasLhs("size") && 
+				if (arg.hasLhs("size") &&
 						(arg.hasRhsReal() || arg.hasRhs("inf")))
 					this.size = arg.getRhs();
 			}
@@ -3759,11 +3759,11 @@ function(isFirst) {
 		args.push("nofit");
 	if (this.fix)
 		args.push("fix");
-	if (this.shade === true) 
+	if (this.shade === true)
 		args.push("shade");
-	if (this.shade === false) 
+	if (this.shade === false)
 		args.push("noshade");
-	for (var i = 0; i < this.shades.length; i++) 
+	for (var i = 0; i < this.shades.length; i++)
 		args.push(this.shades[i]);
 	if (this.size === "inf") {
 		if (isFirst)
@@ -3782,9 +3782,9 @@ function() {
 };
 
 function ResNamedglyph(args) {
-	if (args === null) 
+	if (args === null)
 		this.setDefaults();
-	else if (args.na) { 
+	else if (args.na) {
 		var name = args.na;
 		var argList = args.l;
 		var notes = args.no;
@@ -3906,9 +3906,9 @@ function() {
 };
 
 function ResEmptyglyph(args) {
-	if (args === null) 
+	if (args === null)
 		this.setDefaults();
-	else if (args.l) { 
+	else if (args.l) {
 		var argList = args.l;
 		var note = args.n;
 		var switchs = args.sw;
@@ -4020,7 +4020,7 @@ function() {
 };
 
 function ResBox(args) {
-	if (args === null) 
+	if (args === null)
 		this.setDefaults();
 	else if (args.l) {
 		var type = args.na;
@@ -4142,7 +4142,7 @@ function() {
 	if (this.oversep !== null)
 		args.push("oversep=" + ResArg.realStr(this.oversep));
 	var s = this.type + ResArg.argsStr(args) +
-		"(" + this.switchs1.toString() + 
+		"(" + this.switchs1.toString() +
 		(this.hiero === null ? "" : this.hiero.toString()) +
 		")";
 	for (var i = 0; i < this.notes.length; i++)
@@ -4176,16 +4176,16 @@ function(globals) {
 ResBox.prototype.effectiveDir =
 function() {
 	if (this.direction === "h") {
-		if (this.globals.direction === "vlr") 
+		if (this.globals.direction === "vlr")
 			return "hlr";
-		else if (this.globals.direction === "vrl") 
+		else if (this.globals.direction === "vrl")
 			return "hrl";
 	} else if (this.direction === "v") {
-		if (this.globals.direction === "hlr") 
+		if (this.globals.direction === "hlr")
 			return "vlr";
-		else if (this.globals.direction === "hrl") 
+		else if (this.globals.direction === "hrl")
 			return "vrl";
-	} 
+	}
 	return this.globals.direction;
 };
 ResBox.prototype.effectiveIsH =
@@ -4273,11 +4273,11 @@ function() {
 ResStack.prototype.toString =
 function() {
 	var args = [];
-	if (this.x !== 0.5) 
+	if (this.x !== 0.5)
 		args.push("x=" + ResArg.realStr(this.x));
-	if (this.y !== 0.5) 
+	if (this.y !== 0.5)
 		args.push("y=" + ResArg.realStr(this.y));
-	if (this.onunder !== null) 
+	if (this.onunder !== null)
 		args.push(this.onunder);
 	return "stack" + ResArg.argsStr(args) + "(" + this.switchs1.toString() +
 			this.group1.toString() + "," + this.switchs2.toString() +
@@ -4370,11 +4370,11 @@ function() {
 ResInsert.prototype.toString =
 function() {
 	var args = [];
-	if (this.place !== "") 
+	if (this.place !== "")
 		args.push(this.place);
-	if (this.x !== 0.5) 
+	if (this.x !== 0.5)
 		args.push("x=" + ResArg.realStr(this.x));
-	if (this.y !== 0.5) 
+	if (this.y !== 0.5)
 		args.push("y=" + ResArg.realStr(this.y));
 	if (this.fix)
 		args.push("fix");
@@ -4484,23 +4484,23 @@ function() {
 	this.shade = null;
 	this.shades = [];
 	this.switchs1 = new ResSwitch(null);
-	this.group = null; 
+	this.group = null;
 	this.switchs2 = new ResSwitch(null);
 };
 ResModify.prototype.toString =
 function() {
 	var args = [];
-	if (this.width !== null) 
+	if (this.width !== null)
 		args.push("width=" + ResArg.realStr(this.width));
-	if (this.height !== null) 
+	if (this.height !== null)
 		args.push("height=" + ResArg.realStr(this.height));
-	if (this.above !== 0) 
+	if (this.above !== 0)
 		args.push("above=" + ResArg.realStr(this.above));
-	if (this.below !== 0) 
+	if (this.below !== 0)
 		args.push("below=" + ResArg.realStr(this.below));
-	if (this.before !== 0) 
+	if (this.before !== 0)
 		args.push("before=" + ResArg.realStr(this.before));
-	if (this.after !== 0) 
+	if (this.after !== 0)
 		args.push("after=" + ResArg.realStr(this.after));
 	if (this.omit)
 		args.push("omit");
@@ -4705,9 +4705,9 @@ function(lhs) {
 };
 ResArg.prototype.isColor =
 function() {
-	return this.is("black") || this.is("red") || this.is("green") || this.is("blue") || 
-			this.is("white") || this.is("aqua") || this.is("fuchsia") || this.is("gray") || 
-			this.is("lime") || this.is("maroon") || this.is("navy") || this.is("olive") || 
+	return this.is("black") || this.is("red") || this.is("green") || this.is("blue") ||
+			this.is("white") || this.is("aqua") || this.is("fuchsia") || this.is("gray") ||
+			this.is("lime") || this.is("maroon") || this.is("navy") || this.is("olive") ||
 			this.is("purple") || this.is("silver") || this.is("teal") || this.is("yellow");
 };
 ResArg.prototype.isPattern =
@@ -4722,7 +4722,7 @@ ResArg.prototype.hasRhs =
 function(rhs) {
 	return this.rhs === rhs;
 };
-ResArg.prototype.hasRhsNatnum = 
+ResArg.prototype.hasRhsNatnum =
 function() {
 	return typeof this.rhs === 'number' && this.rhs % 1 === 0;
 };
@@ -4730,11 +4730,11 @@ ResArg.prototype.hasRhsReal =
 function() {
 	return typeof this.rhs === 'number';
 };
-ResArg.prototype.hasRhsNonzeroReal = 
+ResArg.prototype.hasRhsNonzeroReal =
 function() {
 	return typeof this.rhs === 'number' && this.rhs > 0;
 };
-ResArg.prototype.hasRhsLowReal = 
+ResArg.prototype.hasRhsLowReal =
 function() {
 	return typeof this.rhs === 'number' && this.rhs <= 1;
 };
@@ -4744,7 +4744,7 @@ function(args) {
 		return "";
 	else {
 		var s = "[" + args[0];
-		for (var i = 1; i < args.length; i++) 
+		for (var i = 1; i < args.length; i++)
 			s += "," + args[i];
 		s += "]";
 		return s;
@@ -5538,7 +5538,7 @@ function(context) {
 };
 ResFragment.prototype.widthEm =
 function() {
-	if (this.globals.isH()) 
+	if (this.globals.isH())
 		return this.hiero === null ? 0 : this.hiero.widthEm();
 	else
 		return this.globals.size;
@@ -5641,7 +5641,7 @@ function(f) {
 		var op = this.ops[i];
 		var next = this.groups[i+1];
 		op.scaleDown(f);
-		var sideScale1 = this.effectiveIsH() ? 
+		var sideScale1 = this.effectiveIsH() ?
 				prev.sideScaledRight() : prev.sideScaledBottom()
 		var sideScale2 = this.effectiveIsH() ?
 				next.sideScaledLeft() : next.sideScaledTop()
@@ -5769,7 +5769,7 @@ function(group, f) {
 	if (this.ops[0].size === "inf") {
 		unit = Number.MAX_VALUE;
 		return;
-	} else if (this.ops[0].size !== null) 
+	} else if (this.ops[0].size !== null)
 		unit = this.ops[0].size;
 	var targetWidth = this.dynScale * unit;
 	for (var i = 0; i < this.resContext.iterateLimit; i++) {
@@ -6040,7 +6040,7 @@ ResBox.prototype.resetScaling =
 function(context) {
 	this.resContext = context;
 	this.dynScale = 1;
-	if (this.hiero !== null) 
+	if (this.hiero !== null)
 		this.hiero.resetScaling(context);
 	var type = context.auxPoints[this.type + 'open'] ? this.type : 'cartouche';
 	this.charOpenName = String.fromCharCode(context.auxPoints[type + 'open']);
@@ -6050,12 +6050,12 @@ function(context) {
 };
 ResBox.prototype.openChar =
 function() {
-	return !this.effectiveIsH() || !this.effectiveMirror() ? 
+	return !this.effectiveIsH() || !this.effectiveMirror() ?
 		this.charOpenName : this.charCloseName;
 };
 ResBox.prototype.closeChar =
 function() {
-	return !this.effectiveIsH() || !this.effectiveMirror() ? 
+	return !this.effectiveIsH() || !this.effectiveMirror() ?
 		this.charCloseName : this.charOpenName;
 };
 ResBox.prototype.segmentRotate =
@@ -6080,7 +6080,7 @@ function(d, x) {
 ResBox.prototype.widthEm =
 function() {
 	if (this.effectiveIsH())
-		return this.openSizeEm + this.closeSizeEm + 
+		return this.openSizeEm + this.closeSizeEm +
 			Math.max(0, (this.hiero === null ? 0 : this.hiero.widthEm()) +
 						this.openFitSizeEm + this.closeFitSizeEm);
 	else
@@ -6091,7 +6091,7 @@ function() {
 	if (this.effectiveIsH())
 		return this.dynSegmentSizeEm
 	else
-		return this.openSizeEm + this.closeSizeEm + 
+		return this.openSizeEm + this.closeSizeEm +
 			Math.max(0, (this.hiero === null ? 0 : this.hiero.heightEm()) +
 						this.openFitSizeEm + this.closeFitSizeEm);
 };
@@ -6212,7 +6212,7 @@ function(f) {
 	}
 	this.overThicknessEm = this.testRectSegment.over / this.resContext.emSizePx;
 	this.underThicknessEm = this.testRectSegment.under / this.resContext.emSizePx;
-	this.innerSizeEm = this.dynSegmentSizeEm - 
+	this.innerSizeEm = this.dynSegmentSizeEm -
 				this.overThicknessEm - this.underThicknessEm;
 	if (this.hiero !== null) {
 		var targetSize = this.innerSizeEm - this.overSizeEm() - this.underSizeEm();
@@ -6367,7 +6367,7 @@ function() {
 	else if (this.place === "be")
 		return Math.max(this.group2.sideScaledTop(),
 				this.group2.sideScaledLeft());
-	else 
+	else
 		return Math.max(this.group2.sideScaledTop(),
 				this.group2.sideScaledBottom(),
 				this.group2.sideScaledLeft(),
@@ -6412,7 +6412,7 @@ ResModify.prototype.widthEm =
 function() {
 	var share = 1 / (this.before + 1 + this.after);
 	var w = this.group.widthEm();
-	if (this.width !== null) 
+	if (this.width !== null)
 		w = this.dynScale * this.width;
 	return share * w;
 };
@@ -6420,7 +6420,7 @@ ResModify.prototype.heightEm =
 function() {
 	var share = 1 / (this.above + 1 + this.below);
 	var h = this.group.heightEm();
-	if (this.height !== null) 
+	if (this.height !== null)
 		h = this.dynScale * this.height;
 	return share * h;
 };
@@ -6486,7 +6486,7 @@ function(canvas, size) {
 	context.emSizePx = size;
 	this.format(context);
 
-	var env = new ResEnv(context); 
+	var env = new ResEnv(context);
 	env.mirror = this.globals.isRL();
 	while (true) {
 		var w = Math.round(this.widthPx());
@@ -6504,7 +6504,7 @@ function(canvas, size) {
 			env.ctx.scale(-1, 1);
 		}
 		var rect = new ResRectangle(env.leftMarginPx, env.topMarginPx, w, h);
-		env.shading = new ResShading(context, env.mirror); 
+		env.shading = new ResShading(context, env.mirror);
 		var groupRects = env.isH ? [new ResRectangle(0, 0, env.leftMarginPx, h)] :
 									[new ResRectangle(0, 0, w, env.topMarginPx)];
 		if (this.hiero !== null) {
@@ -6645,7 +6645,7 @@ function(i) {
 };
 ResHieroglyphic.prototype.renderNotes =
 function(env) {
-	for (var i = 0; i < this.groups.length; i++) 
+	for (var i = 0; i < this.groups.length; i++)
 		this.groups[i].renderNotes(env);
 };
 
@@ -6667,7 +6667,7 @@ function(env, rect, shadeRect, clip, fitting) {
 		var group = this.groups[i].group;
 		var groupH = group.heightPx();
 		var groupRect = rect.chopStartV(rect.y + groupH);
-		var groupShadeRect = 
+		var groupShadeRect =
 			(i == this.groups.length - 1) ? shadeRect :
 				shadeRect.chopStartV(rect.y + groupH);
 		group.render(env, groupRect, groupShadeRect, clip, fitting);
@@ -6738,7 +6738,7 @@ function(i) {
 };
 ResVertgroup.prototype.renderNotes =
 function(env) {
-	for (var i = 0; i < this.groups.length; i++) 
+	for (var i = 0; i < this.groups.length; i++)
 		this.groups[i].group.renderNotes(env);
 };
 
@@ -6760,7 +6760,7 @@ function(env, rect, shadeRect, clip, fitting) {
 		var group = this.groups[i].group;
 		var groupW = group.widthPx();
 		var groupRect = rect.chopStartH(rect.x + groupW);
-		var groupShadeRect = 
+		var groupShadeRect =
 			(i == this.groups.length - 1) ? shadeRect :
 				shadeRect.chopStartH(rect.x + groupW);
 		group.render(env, groupRect, groupShadeRect, clip, fitting);
@@ -6831,7 +6831,7 @@ function(i) {
 };
 ResHorgroup.prototype.renderNotes =
 function(env) {
-	for (var i = 0; i < this.groups.length; i++) 
+	for (var i = 0; i < this.groups.length; i++)
 		this.groups[i].group.renderNotes(env);
 };
 
@@ -6856,7 +6856,7 @@ function(env, rect, shadeRect, clip, fitting) {
 		env.ctx.rect(clip.x, clip.y, clip.width, clip.height);
 		env.ctx.clip();
 	}
-	ResCanvas.printGlyph(env.ctx, x, y, this.testRect, this.charName, 
+	ResCanvas.printGlyph(env.ctx, x, y, this.testRect, this.charName,
 				size, xScale, this.font, color, this.rotate, mirror);
 	if (clip !== null)
 		env.ctx.restore();
@@ -6931,10 +6931,10 @@ function(env, rect, shadeRect, clip, fitting) {
 		env.ctx.rect(clip.x, clip.y, clip.width, clip.height);
 		env.ctx.clip();
 	}
-	ResCanvas.printGlyph(env.ctx, x, y, this.testRectOpen, 
+	ResCanvas.printGlyph(env.ctx, x, y, this.testRectOpen,
 				this.openChar(), size, 1, font, color, rot, mirror);
 	if (this.effectiveIsH()) {
-		ResCanvas.printGlyph(env.ctx, x+w-this.testRectClose.width, y, this.testRectClose, 
+		ResCanvas.printGlyph(env.ctx, x+w-this.testRectClose.width, y, this.testRectClose,
 				this.closeChar(), size, 1, font, color, rot, mirror);
 		var incr = Math.max(1, this.testRectSegment.width - overlap);
 		var segX;
@@ -6942,10 +6942,10 @@ function(env, rect, shadeRect, clip, fitting) {
 		for (segX = x + this.testRectOpen.width - overlap;
 				segX + this.testRectSegment.width < x+w-this.testRectClose.width+overlap;
 				segX += incr)
-			ResCanvas.printGlyph(env.ctx, segX, y, this.testRectSegment, 
+			ResCanvas.printGlyph(env.ctx, segX, y, this.testRectSegment,
 					this.charSegmentName, size, 1, font, color, segmentRot, mirror);
 	} else {
-		ResCanvas.printGlyph(env.ctx, x, y+h-this.testRectClose.height, this.testRectClose, 
+		ResCanvas.printGlyph(env.ctx, x, y+h-this.testRectClose.height, this.testRectClose,
 			this.closeChar(), size, 1, font, color, rot, mirror);
 		var incr = Math.max(1, this.testRectSegment.height - overlap);
 		var segX = x;
@@ -6953,25 +6953,25 @@ function(env, rect, shadeRect, clip, fitting) {
 		for (segY = y + this.testRectOpen.height - overlap;
 				segY + this.testRectSegment.height < y+h-this.testRectClose.height+overlap;
 				segY += incr)
-			ResCanvas.printGlyph(env.ctx, x, segY, this.testRectSegment, 
+			ResCanvas.printGlyph(env.ctx, x, segY, this.testRectSegment,
 					this.charSegmentName, size, 1, font, color, segmentRot, mirror);
 	}
 	if (clip !== null)
 		env.ctx.restore();
 	if (this.effectiveIsH()) {
-		var lastRect = new ResRectangle(segX, y-clipMargin, 
+		var lastRect = new ResRectangle(segX, y-clipMargin,
 				x+w-this.testRectClose.width+overlap-segX, h + 2*clipMargin);
 	} else {
 		var lastRect = new ResRectangle(x - clipMargin, segY,
 				w + 2*clipMargin, y+h-this.testRectClose.height+overlap-segY);
 	}
-	if (clip !== null) 
+	if (clip !== null)
 		lastRect = lastRect.intersect(clip);
 	env.ctx.save();
 	env.ctx.beginPath();
 	env.ctx.rect(lastRect.x, lastRect.y, lastRect.width, lastRect.height);
 	env.ctx.clip();
-	ResCanvas.printGlyph(env.ctx, segX, segY, this.testRectSegment, 
+	ResCanvas.printGlyph(env.ctx, segX, segY, this.testRectSegment,
 			this.charSegmentName, size, 1, font, color, segmentRot, mirror);
 	env.ctx.restore();
 	if (this.hiero !== null) {
@@ -6994,31 +6994,31 @@ function(env, rect, shadeRect, clip, fitting) {
 	if (!fitting) {
 		env.ensureRect(clip !== null ? clip : centRect);
 		if (hieroRect !== null)
-			ResShading.shadeBox(env, this, shadeRect, hieroRect); 
+			ResShading.shadeBox(env, this, shadeRect, hieroRect);
 		else
-			ResShading.shadeBasicgroup(env, this, shadeRect); 
+			ResShading.shadeBasicgroup(env, this, shadeRect);
 	}
 	this.noteRect = centRect;
 };
 ResBox.prototype.testPrintOpen =
 function() {
-	return this.testPrint(this.openChar(), this.openCloseRotate(), 
+	return this.testPrint(this.openChar(), this.openCloseRotate(),
 			this.effectiveMirror());
 };
 ResBox.prototype.testPrintClose =
 function() {
-	return this.testPrint(this.closeChar(), this.openCloseRotate(), 
+	return this.testPrint(this.closeChar(), this.openCloseRotate(),
 			this.effectiveMirror());
 };
 ResBox.prototype.testPrintSegment =
 function() {
-	var rect = this.testPrint(this.charSegmentName, this.segmentRotate(), 
+	var rect = this.testPrint(this.charSegmentName, this.segmentRotate(),
 				this.effectiveMirror());
 	var canvas = ResCanvas.make(rect.width, rect.height);
 	var ctx = canvas.getContext("2d");
 	var size = this.resContext.emSizePx * this.dynScale * this.scale;
 	ResCanvas.printGlyph(ctx, 0, 0, rect, this.charSegmentName,
-				size, 1, "HieroglyphicAux", "black", 
+				size, 1, "HieroglyphicAux", "black",
 				this.segmentRotate(), this.effectiveMirror());
 	if (this.effectiveIsH()) {
 		var intern = ResCanvas.internalHor(ctx, rect.width, rect.height);
@@ -7069,7 +7069,7 @@ function() {
 	var rectAfter = new ResRectangle(0, y, wAfter, hAfter);
 	this.hiero.renderFromTo(envAfter, rectAfter, 0, lastGroup);
 
-	return ResCanvas.fitHor(envBefore.ctx, envAfter.ctx, 
+	return ResCanvas.fitHor(envBefore.ctx, envAfter.ctx,
 				canvasBefore.width, canvasAfter.width, canvasBefore.height,
 				sep, canvasBefore.width);
 };
@@ -7106,7 +7106,7 @@ function() {
 	var rectBefore = new ResRectangle(0, y, wBefore, hBefore);
 	this.hiero.renderFromTo(envBefore, rectBefore, firstGroup, lastGroup);
 
-	return ResCanvas.fitHor(envBefore.ctx, envAfter.ctx, 
+	return ResCanvas.fitHor(envBefore.ctx, envAfter.ctx,
 				canvasBefore.width, canvasAfter.width, canvasBefore.height,
 				sep, canvasAfter.width);
 };
@@ -7142,7 +7142,7 @@ function() {
 	var rectAfter = new ResRectangle(x, 0, wAfter, hAfter);
 	this.hiero.renderFromTo(envAfter, rectAfter, 0, lastGroup);
 
-	return ResCanvas.fitVert(envBefore.ctx, envAfter.ctx, 
+	return ResCanvas.fitVert(envBefore.ctx, envAfter.ctx,
 				canvasBefore.width, canvasBefore.height, canvasAfter.height,
 				sep, canvasBefore.height);
 };
@@ -7179,7 +7179,7 @@ function() {
 	var rectBefore = new ResRectangle(x, 0, wBefore, hBefore);
 	this.hiero.renderFromTo(envBefore, rectBefore, firstGroup, lastGroup);
 
-	return ResCanvas.fitVert(envBefore.ctx, envAfter.ctx, 
+	return ResCanvas.fitVert(envBefore.ctx, envAfter.ctx,
 				canvasBefore.width, canvasBefore.height, canvasBefore.height,
 				sep, canvasAfter.height);
 };
@@ -7187,7 +7187,7 @@ ResBox.prototype.renderNotes =
 function(env) {
 	for (var i = 0; i < this.notes.length; i++)
 		this.notes[i].render(env, this.noteRect);
-	if (this.hiero !== null) 
+	if (this.hiero !== null)
 		this.hiero.renderNotes(env);
 };
 
@@ -7292,7 +7292,7 @@ function() {
 		this.place === "bs" ||
 		this.place === "be")
 		return this.insertFix(env1.ctx, canvas2, rect1, rect2, this.x, this.y, this.resContext.scaleInit);
-	else 
+	else
 		return this.insertFloat(env1.ctx, canvas2, rect1, rect2);
 };
 ResInsert.prototype.insertFix =
@@ -7302,8 +7302,8 @@ function(ctx1, canvas2, rect1, rect2, fixX, fixY, scale) {
 	var x = 0;
 	var y = 0;
 	var scaleMax = 1;
-	for (var step = this.resContext.scaleStep; 
-			step >= this.resContext.scaleStepMin; 
+	for (var step = this.resContext.scaleStep;
+			step >= this.resContext.scaleStepMin;
 			step *= this.resContext.scaleStepFactor) {
 		for (var newScale = scale*(1+step); newScale <= scaleMax; newScale *= 1+step) {
 			var w = Math.round(rect2.width * newScale);
@@ -7326,12 +7326,12 @@ function(ctx1, canvas2, rect1, rect2, fixX, fixY, scale) {
 			}
 			ctx.clearRect(0, 0, rect1.width, rect1.height);
 			ResCanvas.drawWithAura(ctx, canvas2, x, y, w, h, this.sepPx());
-			if (ResCanvas.disjoint(ctx1, ctx, rect1.width, rect1.height)) 
+			if (ResCanvas.disjoint(ctx1, ctx, rect1.width, rect1.height))
 				scale = newScale;
 			else {
 				scaleMax = newScale;
 				break;
-			} 
+			}
 		}
 	}
 	return {x: x, y: y, scale: scale};
@@ -7423,7 +7423,7 @@ function(env, rect, shadeRect, clip, fitting) {
 	rect = new ResRectangle(rect.x - beforePart, rect.y - abovePart, w, h);
 	this.group.render(env, rect, shadeRect, clip, fitting);
 	if (!fitting)
-		ResShading.shadeBasicgroup(env, this, shadeRect); 
+		ResShading.shadeBasicgroup(env, this, shadeRect);
 };
 ResModify.prototype.renderNotes =
 function(env) {
@@ -7449,23 +7449,23 @@ function(env, rect) {
 				fullWidth, Math.max(fullHeight, rect.height));
 		var rightRect = new ResRectangle(rect.x+rect.width-fullWidth/2, rect.y,
 				fullWidth, Math.max(fullHeight, rect.height));
-		if (env.isH) 
-			var p = this.findFreeRectHor(env, topRect, fullWidth) || 
-					this.findFreeRectHor(env, bottomRect, fullWidth) || 
-					this.findFreeRectVert(env, leftRect, fullHeight) || 
+		if (env.isH)
+			var p = this.findFreeRectHor(env, topRect, fullWidth) ||
+					this.findFreeRectHor(env, bottomRect, fullWidth) ||
+					this.findFreeRectVert(env, leftRect, fullHeight) ||
 					this.findFreeRectVert(env, rightRect, fullHeight);
 		else
-			var p = this.findFreeRectVert(env, leftRect, fullHeight) || 
-					this.findFreeRectVert(env, rightRect, fullHeight)  || 
-					this.findFreeRectHor(env, topRect, fullWidth) || 
+			var p = this.findFreeRectVert(env, leftRect, fullHeight) ||
+					this.findFreeRectVert(env, rightRect, fullHeight)  ||
+					this.findFreeRectHor(env, topRect, fullWidth) ||
 					this.findFreeRectHor(env, bottomRect, fullWidth);
 		if (p) {
-			ResCanvas.printGlyph(env.ctx, p.x+margin, p.y+margin, testRect, str, size, 1, 
+			ResCanvas.printGlyph(env.ctx, p.x+margin, p.y+margin, testRect, str, size, 1,
 				"HieroglyphicPlain", color, 0, mirror);
 			env.ensureRect(new ResRectangle(p.x+margin, p.y+margin, testRect.width, testRect.height));
 			break;
 		}
-		rect = new ResRectangle(rect.x - testRect.width/2, rect.y - testRect.height/2, 
+		rect = new ResRectangle(rect.x - testRect.width/2, rect.y - testRect.height/2,
 						rect.width + testRect.width, rect.height + testRect.height);
 	}
 };
@@ -7514,7 +7514,7 @@ function ResWeb() {
 	var canvass = document.getElementsByTagName("canvas");
 	for (var i = 0; i < canvass.length; i++) {
 		var canvas = canvass[i];
-		if (canvas.className.match(/\bres\b/)) 
+		if (canvas.className.match(/\bres\b/))
 			ResWeb.makeSometime(canvas);
 	}
 }
@@ -7640,7 +7640,7 @@ function(elem) {
 			var code = span.firstChild.nodeValue;
 			var key = ResContext.unMnemonic(code);
 			key = ResContext.hieroPoints[key];
-			if (key) 
+			if (key)
 				span.innerHTML = String.fromCharCode(key);
 		}
 	}

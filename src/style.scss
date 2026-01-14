@@ -45,15 +45,24 @@ article {
     h1 {
       margin: 0;
       text-align: justify;
-
-      border-bottom: 2px solid black;
     }
+
+    border-bottom: 2px solid black;
+  }
+
+  div.amduat {
+    margin: 0;
+    padding: 0.2em 0;
+    font-size: 6vmin;
+    overflow: hidden;
+    text-align: center;
+    line-height: 0.4em;
+
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
   }
 
   footer {
-    display: none;
-    visibility: hidden;
-
     font-size: 3.5vmin;
 
     table {
@@ -229,6 +238,11 @@ article {
       }
     }
   }
+}
+
+.hide {
+  display: none;
+  visibility: hidden;
 }
 
 //@media only screen and (min-width: vars.$screen-md-min) {
