@@ -4315,9 +4315,9 @@ class HieroJax {
 	}
 
 	processFragmentNow(elem) {
-		var style = window.getComputedStyle(elem, null);
-		var fontSize = Number(style.getPropertyValue('font-size').replace('px', ''));
-		var signColor = style.getPropertyValue('color');
+		const style = window.getComputedStyle(elem, null);
+		const fontSize = Number(style.getPropertyValue('font-size').replace('px', ''));
+		const signColor = style.getPropertyValue('color');
 		const txt = elem.innerText;
 		elem.innerHTML = '';
 		try {
@@ -4338,4 +4338,8 @@ class HieroJax {
 	}
 }
 
-window.hierojax = new HieroJax();
+const hierojax = new HieroJax();
+
+window.addEventListener("DOMContentLoaded", () => {
+  hierojax.processFragments();
+});
