@@ -1,6 +1,7 @@
 @use "vars" as vars;
 @use "fonts";
-@use "res";
+//@use "res";
+@use "hierojax";
 
 * {
   box-sizing: border-box !important;
@@ -45,6 +46,12 @@ article {
     h1 {
       margin: 0;
       text-align: justify;
+
+      .hierojax {
+        display: inline-block;
+        font-size: 0.7em;
+        vertical-align: baseline !important;
+      }
     }
   }
 
@@ -102,7 +109,7 @@ article {
     border-top: 2px solid black;
     border-bottom: 2px solid black;
 
-    .res {
+    .hierojax {
       margin: 0 7vmin;
     }
   }
@@ -200,7 +207,7 @@ article {
     }
 
     div.amduat {
-      font-size: 7.25vmin;
+      font-size: 5.4vmin;
     }
   }
 }
@@ -216,7 +223,11 @@ article {
       border-bottom: 1px solid black;
 
       h1 {
-        font-size: 7.5vmin;
+        font-size: 7.75vmin;
+
+        .hierojax {
+          font-size: 0.65em;
+        }
       }
     }
 
@@ -249,7 +260,7 @@ article {
     }
 
     div.amduat {
-      font-size: 6.25vmin;
+      font-size: 5vmin;
     }
   }
 }
@@ -261,88 +272,96 @@ article {
 
 //@media only screen and (min-width: vars.$screen-md-min) {
 //  article {
-//    width: vars.$article-sm-width;
-//    max-width: vars.$article-sm-width;
-//    padding: 3vmin vars.$article-sm-pad-w;
-//    font-size: 4vmin;
+//    //width: vars.$article-sm-width;
+//    //max-width: vars.$article-sm-width;
+//    //padding: 3vmin vars.$article-sm-pad-w;
+//    //font-size: 4vmin;
+//    //
+//    //header {
+//    //  border-bottom: 1px solid black;
+//    //
+//    //  h1 {
+//    //    font-size: 9vmin;
+//    //  }
+//    //}
 //
-//    header {
-//      border-bottom: 1px solid black;
+//    //blockquote {
+//    //  &::before, &::after {
+//    //    font-size: 15vmin;
+//    //    line-height: 5vmin;
+//    //  }
+//    //
+//    //  &::before {
+//    //    top: 2vmin;
+//    //  }
+//    //
+//    //  &::after {
+//    //    bottom: 8vmin;
+//    //    margin-bottom: -8vmin;
+//    //  }
+//    //
+//    //  p {
+//    //    display: block;
+//    //    margin: 0 7vmin;
+//    //    font-size: 6.15vmin;
+//    //  }
+//    //
+//    //  cite {
+//    //    margin-top: 1rem;
+//    //    padding-left: 6.5vmin;
+//    //  }
+//    //}
 //
-//      h1 {
-//        font-size: 9vmin;
-//      }
-//    }
-//
-//    blockquote {
-//      &::before, &::after {
-//        font-size: 15vmin;
-//        line-height: 5vmin;
-//      }
-//
-//      &::before {
-//        top: 2vmin;
-//      }
-//
-//      &::after {
-//        bottom: 8vmin;
-//        margin-bottom: -8vmin;
-//      }
-//
-//      p {
-//        display: block;
-//        margin: 0 7vmin;
-//        font-size: 6.15vmin;
-//      }
-//
-//      cite {
-//        margin-top: 1rem;
-//        padding-left: 6.5vmin;
-//      }
-//    }
+//    //div.amduat {
+//    //  font-size: 5.5vmin;
+//    //}
 //  }
 //}
 
-//@media only screen and (min-width: vars.$screen-lg-min) {
-//  article {
-//    width: vars.$article-sm-width;
-//    max-width: vars.$article-sm-width;
-//    padding: 3vmin vars.$article-sm-pad-w;
-//    font-size: 4vmin;
-//
-//    header {
-//      border-bottom: 1px solid black;
-//
-//      h1 {
-//        font-size: 9vmin;
-//      }
-//    }
-//
-//    blockquote {
-//      &::before, &::after {
-//        font-size: 15vmin;
-//        line-height: 5vmin;
-//      }
-//
-//      &::before {
-//        top: 2vmin;
-//      }
-//
-//      &::after {
-//        bottom: 8vmin;
-//        margin-bottom: -8vmin;
-//      }
-//
-//      p {
-//        display: block;
-//        margin: 0 7vmin;
-//        font-size: 6.15vmin;
-//      }
-//
-//      cite {
-//        margin-top: 1rem;
-//        padding-left: 6.5vmin;
-//      }
-//    }
-//  }
-//}
+@media only screen and (min-width: vars.$screen-lg-min) {
+  article {
+    //width: vars.$article-sm-width;
+    //max-width: vars.$article-sm-width;
+    //padding: 3vmin vars.$article-sm-pad-w;
+    //font-size: 4vmin;
+    //
+    //header {
+    //  border-bottom: 1px solid black;
+    //
+    //  h1 {
+    //    font-size: 9vmin;
+    //  }
+    //}
+    //
+    //blockquote {
+    //  &::before, &::after {
+    //    font-size: 15vmin;
+    //    line-height: 5vmin;
+    //  }
+    //
+    //  &::before {
+    //    top: 2vmin;
+    //  }
+    //
+    //  &::after {
+    //    bottom: 8vmin;
+    //    margin-bottom: -8vmin;
+    //  }
+    //
+    //  p {
+    //    display: block;
+    //    margin: 0 7vmin;
+    //    font-size: 6.15vmin;
+    //  }
+    //
+    //  cite {
+    //    margin-top: 1rem;
+    //    padding-left: 6.5vmin;
+    //  }
+    //}
+
+    div.amduat {
+      font-size: 4.5vmin;
+    }
+  }
+}
