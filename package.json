@@ -37,15 +37,15 @@
   },
   "homepage": "https://inkhk3.org",
   "devDependencies": {
-    "autoprefixer": "^10.4.2",
+    "autoprefixer": "^10.6.2",
     "browser-sync": "^3.0.4",
     "copyfiles": "^2.4.1",
     "cssnano": "^5.0.17",
     "npm-run-all": "^4.1.5",
     "onchange": "^7.1.0",
     "postcss-cli": "^9.1.0",
-    "sass": "^1.97.0",
-    "vite": "^7.3.0",
+    "sass": "^1.108.1",
+    "vite": "^7.3.7",
     "vite-plugin-clean": "^2.0.1"
   }
 }
