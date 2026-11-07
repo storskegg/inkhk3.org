@@ -28,6 +28,11 @@ Route53, certificates).
 The script needs node 24.x (it tries `nvm use` itself) and the `aws` CLI. It sets content types for fonts and the web
 manifest, long immutable caching for the hashed `index-*.js/css`, and a short cache for everything else.
 
+Order: it uploads without deleting (assets, fonts, then `index.html` last), invalidates CloudFront and waits for that,
+and only then deletes stale keys, keeping hashed `index-*.js/css` uploaded in the last 24 hours (the previous deploy's pair).
+`test/deploy-order.sh` runs `deploy.sh` and `--live` against a fake `aws` (`test/fake-aws.sh`) and checks that order;
+it needs node 24 and calls no AWS.
+
 ### One-time migration
 
 The S3 objects used to be Terraform resources. A `removed` block in `modules/S3/main.tf` (with `destroy = false`)
