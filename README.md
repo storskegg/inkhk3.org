@@ -16,9 +16,30 @@ I'm entertained that, given the utter simplicity of the website itself, the terr
   "The Mechanics of Ancient Egyptian Magical Practice," which itself cites Hornung, 1963. I find this statement quite 
   lovely. "May your words occur; may your magic shine."
 
+## Deploying
+
+Content is published by `deploy.sh`, not Terraform. Terraform manages only the infrastructure (bucket, CloudFront,
+Route53, certificates).
+
+    aws sso login        # if your session has expired
+    ./deploy.sh          # builds, then shows a dry run of the S3 sync; changes nothing
+    ./deploy.sh --live   # builds, syncs to S3, then invalidates the changed paths in CloudFront
+
+The script needs node 24.x (it tries `nvm use` itself) and the `aws` CLI. It sets content types for fonts and the web
+manifest, long immutable caching for the hashed `index-*.js/css`, and a short cache for everything else.
+
+### One-time migration
+
+The S3 objects used to be Terraform resources. A `removed` block in `modules/S3/main.tf` (with `destroy = false`)
+hands them over without deleting anything from the bucket. Once, before the first apply:
+
+1. `terraform plan`, and confirm it says **0 to destroy** (the objects should only be "forgotten").
+2. `terraform apply`.
+
+After that, use `./deploy.sh` for all content changes.
+
 ## TODO
 
-- Implement automatic Cloudfront invalidations for paths of changed files, on successful deploy.
 - Implement something esoteric.
 
 ## Credits
