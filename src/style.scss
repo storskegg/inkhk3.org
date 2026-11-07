@@ -1,24 +1,31 @@
-@use "vars" as vars;
+@use "vars";
 @use "fonts";
-//@use "res";
 @use "hierojax";
 
-* {
-  box-sizing: border-box !important;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  // The card never exceeds the viewport width; this is a safety net only.
+  overflow-x: hidden;
 }
 
 body {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-
-  padding-top: 50px;
   margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: clamp(0.75rem, 4vmin, 3rem) 0;
 
-  background: gray url("https://inkhk3.org/binding_dark2.png");
+  // Centre the card both ways. If a short screen needs more height than it has,
+  // the page grows and scrolls vertically (margin:auto keeps it from clipping).
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: gray url("/binding_dark2.png");
 }
 
 .egypt {
@@ -26,342 +33,142 @@ body {
 }
 
 article {
-  position: absolute;
-  width: vars.$art-wid;
-  max-width: vars.$art-wid;
-  max-height: 90vmin;
-  top: 50%;
-  left: 50%;
-  transform: translate3d(-50%, -50%, 0);
-  padding: 1vmin vars.$art-pad-w;
+  // Everything inside is sized in container units, so the card's proportions
+  // stay constant from phone to desktop.
+  container-type: inline-size;
+  flex: 0 1 auto;
+  width: vars.$card-width;
+  padding: clamp(0.75rem, 3.5vw, 2rem) clamp(1rem, 5.9vw, 3.375rem);
+
+  background: url("/paper_fff.jpg");
+  color: #333;
+  font-size: 1rem;
+}
+
+h1 {
+  margin: 0 0 0.12em;
+  padding-bottom: 0.05em;
+  font-size: clamp(2.3rem, 10.4cqw, 5.25rem);
+  line-height: 1.2;
+  white-space: nowrap;
+
+  // Hieroglyphs, "Ink Ḥkꜣ", "{.org}": one centred row that wraps as a unit.
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  column-gap: 0.3em;
+
+  .hierojax {
+    font-size: 0.7em;
+  }
+
+  // "Ink Ḥkꜣ {.org}" stays together; the hieroglyphs wrap above it when tight.
+  .title-text {
+    white-space: nowrap;
+  }
+}
+
+// Space for the asynchronously rendered SVG is reserved in em of its own
+// font-size, so nothing moves when hierojax swaps text for the drawing.
+.hierojax {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: baseline;
+
+  // Exact block size of the rendered SVG (measured), so the box is the same
+  // before and after rendering. Until then the raw text is clipped, not shown.
+  flex: none;
   overflow: hidden;
+  white-space: nowrap;
+  line-height: 1;
+  width: var(--hj-w);
+  height: var(--hj-h);
 
-  background: url("https://inkhk3.org/paper_fff.jpg");
+  svg {
+    display: block;
+    flex: none;
+  }
+}
 
-  &, &::after, &::before {
-    color: #333;
+// Measured at 1920x1080: 191x63px at 58.8px = 3.25em x 1.07em.
+h1 .hierojax {
+  --hj-w: 3.25em;
+  --hj-h: 1.08em;
+}
+
+header {
+  border-bottom: 2px solid #000;
+}
+
+blockquote {
+  margin: 0;
+  padding-top: clamp(0.5rem, 4.4cqw, 2.5rem);
+  font-family: serif;
+
+  // Opening mark | quote | closing mark, with the citation under the quote.
+  display: grid;
+  grid-template-columns: clamp(1.5rem, 9.3cqw, 4.7rem) 1fr clamp(1.5rem, 9.3cqw, 4.7rem);
+  grid-template-areas:
+    "open quote close"
+    ".    cite  cite";
+  align-items: start;
+
+  &::before,
+  &::after {
+    font-size: clamp(2.6rem, 14.7cqw, 7.4rem);
+    line-height: 0.62;
   }
 
-  header {
-    h1 {
-      margin: 0;
-      text-align: justify;
-
-      .hierojax {
-        display: inline-block;
-        font-size: 0.7em;
-        vertical-align: baseline !important;
-      }
-    }
+  &::before {
+    content: "“";
+    grid-area: open;
+    justify-self: start;
   }
 
-  blockquote {
+  &::after {
+    content: "”";
+    grid-area: close;
+    justify-self: end;
+    align-self: end;
+  }
+
+  p {
+    grid-area: quote;
     margin: 0;
-    position: relative;
-    padding-top: 4vmin;
-    font-family: serif;
+    font-size: clamp(1.55rem, 8cqw, 4.06rem);
+    font-weight: 900;
+  }
 
-    border-top: 2px solid black;
-
-    &::after,
-    &::before {
-      display: block;
-      position: relative;
-      margin: 0;
-      padding: 0;
-    }
-
-    &::after {
-      content: "”";
-      float: right;
-    }
+  cite {
+    grid-area: cite;
+    margin-top: 0.5em;
+    line-height: 1.1;
+    font-size: clamp(0.95rem, 4cqw, 2.03rem);
 
     &::before {
-      content: "“";
-      float: left;
-    }
-
-    p {
-      font-weight: 900;
-      font-size: 3.5vmin;
-      margin: 0;
-    }
-
-    cite {
-      display: block;
-      text-align: justify;
-      margin-top: 1rem;
-      font-size: 0.7em;
-
-      &::before {
-        content: "—";
-        margin-right: 0.5rem;
-      }
-    }
-  }
-
-  div.amduat {
-    padding: 0.2em 0;
-    font-size: 6vmin;
-    overflow: hidden;
-    line-height: 0.4em;
-
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
-
-    .hierojax {
-      margin: 0 7vmin;
-    }
-  }
-
-  footer {
-    font-size: 3.5vmin;
-
-    table {
-      border-spacing: 0;
-      border-collapse: collapse;
-    }
-
-    td, th {
-      text-align: center;
-      border: 1px solid black;
-      min-width: 1.25rem;
-    }
-
-    tr {
-      &:first-of-type {
-        th {
-          border-top: 2px solid black;
-        }
-      }
-
-      &:last-of-type {
-        td {
-          border-bottom: 2px solid black;
-        }
-      }
-
-      td {
-        border-bottom: 2px solid black;
-      }
-
-      td, th {
-        &:first-of-type {
-          border-left: 2px solid black;
-        }
-
-        &:last-of-type {
-          border-right: 2px solid black;
-        }
-
-        &:nth-of-type(even) {
-          background-color: cadetblue;
-        }
-      }
+      content: "—";
+      margin-right: 0.5rem;
     }
   }
 }
 
-@media only screen and (max-width: vars.$screen-xs-max) {
-  article {
-    width: vars.$article-sm-width;
-    max-width: vars.$article-sm-width;
-    padding: 3vmin vars.$article-sm-pad-w;
-    font-size: 4vmin;
+.amduat {
+  margin-top: 0.4em;
+  padding: 0.2em 0;
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
 
-    header {
-      border-bottom: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: min(7.2cqw, 3.04rem);
 
-      h1 {
-        font-size: 9vmin;
-      }
-    }
-
-    blockquote {
-      &::before, &::after {
-        font-size: 15vmin;
-        line-height: 5vmin;
-      }
-
-      &::before {
-        top: 2vmin;
-      }
-
-      &::after {
-        bottom: 8vmin;
-        margin-bottom: -8vmin;
-      }
-
-      p {
-        display: block;
-        margin: 0 7vmin;
-        font-size: 6.15vmin;
-      }
-
-      cite {
-        margin-top: 1rem;
-        padding-left: 6.5vmin;
-
-        font-size: 0.8em;
-      }
-    }
-
-    div.amduat {
-      font-size: 5.4vmin;
-    }
-  }
-}
-
-@media only screen and (min-width: vars.$screen-sm-min) {
-  article {
-    width: vars.$article-sm-width;
-    max-width: vars.$article-sm-width;
-    padding: 3vmin vars.$article-sm-pad-w;
-    font-size: 4vmin;
-
-    header {
-      border-bottom: 1px solid black;
-
-      h1 {
-        font-size: 7.75vmin;
-
-        .hierojax {
-          font-size: 0.65em;
-        }
-      }
-    }
-
-    blockquote {
-      &::before, &::after {
-        font-size: 11vmin;
-        line-height: 5vmin;
-      }
-
-      &::before {
-        top: 1.5vmin;
-      }
-
-      &::after {
-        bottom: 7.5vmin;
-        margin-bottom: -7.5vmin;
-      }
-
-      p {
-        display: block;
-        margin: 0 7vmin;
-        font-size: 6vmin;
-      }
-
-      cite {
-        margin-top: 1rem;
-        padding-left: 6.5vmin;
-        font-size: 0.75em;
-      }
-    }
-
-    div.amduat {
-      font-size: 5vmin;
-    }
-  }
-}
-
-.hide {
-  display: none;
-  visibility: hidden;
-}
-
-//@media only screen and (min-width: vars.$screen-md-min) {
-//  article {
-//    //width: vars.$article-sm-width;
-//    //max-width: vars.$article-sm-width;
-//    //padding: 3vmin vars.$article-sm-pad-w;
-//    //font-size: 4vmin;
-//    //
-//    //header {
-//    //  border-bottom: 1px solid black;
-//    //
-//    //  h1 {
-//    //    font-size: 9vmin;
-//    //  }
-//    //}
-//
-//    //blockquote {
-//    //  &::before, &::after {
-//    //    font-size: 15vmin;
-//    //    line-height: 5vmin;
-//    //  }
-//    //
-//    //  &::before {
-//    //    top: 2vmin;
-//    //  }
-//    //
-//    //  &::after {
-//    //    bottom: 8vmin;
-//    //    margin-bottom: -8vmin;
-//    //  }
-//    //
-//    //  p {
-//    //    display: block;
-//    //    margin: 0 7vmin;
-//    //    font-size: 6.15vmin;
-//    //  }
-//    //
-//    //  cite {
-//    //    margin-top: 1rem;
-//    //    padding-left: 6.5vmin;
-//    //  }
-//    //}
-//
-//    //div.amduat {
-//    //  font-size: 5.5vmin;
-//    //}
-//  }
-//}
-
-@media only screen and (min-width: vars.$screen-lg-min) {
-  article {
-    //width: vars.$article-sm-width;
-    //max-width: vars.$article-sm-width;
-    //padding: 3vmin vars.$article-sm-pad-w;
-    //font-size: 4vmin;
-    //
-    //header {
-    //  border-bottom: 1px solid black;
-    //
-    //  h1 {
-    //    font-size: 9vmin;
-    //  }
-    //}
-    //
-    //blockquote {
-    //  &::before, &::after {
-    //    font-size: 15vmin;
-    //    line-height: 5vmin;
-    //  }
-    //
-    //  &::before {
-    //    top: 2vmin;
-    //  }
-    //
-    //  &::after {
-    //    bottom: 8vmin;
-    //    margin-bottom: -8vmin;
-    //  }
-    //
-    //  p {
-    //    display: block;
-    //    margin: 0 7vmin;
-    //    font-size: 6.15vmin;
-    //  }
-    //
-    //  cite {
-    //    margin-top: 1rem;
-    //    padding-left: 6.5vmin;
-    //  }
-    //}
-
-    div.amduat {
-      font-size: 4.5vmin;
-    }
+  // Measured at 1920x1080: 668x53px at 48.64px = 13.74em x 1.09em.
+  .hierojax {
+    --hj-w: 13.74em;
+    --hj-h: 1.09em;
+    max-width: 100%;
   }
 }
