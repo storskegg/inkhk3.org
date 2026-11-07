@@ -40,7 +40,7 @@ echo "using node $(node -v)"
 # --- aws -------------------------------------------------------------------
 command -v aws >/dev/null 2>&1 || die "aws CLI not found; install it first."
 if ! aws sts get-caller-identity >/dev/null 2>&1; then
-  die "not authenticated to AWS. Run 'aws sso login' and retry."
+  die "not authenticated to AWS. Run 'aws login' and retry."
 fi
 
 # --- build -----------------------------------------------------------------

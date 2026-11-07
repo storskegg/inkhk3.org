@@ -21,7 +21,7 @@ I'm entertained that, given the utter simplicity of the website itself, the terr
 Content is published by `deploy.sh`, not Terraform. Terraform manages only the infrastructure (bucket, CloudFront,
 Route53, certificates).
 
-    aws sso login        # if your session has expired
+    aws login        # if your session has expired
     ./deploy.sh          # builds, then shows a dry run of the S3 sync; changes nothing
     ./deploy.sh --live   # builds, syncs to S3, then invalidates the changed paths in CloudFront
 
