@@ -146,7 +146,7 @@ delete_stale() {
     return 0
   fi
   echo "== deleting ${#keys[@]} stale object(s) =="
-  for k in "${keys[@]}"; do aws s3 rm "s3://$BUCKET/$k" --no-progress; done
+  for k in "${keys[@]}"; do aws s3 rm "s3://$BUCKET/$k"; done
 }
 
 if [[ $LIVE -eq 0 ]]; then
