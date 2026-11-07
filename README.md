@@ -49,5 +49,7 @@ respective owners. Anything listed below that is incorporated into this repo may
 form to suit the needs of this project.
 
 - Mark-Jan Nederhof's excellent [ResJS](https://github.com/nederhof/resjs) library to render hieroglyphs beautifully.
+- `src/hierojax.js` (the hierojax library) is modified locally: rendered SVGs get a `viewBox` and em-based width/height
+  so they scale with the font-size.
 - Mark-Jan Nederhof's excellent fonts for hieroglyphs, transliteration, etc. All fonts found in Nederhof's ResJS repo
   have been incorporated in their original form into this repo.

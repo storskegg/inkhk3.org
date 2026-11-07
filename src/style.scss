@@ -8,16 +8,17 @@
   box-sizing: border-box;
 }
 
-html {
-  // The card never exceeds the viewport width; this is a safety net only.
-  overflow-x: hidden;
+:root {
+  --ink: #333;
+  --rule: 2px solid #000;
+  --mark-col: max(1.5rem, 9.3cqw);
 }
 
 body {
   margin: 0;
   min-height: 100vh;
   min-height: 100dvh;
-  padding: clamp(0.75rem, 4vmin, 3rem) 0;
+  padding: max(0.5rem, 3vmin) 0;
 
   // Centre the card both ways. If a short screen needs more height than it has,
   // the page grows and scrolls vertically (margin:auto keeps it from clipping).
@@ -38,19 +39,18 @@ article {
   container-type: inline-size;
   flex: 0 1 auto;
   width: vars.$card-width;
-  padding: clamp(0.75rem, 3.5vw, 2rem) clamp(1rem, 5.9vw, 3.375rem);
+  // The card is ~85vmin wide, so vmin padding keeps its proportions.
+  padding: max(0.75rem, 3vmin) max(1rem, 5vmin);
 
   background: url("/paper_fff.jpg");
-  color: #333;
+  color: var(--ink);
   font-size: 1rem;
 }
 
 h1 {
-  margin: 0 0 0.12em;
-  padding-bottom: 0.05em;
-  font-size: clamp(2.3rem, 10.4cqw, 5.25rem);
-  line-height: 1.2;
-  white-space: nowrap;
+  margin: 0 0 0.04em;
+  font-size: max(1.75rem, 10.4cqw);
+  line-height: 1.1;
 
   // Hieroglyphs, "Ink Ḥkꜣ", "{.org}": one centred row that wraps as a unit.
   display: flex;
@@ -64,8 +64,17 @@ h1 {
   }
 
   // "Ink Ḥkꜣ {.org}" stays together; the hieroglyphs wrap above it when tight.
+  // At very narrow widths the floor above is low enough for it to fit, and if it
+  // still can't it wraps rather than overflowing.
   .title-text {
     white-space: nowrap;
+  }
+
+  @container (max-width: 15rem) {
+    .title-text {
+      white-space: normal;
+      text-align: center;
+    }
   }
 }
 
@@ -77,10 +86,11 @@ h1 {
   align-items: center;
   vertical-align: baseline;
 
-  // Exact block size of the rendered SVG (measured), so the box is the same
-  // before and after rendering. Until then the raw text is clipped, not shown.
+  // --hj-w / --hj-h are the rendered SVG's size in em of the element's own
+  // font-size, so the box is the same before and after rendering. To remeasure:
+  // svg.getBoundingClientRect() / getComputedStyle(span).fontSize. Not clipped,
+  // so a larger render (fallback font, user scaling) is shown, not cut.
   flex: none;
-  overflow: hidden;
   white-space: nowrap;
   line-height: 1;
   width: var(--hj-w);
@@ -92,24 +102,31 @@ h1 {
   }
 }
 
-// Measured at 1920x1080: 191x63px at 58.8px = 3.25em x 1.07em.
+// Until hierojax has drawn the SVG, hide the raw glyph text. This must not
+// touch `color`: hierojax reads the computed colour to fill the SVG, whereas
+// -webkit-text-fill-color leaves it alone.
+.hierojax:not(:has(svg)) {
+  -webkit-text-fill-color: transparent;
+  overflow: clip; // the raw text is much wider than the box; only until drawn
+}
+
 h1 .hierojax {
   --hj-w: 3.25em;
   --hj-h: 1.08em;
 }
 
 header {
-  border-bottom: 2px solid #000;
+  border-bottom: var(--rule);
 }
 
 blockquote {
   margin: 0;
-  padding-top: clamp(0.5rem, 4.4cqw, 2.5rem);
+  padding-top: max(0.5rem, 4.4cqw);
   font-family: serif;
 
   // Opening mark | quote | closing mark, with the citation under the quote.
   display: grid;
-  grid-template-columns: clamp(1.5rem, 9.3cqw, 4.7rem) 1fr clamp(1.5rem, 9.3cqw, 4.7rem);
+  grid-template-columns: var(--mark-col) 1fr var(--mark-col);
   grid-template-areas:
     "open quote close"
     ".    cite  cite";
@@ -117,7 +134,7 @@ blockquote {
 
   &::before,
   &::after {
-    font-size: clamp(2.6rem, 14.7cqw, 7.4rem);
+    font-size: max(2.6rem, 14.7cqw);
     line-height: 0.62;
   }
 
@@ -137,15 +154,16 @@ blockquote {
   p {
     grid-area: quote;
     margin: 0;
-    font-size: clamp(1.55rem, 8cqw, 4.06rem);
+    font-size: max(1.55rem, 8cqw);
+    line-height: 1.03;
     font-weight: 900;
   }
 
   cite {
     grid-area: cite;
-    margin-top: 0.5em;
+    margin-top: 0.3em;
     line-height: 1.1;
-    font-size: clamp(0.95rem, 4cqw, 2.03rem);
+    font-size: max(0.95rem, 4cqw);
 
     &::before {
       content: "—";
@@ -155,17 +173,22 @@ blockquote {
 }
 
 .amduat {
-  margin-top: 0.4em;
-  padding: 0.2em 0;
-  border-top: 2px solid #000;
-  border-bottom: 2px solid #000;
+  margin-top: 0.3em;
+  padding: 0.15em 0;
+  border-top: var(--rule);
+  border-bottom: var(--rule);
 
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: min(7.2cqw, 3.04rem);
+  // 6cqw leaves the reference's margins either side; narrower cards use the
+  // full width, since this line can't wrap.
+  font-size: 6cqw;
 
-  // Measured at 1920x1080: 668x53px at 48.64px = 13.74em x 1.09em.
+  @container (max-width: 42rem) {
+    font-size: 7.2cqw;
+  }
+
   .hierojax {
     --hj-w: 13.74em;
     --hj-h: 1.09em;

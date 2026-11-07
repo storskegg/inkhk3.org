@@ -1,3 +1,4 @@
-// Card geometry. 920px matches the reference look at 1920x1080.
-$card-max-width: 920px;
-$card-width: min(92vw, $card-max-width);
+// The card is sized like the original: 85% of the shorter viewport side (about
+// 918px at 1920x1080, matching the reference), never wider than the viewport.
+// Short landscape screens therefore get a narrower card that fits their height.
+$card-width: min(92vw, max(85vmin, 20rem));

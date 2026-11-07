@@ -1678,8 +1678,10 @@ class PrintedSVG extends PrintedAny {
 		// Local change: let the SVG scale with the container's font-size after
 		// it has been rendered (e.g. on resize or rotation).
 		this.svg.setAttribute('viewBox', `0 0 ${this.width()} ${this.height()}`);
-		this.svg.style.width = `${this.width() / this.fontSize}em`;
-		this.svg.style.height = `${this.height() / this.fontSize}em`;
+		if (this.fontSize > 0) {
+			this.svg.style.width = `${this.width() / this.fontSize}em`;
+			this.svg.style.height = `${this.height() / this.fontSize}em`;
+		}
 		if (this.options.border && !this.options.separated)
 			this.svg.classList.add('hierojax-border');
 		if (options.standalone) {
