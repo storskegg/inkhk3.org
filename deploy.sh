@@ -44,7 +44,10 @@ if ! aws sts get-caller-identity >/dev/null 2>&1; then
 fi
 
 # --- build -----------------------------------------------------------------
-[[ -d node_modules ]] || npm ci
+if [[ ! -d node_modules || ! -f node_modules/.package-lock.json \
+      || package-lock.json -nt node_modules/.package-lock.json ]]; then
+  npm ci
+fi
 npm run build
 [[ -f dist/index.html ]] || die "dist/index.html missing after build"
 
@@ -59,7 +62,7 @@ MODE_ARGS=(--dryrun)
 if [[ $LIVE -eq 1 ]]; then MODE_ARGS=(); fi
 
 sync_pass() {
-  aws s3 sync dist/ "s3://$BUCKET" --delete ${MODE_ARGS[@]+"${MODE_ARGS[@]}"} "$@" | tee -a "$LOG"
+  aws s3 sync dist/ "s3://$BUCKET" --delete --no-progress ${MODE_ARGS[@]+"${MODE_ARGS[@]}"} "$@" | tee -a "$LOG"
 }
 
 echo
@@ -81,7 +84,7 @@ sync_pass --exclude '*' --include '*.webmanifest' \
 # 4. TrueType fonts (lowercase .ttf and uppercase .TTF)
 sync_pass --exclude '*' --include '*.ttf' --include '*.TTF' \
   --content-type font/ttf --cache-control "$SHORT_CACHE"
-# 5. everything else (index.html, style.css, images, ...), short cache
+# 5. everything else (index.html, images, ...), short cache
 sync_pass \
   --exclude 'index-*.js' --exclude 'index-*.css' --exclude '*.woff2' \
   --exclude '*.webmanifest' --exclude '*.ttf' --exclude '*.TTF' \
@@ -111,16 +114,25 @@ fi
 
 # Changed keys come from the sync output:
 #   "upload: dist/KEY to s3://BUCKET/KEY" and "delete: s3://BUCKET/KEY".
+# Progress lines end in \r, not \n, and can prefix an upload: line; turn every
+# \r into a newline and drop everything before "upload:"/"delete:" so none hide.
+changed_lines() {
+  tr '\r' '\n' < "$1" | sed -n -E 's#^.*(upload|delete): #\1: #p'
+}
+extract_paths() {
+  local lines
+  lines="$(changed_lines "$1")"
+  {
+    printf '%s\n' "$lines" | sed -n -E "s#^upload: dist/(.*) to s3://$BUCKET/.*#/\1#p; s#^delete: s3://$BUCKET/(.*)#/\1#p"
+    # index.html is also served at the root
+    if printf '%s\n' "$lines" | grep -q -E "index\.html"; then echo "/"; fi
+  } | sort -u
+}
+
 PATHS=()
 while IFS= read -r p; do
   if [[ -n "$p" ]]; then PATHS+=("$p"); fi
-done < <(
-  {
-    sed -n -E "s#^upload: dist/(.*) to s3://$BUCKET/.*#/\\1#p; s#^delete: s3://$BUCKET/(.*)#/\\1#p" "$LOG"
-    # index.html is also served at the root
-    if grep -q -E "^(upload|delete): .*index\\.html" "$LOG"; then echo "/"; fi
-  } | sort -u
-)
+done < <(extract_paths "$LOG")
 
 if [[ ${#PATHS[@]} -eq 0 ]]; then
   echo "nothing changed; no invalidation needed."
