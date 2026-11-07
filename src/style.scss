@@ -52,7 +52,8 @@ h1 {
   font-size: max(1.75rem, 10.4cqw);
   line-height: 1.1;
 
-  // Hieroglyphs, "Ink Ḥkꜣ", "{.org}": one centred row that wraps as a unit.
+  // Hieroglyphs, "Ink Ḥkꜣ", "{.org}": one row that wraps as a unit; centred on
+  // phones, left-aligned on wider cards (see below).
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -68,6 +69,11 @@ h1 {
   // still can't it wraps rather than overflowing.
   .title-text {
     white-space: nowrap;
+  }
+
+  // Wider than a phone: left-aligned, as in the user's reference.
+  @container (min-width: 30rem) {
+    justify-content: flex-start;
   }
 
   @container (max-width: 15rem) {
