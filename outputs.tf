@@ -4,7 +4,7 @@ output "route53_nameservers" {
   value       = module.route53.nameservers
 }
 
-output "s3_filez" {
-  description = "S3 Bucket Filez"
-  value = module.s3.filez
+output "cloudfront_distribution_id" {
+  description = "The ID of the CloudFront distribution (used by deploy.sh)"
+  value       = module.cloudfront.distribution_id
 }

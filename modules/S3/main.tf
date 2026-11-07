@@ -22,28 +22,14 @@ resource "aws_s3_bucket_public_access_block" "block" {
 }
 
 
-resource "aws_s3_object" "object" {
-  for_each = fileset(local.path_to_files, "**/*")
-  bucket = aws_s3_bucket.s3_bucket.id
-  key    = each.value
-  source = "${local.path_to_files}/${each.value}"
-  etag = filemd5("${local.path_to_files}/${each.value}")
-  content_type = lookup({
-    "html"        = "text/html",
-    "css"         = "text/css",
-    "js"          = "application/javascript",
-    "json"        = "application/json",
-    "webmanifest" = "application/json"
-    "png"         = "image/png",
-    "jpg"         = "image/jpeg",
-    "jpeg"        = "image/jpeg",
-    "gif"         = "image/gif",
-    "svg"         = "image/svg+xml",
-    "ico"         = "image/x-icon",
-    "txt"         = "text/plain",
-    "ttf"         = "font/ttf",
-    "TTF"         = "font/ttf"
-  }, split(".", each.value)[length(split(".", each.value)) - 1], "application/octet-stream")
+# Site content is now uploaded by deploy.sh, not Terraform. This hands the existing
+# objects over: they are dropped from state but NOT deleted from the bucket.
+removed {
+  from = aws_s3_object.object
+
+  lifecycle {
+    destroy = false
+  }
 }
 
 

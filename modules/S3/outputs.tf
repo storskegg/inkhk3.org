@@ -17,8 +17,3 @@ output "bucket_domain_name" {
   description = "The S3 bucket domain name"
   value = aws_s3_bucket.s3_bucket.bucket_domain_name
 }
-
-output "filez" {
-  description = "S3 Bucket Filez"
-  value = fileset(local.path_to_files, "**/*")
-}
