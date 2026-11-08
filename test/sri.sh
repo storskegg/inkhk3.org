@@ -91,4 +91,17 @@ fresh "$D"; mkdir "$D/sub"; sed 's#/index-#../index-#g' "$D/index.html" > "$D/su
 node "$SRI" "$D" > /dev/null 2>&1; rc=$?
 check "every html in dist/ is handled (also in a subfolder, relative URLs)" '[[ $rc -eq 0 && $(grep -c "integrity=" "$D/sub/other.html") -eq 2 ]] && node "$SRI" --check "$D" > /dev/null 2>&1'
 check "both html files point at the one renamed css" '[[ $(grep -l "$(cd "$D" && ls index-*.css)" "$D/index.html" "$D/sub/other.html" | wc -l) -eq 2 ]]'
+
+# the script tag at the end of <body> (as the built site has it)
+fresh "$D"
+python3 - "$D/index.html" <<'PY'
+import sys; p=sys.argv[1]; s=open(p).read()
+t='  <script type="module" crossorigin src="/index-AAAA1111.js"></script>\n'
+open(p,'w').write(s.replace(t,'',1).replace('</body>','\n\t'+t.strip()+'\n</body>'))
+PY
+node "$SRI" "$D" > /dev/null 2>&1; rc=$?
+check "a script at the end of <body> gets its integrity, in place" '[[ $rc -eq 0 ]] && grep -q "^	<script type=\"module\" crossorigin src=\"/index-AAAA1111.js\" integrity=\"sha384-$(b64 "$D/index-AAAA1111.js")\"></script>$" "$D/index.html" && node "$SRI" --check "$D" > /dev/null 2>&1'
+echo '//evil' >> "$D/index-AAAA1111.js"
+node "$SRI" --check "$D" > "$TMP/c.out" 2>&1; rc=$?
+check "--check fails when the script in <body> was tampered with" '[[ $rc -ne 0 ]] && grep -q "integrity does not match" "$TMP/c.out"'
 exit $fail

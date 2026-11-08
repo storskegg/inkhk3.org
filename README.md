@@ -55,6 +55,8 @@ so compression doesn't affect them.
 
 ### Subresource Integrity
 
+The built entry `<script type="module">` is the last element in `<body>`: Vite injects it into `<head>` whatever the source says, so a small plugin in `vite.config.ts` (`entry-script-to-body-end`) moves it, and fails the build if it finds not exactly one `<script src>`. The stylesheet stays in `<head>`.
+
 `npm run build` ends with `bin/sri.mjs` (in `postbuild`, after postcss/cssnano, so it hashes the final bytes). In every
 `dist/*.html` it adds `integrity="sha384-..."` to each local `<script src>` and stylesheet link (and any
 `modulepreload`, or `preload` of a script or style), and keeps `crossorigin`. Everything else in the HTML stays as it
