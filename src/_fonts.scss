@@ -5,28 +5,28 @@
   font-family: 'Umschrift';
   font-weight: normal;
   font-style: normal;
-  src: url("/UMSCH_S.TTF") format('truetype');
+  src: url("/UMSCH_S.woff2") format('woff2');
 }
 
 @font-face {
   font-family: 'Umschrift';
   font-weight: bold;
   font-style: normal;
-  src: url("/UMSCH_SB.TTF") format('truetype');
+  src: url("/UMSCH_SB.woff2") format('woff2');
 }
 
 @font-face {
   font-family: 'Umschrift';
   font-weight: normal;
   font-style: italic;
-  src: url("/UMSCH_I.TTF") format('truetype');
+  src: url("/UMSCH_I.woff2") format('woff2');
 }
 
 @font-face {
   font-family: 'Umschrift';
   font-weight: bold;
   font-style: italic;
-  src: url("/UMSCH_IB.TTF") format('truetype');
+  src: url("/UMSCH_IB.woff2") format('woff2');
 }
 
 // 'Hieroglyphic' (/NewGardiner.woff2) is registered by hierojax.js itself (FontFace in
