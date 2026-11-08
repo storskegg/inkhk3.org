@@ -53,8 +53,30 @@ Please find, below, a list of open source projects that I've used in this projec
 respective owners. Anything listed below that is incorporated into this repo may have been modified from its original
 form to suit the needs of this project.
 
-- Mark-Jan Nederhof's excellent [ResJS](https://github.com/nederhof/resjs) library to render hieroglyphs beautifully.
-- `src/hierojax.js` (the hierojax library) is modified locally: rendered SVGs get a `viewBox` and em-based width/height
-  so they scale with the font-size.
-- Mark-Jan Nederhof's excellent fonts for hieroglyphs, transliteration, etc. All fonts found in Nederhof's ResJS repo
-  have been incorporated in their original form into this repo.
+- Mark-Jan Nederhof's [hierojax](https://github.com/nederhof/hierojax) renders the hieroglyphs; see below.
+- Mark-Jan Nederhof's [ResJS](https://github.com/nederhof/resjs) repository: `CaslonRoman.ttf`, `DejaVuSans-Bold.ttf`
+  and `HieroglyphicAux.ttf` in `public/` are byte-identical (same git blob hashes) to the files in that repo, in their
+  original form. ResJS itself no longer renders anything on this site.
+- `UMSCH_S.TTF`, `UMSCH_SB.TTF`, `UMSCH_I.TTF` and `UMSCH_IB.TTF` (the Umschrift transliteration fonts) are not in
+  ResJS or hierojax; their original source has not been confirmed.
+
+### hierojax
+
+`src/hierojax.js` is [hierojax](https://github.com/nederhof/hierojax/tree/da318801e00b10b4b5c5ec8d9cc6f8fddcc9eb5a)
+(`docs/hierojax.js` at commit da31880) by Mark-Jan Nederhof, licensed GPL-3.0. `src/_hierojax.scss` is its
+`docs/hierojax.css` at the same commit, with the `@font-face` rule removed (fonts are declared in `src/_fonts.scss`).
+
+Local modifications to `src/hierojax.js`; the complete diff is `vendor/hierojax.local.patch` (the file header says how to
+apply and regenerate it):
+
+- (a) `PrintedSVG` constructor, right after the `width`/`height` attributes are set: adds a `viewBox` of
+  `0 0 width height` and, if `fontSize > 0`, sets the SVG's style width and height in `em` (`size / fontSize`).
+  Why: the rendered SVG then scales with the container's font-size after rendering (resize, rotation).
+- (b) End of the file: adds a `DOMContentLoaded` listener that calls `hierojax.processFragments()`. Why: upstream leaves
+  that call to the page; here it starts automatically.
+- (c) Font file name and format, so the font loads once: the `FontFace('Hieroglyphic', ...)` URL in
+  `startLoadingFonts()` is `/NewGardiner.woff2` (was `NewGardiner.otf`), `PrintedSVG.EXTERNAL_FONT` is
+  `'/NewGardiner.woff2'` (was `'NewGardiner.otf'`), and `PrintedSVG.internalCSS()` says `format('woff2')` (was
+  `format('opentype')`). The absolute path is deliberate.
+- (d) `public/NewGardiner.woff2` is upstream's `docs/NewGardiner.otf` converted to WOFF2 with fontTools
+  (`fonttools ttLib.woff2 compress`). No other changes to the font (no subsetting).
