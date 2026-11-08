@@ -72,7 +72,7 @@ main { flex: 1; min-width: 0; }
 .card blockquote::before { content: "\201C"; grid-area: open; justify-self: start; }
 .card blockquote::after { content: "\201D"; grid-area: close; justify-self: end; align-self: end; translate: 0 0.32em; }
 .card blockquote p { grid-area: quote; margin: 0; font-size: max(1.55rem, 8cqw); line-height: 1.03; font-weight: var(--quote-w); }
-.card blockquote cite { grid-area: cite; margin-top: 0.3em; line-height: 1.1; font-size: max(0.95rem, 4cqw); font-style: var(--quote-s); font-weight: 400; }
+.card blockquote cite { grid-area: cite; margin-top: 0.3em; line-height: 1.1; font-size: max(0.95rem, 4cqw); font-style: var(--cite-s, italic); font-weight: 400; }
 .card blockquote cite::before { content: "\2014"; margin-right: 0.5rem; }
 
 .card .amduat { margin-top: 0.3em; padding: 0.15em 0; border-top: var(--rule); border-bottom: var(--rule); display: flex; justify-content: center; align-items: center; font-size: 6cqw; }
@@ -80,7 +80,7 @@ main { flex: 1; min-width: 0; }
 .card .amduat .hierojax { --hj-w: 13.16em; --hj-h: 1.12em; max-width: 100%; }
 
 /* today's card: exactly the site's fonts */
-.card.today { --title-ff: "lab-umschrift", serif; --title-w: 700; --title-s: normal; --quote-ff: serif; --quote-w: 900; --quote-s: normal; }
+.card.today { --title-ff: "lab-umschrift", serif; --title-w: 700; --title-s: normal; --quote-ff: serif; --quote-w: 900; --quote-s: normal; --cite-s: italic; }
 
 /* --- specimen --- */
 #specimen, #table { padding: 16px; background: #fff; color: #222; min-height: 100vh; }

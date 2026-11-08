@@ -54,7 +54,7 @@
 
   const state = {
     title: q.get("title") || "gentium", tw: q.get("tw") || "700", ti: q.get("ti") === "1",
-    quote: q.get("quote") || "gentium", qw: q.get("qw") || "900", qi: q.get("qi") === "1",
+    quote: q.get("quote") || "gentium", qw: q.get("qw") || "900", qi: q.get("qi") === "1", ci: q.get("ci") !== "0",
     width: q.get("width") || "765", side: q.get("side") === "1",
     spec: q.get("spec") || q.get("title") || "gentium", view: q.get("view") || "card",
   };
@@ -91,6 +91,7 @@
     state.qw = weightOptions($("quote-weight"), qf, state.qw);
     $("title-italic").disabled = !caps(tf).italic;
     $("quote-italic").disabled = !caps(qf).italic;
+    $("cite-italic").disabled = !caps(qf).italic;
     const cand = $("cand");
     cand.style.setProperty("--title-ff", ffTitle(tf));
     cand.style.setProperty("--title-w", state.tw);
@@ -98,12 +99,14 @@
     cand.style.setProperty("--quote-ff", ff(qf));
     cand.style.setProperty("--quote-w", state.qw);
     cand.style.setProperty("--quote-s", state.qi ? "italic" : "normal");
+    cand.style.setProperty("--cite-s", state.ci ? "italic" : "normal");
     // real Unicode for candidates, keyboard-encoded for Umschrift
     cand.querySelector(".t1").textContent = tf === "umschrift" ? "Ink Ok#" : "Ink Ḥkꜣ";
     cand.querySelector(".t2").textContent = tf === "umschrift" ? "{.Órg}" : "{.org}";
     $("cand-cap").textContent = `Candidate: title ${byName[tf].family}, quote ${byName[qf].family}`;
     status($("title-status"), tf, state.tw, state.ti);
     status($("quote-status"), qf, state.qw, state.qi);
+    if (state.ci && !caps(qf).italic) { const el = $("quote-status"); el.classList.add("warn"); el.textContent += "; NO italic: citation shows upright"; }
     for (const w of document.querySelectorAll(".cardwrap")) w.style.setProperty("--cw", state.width + "px");
     $("stage").classList.toggle("side", state.side);
   }
@@ -173,7 +176,7 @@
 
   // ---- wiring ----
   function sync() {
-    const p = new URLSearchParams({ title: state.title, tw: state.tw, ti: +state.ti, quote: state.quote, qw: state.qw, qi: +state.qi, width: state.width, side: +state.side, spec: state.spec, view: state.view });
+    const p = new URLSearchParams({ title: state.title, tw: state.tw, ti: +state.ti, quote: state.quote, qw: state.qw, qi: +state.qi, ci: +state.ci, width: state.width, side: +state.side, spec: state.spec, view: state.view });
     history.replaceState(null, "", "?" + p);
   }
   function showView() {
@@ -183,7 +186,7 @@
   }
   function setAll() {
     $("title-font").value = state.title; $("quote-font").value = state.quote; $("spec-font").value = state.spec;
-    $("title-italic").checked = state.ti; $("quote-italic").checked = state.qi;
+    $("title-italic").checked = state.ti; $("quote-italic").checked = state.qi; $("cite-italic").checked = state.ci;
     $("card-width").value = state.width; $("side").checked = state.side;
     applyCard(); showView(); sync();
   }
@@ -193,6 +196,7 @@
   $("title-weight").onchange = e => { state.tw = e.target.value; setAll(); };
   $("quote-weight").onchange = e => { state.qw = e.target.value; setAll(); };
   $("title-italic").onchange = e => { state.ti = e.target.checked; setAll(); };
+  $("cite-italic").onchange = e => { state.ci = e.target.checked; setAll(); };
   $("quote-italic").onchange = e => { state.qi = e.target.checked; setAll(); };
   $("card-width").onchange = e => { state.width = e.target.value; setAll(); };
   $("side").onchange = e => { state.side = e.target.checked; setAll(); };
