@@ -11,14 +11,16 @@
 :root {
   --ink: #333;
   --rule: 2px solid #000;
-  --mark-col: max(1.5rem, 9.3cqw);
+  // Everything inside the card is sized in cqi: 1cqi is 1% of the card's width, so the card is one
+  // proportional drawing at every size (the 1920x1080 look, scaled).
+  --mark-col: 8.2cqi;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
   min-height: 100dvh;
-  padding: max(0.5rem, 3vmin) 0;
+  padding: vars.$card-pad-y 0;
 
   // Centre the card both ways. If a short screen needs more height than it has,
   // the page grows and scrolls vertically (margin:auto keeps it from clipping).
@@ -40,29 +42,37 @@ body {
 }
 
 article {
-  // Everything inside is sized in container units, so the card's proportions
-  // stay constant from phone to desktop.
+  // A business card, US 3.5 x 2 in, landscape at every size (the width rule is in _vars.scss and keeps it
+  // inside the viewport's height too). The text scales with the card's width, not the viewport.
   container-type: inline-size;
   flex: 0 1 auto;
   width: vars.$card-width;
-  // The card is ~85vmin wide, so vmin padding keeps its proportions.
-  padding: max(0.75rem, 3vmin) max(1rem, 5vmin);
+  aspect-ratio: 7 / 4;
+  display: flex;
 
   background: url("/paper_fff.jpg");
   color: var(--ink);
   font-size: 1rem;
 }
 
+// The card's padding: article can't pad itself in its own container units.
+.card {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 4.4cqi 5.9cqi;
+}
+
 h1 {
   margin: 0 0 0.04em;
-  font-size: max(1.75rem, 10.4cqw);
+  font-size: 9.18cqi;
   line-height: 1.1;
 
-  // Hieroglyphs, "Ink Ḥkꜣ", "{.org}": one row that wraps as a unit; centred on
-  // phones, left-aligned on wider cards (see below).
+  // Hieroglyphs, "Ink Ḥkꜣ", "{.org}": one left-aligned row, as in the user's reference. It scales with
+  // the card, so it always fits on one line.
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: baseline;
   column-gap: 0.3em;
 
@@ -70,9 +80,7 @@ h1 {
     font-size: 0.7em;
   }
 
-  // "Ink Ḥkꜣ {.org}" stays together; the hieroglyphs wrap above it when tight.
-  // At very narrow widths the floor above is low enough for it to fit, and if it
-  // still can't it wraps rather than overflowing.
+  // "Ink Ḥkꜣ {.org}" stays on one line.
   // Its width is reserved in em of New Athena Unicode Bold's "Ink Ḥkꜣ {.org}" (measured on the rendered
   // title: 5.788em at 360, 768 and 1920 px, with the ꜣ's 0.03em margin), like the hierojax boxes, so the fallback font's different
   // width cannot move anything when the web font arrives.
@@ -96,19 +104,6 @@ h1 {
     margin-left: 0.03em;   // the enlarged hook would otherwise touch the k's arm (the only change to the advance)
     transform-origin: 0.017em 0.2835em;
     transform: translateY(calc(var(--aleph-lift) * -1)) scale(var(--aleph-scale));
-  }
-
-  // Wider than a phone: left-aligned, as in the user's reference.
-  @container (min-width: 30rem) {
-    justify-content: flex-start;
-  }
-
-  @container (max-width: 15rem) {
-    .title-text {
-      white-space: normal;
-      text-align: center;
-      width: auto;
-    }
   }
 }
 
@@ -158,7 +153,11 @@ header {
 
 blockquote {
   margin: 0;
-  padding-top: max(0.5rem, 4.4cqw);
+  // Takes the card's spare height and centres the quote in it, so the space is shared between the
+  // title rule above and the Amduat line below.
+  flex: 1;
+  align-content: center;
+  padding: 2cqi 0;
   font-family: 'NewAthenaUnicodeText', serif;
 
   // Opening mark | quote | closing mark, with the citation under the quote.
@@ -171,7 +170,7 @@ blockquote {
 
   &::before,
   &::after {
-    font-size: max(2.6rem, 14.7cqw);
+    font-size: 12.97cqi;
     line-height: 0.62;
   }
 
@@ -194,7 +193,7 @@ blockquote {
   p {
     grid-area: quote;
     margin: 0;
-    font-size: max(1.55rem, 8cqw);
+    font-size: 7.06cqi;
     line-height: 1.03;
     font-weight: 700;   // the bold face is the heaviest there is (it was 900 with the system serif)
   }
@@ -203,11 +202,11 @@ blockquote {
     grid-area: cite;
     margin-top: 0.3em;
     line-height: 1.1;
-    font-size: max(0.95rem, 4cqw);
+    font-size: 3.53cqi;
 
     &::before {
       content: "—";
-      margin-right: 0.5rem;
+      margin-right: 0.25em;
     }
   }
 }
@@ -221,13 +220,7 @@ blockquote {
   display: flex;
   justify-content: center;
   align-items: center;
-  // 6cqw leaves the reference's margins either side; narrower cards use the
-  // full width, since this line can't wrap.
-  font-size: 6cqw;
-
-  @container (max-width: 42rem) {
-    font-size: 7.2cqw;
-  }
+  font-size: 5.29cqi;
 
   .hierojax {
     --hj-w: 13.16em;
