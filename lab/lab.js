@@ -46,8 +46,11 @@
       sel.appendChild(o);
     }
   }
-  const titleList = usable.filter(f => !f.virtual);
-  const quoteList = usable;
+  const byFamily = (a, b) => a.family.localeCompare(b.family, undefined, { sensitivity: "base" });
+  // today's references first, then the rest A-Z by family name
+  const todayFirst = (a, b) => (!!b.today - !!a.today) || byFamily(a, b);
+  const titleList = usable.filter(f => !f.virtual).sort(todayFirst);
+  const quoteList = [...usable].sort(todayFirst);
   fill($("title-font"), titleList);
   fill($("quote-font"), quoteList);
   fill($("spec-font"), titleList);
@@ -198,7 +201,7 @@
 
   // ---- table ----
   function renderTable() {
-    const sorted = [...fonts].sort((a, b) => (b.coreRegular || -1) - (a.coreRegular || -1));
+    const sorted = [...fonts].sort(byFamily);
     let h = `<h2>All candidates</h2><p class="legend">Core = the 22 core characters (${data.coreDefinition.replace(/^22 core chars: /, "")}). Counts per style: R / I / B / BI. Extra = Q q + U+0313 + U+0357 present in Regular (of 4). Sizes are woff2 per style. A red licence cell = unclear web terms.</p>`;
     h += `<table><tr><th>Font</th><th>Core R / I / B / BI</th><th>Extra (reg)</th><th>Basic Latin</th><th>Mark GPOS</th><th>Styles</th><th>woff2 sizes</th><th>Licence</th><th>Source</th><th>Use</th></tr>`;
     for (const f of sorted) {
@@ -221,15 +224,16 @@
   function renderAleph() {
     const el = $("aleph");
     if (!aleph) { el.innerHTML = '<p class="legend">No aleph.json: run lab/measure-aleph.py (see README).</p>'; return; }
-    const face = state.aw, order = faceRank(face), U = aleph.umschrift[face];
+    const face = state.aw, U = aleph.umschrift[face];
     const ent = n => aleph.fonts.find(f => f.name === n);
+    const order = [...faceRank(face)].sort((a, b) => byFamily(ent(a), ent(b)));   // A-Z; rank stays in the label
     let h = `<div class="abar"><label>Face <select id="aw"><option value="bold">Bold (the title face; Umschrift SB)</option><option value="regular">Regular (Umschrift S)</option></select></label>`;
     h += ` <button data-a="top6">Top 6</button> <button data-a="all">All</button> <button data-a="none">None</button></div><div class="apick">`;
     for (const n of order) {
       const e = ent(n), m = e.faces[face];
       h += `<label class="achk"><input type="checkbox" data-af="${n}"${state.af.includes(n) ? " checked" : ""}> #${m.rank} ${e.family}${face === "bold" && !m.realFace ? " (no bold)" : ""} <small>${m.score.toFixed(2)}</small></label>`;
     }
-    h += `</div><p class="legend">Ranked by the score in aleph-report.md (shape and proportion about equally, formula there). Same font size and baseline in each row: ꜣ in the candidate (left of each pair) against Umschrift's # (right). Guides: baseline (grey), x-height (blue) and cap height (green) of the cell's own font; Umschrift's x-height and cap height are repeated as red dashes inside the candidate cells. Rank is by score, not by eye: look. A face without bold shows its regular.</p>`;
+    h += `</div><p class="legend">Listed A-Z; the rank (#) and score come from aleph-report.md (shape and proportion about equally, formula there). Same font size and baseline in each row: ꜣ in the candidate (left of each pair) against Umschrift's # (right). Guides: baseline (grey), x-height (blue) and cap height (green) of the cell's own font; Umschrift's x-height and cap height are repeated as red dashes inside the candidate cells. Rank is by score, not by eye: look. A face without bold shows its regular.</p>`;
     h += `<div class="acell-key">Umschrift reference (${face === "bold" ? "SB" : "S"}): ꜣ ${U.components} pieces, h/x ${U.hOverX.toFixed(2)}, w/x ${U.wOverX.toFixed(2)}, top/cap ${U.topOverCap.toFixed(2)}</div>`;
     const ufam = `"lab-umschrift", serif`, uw = face === "bold" ? 700 : 400;
     const cell = (ff, w, size, text, m, um, extra) => `<div class="acell" style='font-family:${ff};font-weight:${w};font-size:${size}px' data-x="${m.xHeightEm}" data-c="${m.capHeightEm}"${um ? ` data-ux="${um.xHeightEm}" data-uc="${um.capHeightEm}"` : ""}><span class="bl"></span>${text}</div>`;

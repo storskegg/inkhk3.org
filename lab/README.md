@@ -33,6 +33,8 @@ npm run lab                                                # http://localhost:80
   Pickers for title and quote, weight and italic (`font-synthesis: none`, so a missing bold or italic is
   shown as the nearest real face), card width, side-by-side toggle, a specimen view (missing glyphs boxed
   in red from the cmap data, with a monospace fallback behind each font) and a table of all candidates.
+  Every font list is sorted A-Z by family name (case-insensitive, locale compare); in the title, quote and specimen
+  pickers today's references (Umschrift, the system serif) stay on top.
   State lives in the URL (`?title=junicode&quote=charis&side=1&view=specimen`).
 - Serifs only: the sans-serif control (Andika) and its "sans control" code were removed. Doulos SIL is a serif and stays.
 - **Aleph study** (`measure-aleph.py` -> `aleph.json`, `aleph-report.md`, both committed): for every serif with a real
@@ -45,7 +47,7 @@ npm run lab                                                # http://localhost:80
 - **Aleph view** (`view=aleph`, button "Aleph"): per candidate a row with "Ink Ḥkꜣ" at 96 px and the ꜣ alone at 240 px,
   each next to Umschrift's "Ink Ok#" and "#" on the same baseline, with the baseline, x-height and cap height as faint
   guides (Umschrift's two heights repeated as red dashes). Pick the fonts with the checkboxes (default: top 6 by bold
-  score), "Top 6" / "All" / "None", and a Bold / Regular toggle. URL: `af=<comma list>`, `aw=bold|regular`.
+  score; the checkboxes and rows are listed A-Z by family, with each font's rank and score kept in its label), "Top 6" (the top 6 by score) / "All" / "None", and a Bold / Regular toggle. URL: `af=<comma list>`, `aw=bold|regular`.
 - **Settings persist.** Every control is saved to `localStorage` under one key, `inkhk3-lab` (JSON), and to the URL.
   On load, if the URL has any lab parameter the URL wins and storage is ignored (so shared links work); otherwise the
   stored values are used; otherwise the defaults. Every stored value is validated on its own: a missing or invalid
