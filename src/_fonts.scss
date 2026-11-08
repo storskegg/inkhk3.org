@@ -29,10 +29,8 @@
   src: url("/UMSCH_IB.TTF") format('truetype');
 }
 
-@font-face {
-  font-family: 'Hieroglyphic';
-  src: url('/NewGardiner.woff2') format('woff2');
-}
+// 'Hieroglyphic' (/NewGardiner.woff2) is registered by hierojax.js itself (FontFace in
+// startLoadingFonts). A second @font-face here would make the browser fetch it twice.
 @font-face {
   font-family: 'HieroglyphicAux';
   src: url('/HieroglyphicAux.ttf') format('truetype');

@@ -64,7 +64,7 @@ form to suit the needs of this project.
 
 `src/hierojax.js` is [hierojax](https://github.com/nederhof/hierojax/tree/da318801e00b10b4b5c5ec8d9cc6f8fddcc9eb5a)
 (`docs/hierojax.js` at commit da31880) by Mark-Jan Nederhof, licensed GPL-3.0. `src/_hierojax.scss` is its
-`docs/hierojax.css` at the same commit, with the `@font-face` rule removed (fonts are declared in `src/_fonts.scss`).
+`docs/hierojax.css` at the same commit, with the `@font-face` rule removed: the `Hieroglyphic` font is registered only by `src/hierojax.js` (see (c)), so it loads once.
 
 Local modifications to `src/hierojax.js`; the complete diff is `vendor/hierojax.local.patch` (the file header says how to
 apply and regenerate it):
