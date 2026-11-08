@@ -145,6 +145,15 @@ h1 {
 h1 .hierojax {
   --hj-w: 3.22em;
   --hj-h: 1.12em;
+
+  // Baseline alignment: the lowest signs' ink should sit exactly on the title's baseline. The box's
+  // bottom edge is the baseline (contain: layout), the centred SVG is ~0.02em above it, and the signs'
+  // ink ends ~0.065em above the baseline in Chromium, WebKit and Firefox (pixel-measured at 360, 768
+  // and 1920 px: 0.06 to 0.07em, i.e. 4px at 1920). It is a fraction of the hieroglyphs' own font-size,
+  // so it scales with the card. translate moves only the paint: the reserved box, the line box and
+  // therefore the layout stay put (CLS 0). The user's first spec was padding-top: 4px, which is this
+  // same shift at 1920 but 0.19em too much at 360.
+  translate: 0 0.065em;
 }
 
 header {
