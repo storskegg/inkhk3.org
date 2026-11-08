@@ -97,6 +97,9 @@ h1 {
   // svg.getBoundingClientRect() / getComputedStyle(span).fontSize. Not clipped,
   // so a larger render (fallback font, user scaling) is shown, not cut.
   flex: none;
+  // Layout containment makes the baseline the box's bottom edge, so it is the
+  // same before and after the SVG replaces the text (no vertical shift).
+  contain: layout;
   white-space: nowrap;
   line-height: 1;
   width: var(--hj-w);
@@ -117,8 +120,8 @@ h1 {
 }
 
 h1 .hierojax {
-  --hj-w: 3.25em;
-  --hj-h: 1.08em;
+  --hj-w: 3.22em;
+  --hj-h: 1.12em;
 }
 
 header {
@@ -199,8 +202,8 @@ blockquote {
   }
 
   .hierojax {
-    --hj-w: 13.74em;
-    --hj-h: 1.09em;
+    --hj-w: 13.16em;
+    --hj-h: 1.12em;
     max-width: 100%;
   }
 }
