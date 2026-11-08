@@ -29,8 +29,14 @@ body {
   background: gray url("/binding_dark2.png");
 }
 
+// New Athena Unicode has no heavier face and no regular upright one in use: never fake one.
+body {
+  font-synthesis: none;
+}
+
 .egypt {
-  font-family: 'Umschrift', serif;
+  font-family: 'NewAthenaUnicode', 'NewAthenaUnicodeFallback', serif;
+  font-weight: 700;
 }
 
 article {
@@ -67,8 +73,29 @@ h1 {
   // "Ink Ḥkꜣ {.org}" stays together; the hieroglyphs wrap above it when tight.
   // At very narrow widths the floor above is low enough for it to fit, and if it
   // still can't it wraps rather than overflowing.
+  // Its width is reserved in em of New Athena Unicode Bold's "Ink Ḥkꜣ {.org}" (measured on the rendered
+  // title: 5.788em at 360, 768 and 1920 px, with the ꜣ's 0.03em margin), like the hierojax boxes, so the fallback font's different
+  // width cannot move anything when the web font arrives.
   .title-text {
     white-space: nowrap;
+    flex: none;
+    width: 5.79em;
+  }
+
+  // The enlarged ꜣ (New Athena's is 1.30 x-heights tall and tops out at 0.80 of the cap height; Umschrift's
+  // was 1.48 and 0.98). Tuned in lab/ (see README.md, "Fonts"): scaled 1.18 about the baseline and the
+  // ink's left edge, lifted 0.037em, so its top meets the cap height and it is 1.53 x-heights tall.
+  // A transform changes neither the line box nor the advance width, so ".org" and the baseline stay put.
+  // The origin is NAU Bold's: x = the glyph's left side bearing (0.017em), y = the baseline measured
+  // from the top of a zero-height (line-height: 0) inline-block (0.2835em).
+  .aleph {
+    --aleph-scale: 1.18;
+    --aleph-lift: 0.037em;
+    display: inline-block;
+    line-height: 0;
+    margin-left: 0.03em;   // the enlarged hook would otherwise touch the k's arm (the only change to the advance)
+    transform-origin: 0.017em 0.2835em;
+    transform: translateY(calc(var(--aleph-lift) * -1)) scale(var(--aleph-scale));
   }
 
   // Wider than a phone: left-aligned, as in the user's reference.
@@ -80,6 +107,7 @@ h1 {
     .title-text {
       white-space: normal;
       text-align: center;
+      width: auto;
     }
   }
 }
@@ -131,7 +159,7 @@ header {
 blockquote {
   margin: 0;
   padding-top: max(0.5rem, 4.4cqw);
-  font-family: serif;
+  font-family: 'NewAthenaUnicodeText', serif;
 
   // Opening mark | quote | closing mark, with the citation under the quote.
   display: grid;
@@ -168,7 +196,7 @@ blockquote {
     margin: 0;
     font-size: max(1.55rem, 8cqw);
     line-height: 1.03;
-    font-weight: 900;
+    font-weight: 700;   // the bold face is the heaviest there is (it was 900 with the system serif)
   }
 
   cite {

@@ -1,45 +1,54 @@
-// The following google font does not support the necessary utf characters for Egyptological transliteration
-//@import url(https://fonts.googleapis.com/css?family=Nixie+One|Trocchi|Special+Elite);
-
+// New Athena Unicode 5.008 (Society for Classical Studies, OFL-1.1): real Unicode Egyptological
+// transliteration for the title ("Ink Ḥkꜣ {.org}"), the quote and the citation. Only the two faces
+// the page uses are shipped, as lossless woff2 conversions (no subsetting).
+//
+// font-display and the two families: see README.md, "Fonts".
+//
+// 'NewAthenaUnicode' is the title (h1: the bold face). font-display: block, because the title's width
+// is reserved in em (style.scss) and its fallback below has New Athena's vertical metrics: while the
+// font loads the title is invisible (never a wrong-looking title), and when it arrives nothing moves.
 @font-face {
-  font-family: 'Umschrift';
-  font-weight: normal;
+  font-family: 'NewAthenaUnicode';
+  font-weight: 700;
   font-style: normal;
-  src: url("/UMSCH_S.woff2") format('woff2');
+  font-display: block;
+  src: url("/NewAthenaUnicode-Bold.woff2") format('woff2');
 }
 
+// 'NewAthenaUnicodeText' is the quote (weight 900 asked for; the bold face is the nearest real one) and
+// the citation (<cite> is italic by default). font-display: optional, because the quote's line breaks
+// depend on the font, so a late swap would re-wrap it and move the card. If the faces are not ready in
+// the first ~100 ms (preloaded, so on a warm cache or a fast line they are) this page view keeps the
+// system serif (what the quote used before) and the next view, from the cache, gets New Athena.
 @font-face {
-  font-family: 'Umschrift';
-  font-weight: bold;
+  font-family: 'NewAthenaUnicodeText';
+  font-weight: 700;
   font-style: normal;
-  src: url("/UMSCH_SB.woff2") format('woff2');
+  font-display: optional;
+  src: url("/NewAthenaUnicode-Bold.woff2") format('woff2');
 }
 
 @font-face {
-  font-family: 'Umschrift';
-  font-weight: normal;
+  font-family: 'NewAthenaUnicodeText';
+  font-weight: 400;
   font-style: italic;
-  src: url("/UMSCH_I.woff2") format('woff2');
+  font-display: optional;
+  src: url("/NewAthenaUnicode-Italic.woff2") format('woff2');
 }
 
+// What shows (or, under block, takes the title's place) before New Athena is there: Times with New
+// Athena's ascent, descent and line gap (hhea/typo: 732, 284, 25 of 1000), so the baseline sits where it
+// will sit, and the hieroglyph row that is baseline-aligned to it does not jump.
 @font-face {
-  font-family: 'Umschrift';
-  font-weight: bold;
-  font-style: italic;
-  src: url("/UMSCH_IB.woff2") format('woff2');
+  font-family: 'NewAthenaUnicodeFallback';
+  font-weight: 700;
+  font-style: normal;
+  src: local('Times New Roman Bold'), local('TimesNewRomanPS-BoldMT'), local('Times Bold'),
+       local('Liberation Serif Bold'), local('Tinos Bold');
+  ascent-override: 73.2%;
+  descent-override: 28.4%;
+  line-gap-override: 2.5%;
 }
 
 // 'Hieroglyphic' (/NewGardiner.woff2) is registered by hierojax.js itself (FontFace in
 // startLoadingFonts). A second @font-face here would make the browser fetch it twice.
-@font-face {
-  font-family: 'HieroglyphicAux';
-  src: url('/HieroglyphicAux.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'HieroglyphicPlain';
-  src: url('/CaslonRoman.ttf') format('truetype');;
-}
-@font-face {
-  font-family: 'Transliteration';
-  src: url('/DejaVuSans-Bold.ttf') format('truetype');;
-}
