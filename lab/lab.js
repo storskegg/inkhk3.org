@@ -64,8 +64,9 @@
   // ---- state: URL params > localStorage > defaults; every value validated on its own ----
   const STORE_KEY = "inkhk3-lab";
   const DEFAULTS = {
-    title: "gentium", tw: "700", ti: false, quote: "gentium", qw: "900", qi: false, ci: true,
-    width: "765", side: false, spec: "gentium", view: "card", af: alephDefault, aw: "bold",
+    title: "new-athena-unicode", tw: "700", ti: false, quote: "new-athena-unicode", qw: "900", qi: false, ci: true,
+    width: "765", side: false, spec: "new-athena-unicode", view: "card", af: alephDefault, aw: "bold",
+    as: "1.18", ay: "0.037",
   };
   const asBool = v => (v === true || v === "1") ? true : (v === false || v === "0") ? false : undefined;
   const oneOf = list => v => list.includes(String(v)) ? String(v) : undefined;
@@ -77,6 +78,8 @@
     ti: asBool, qi: asBool, ci: asBool, side: asBool,
     width: oneOf(["765", "918", "540", "340"]), view: oneOf(["card", "specimen", "table", "aleph"]),
     aw: oneOf(["bold", "regular"]),
+    as: v => { const n = Number(v); return (v !== "" && v !== null && Number.isFinite(n) && n >= 1 && n <= 1.4) ? String(Math.round(n * 100) / 100) : undefined; },
+    ay: v => { const n = Number(v); return (v !== "" && v !== null && Number.isFinite(n) && n >= -0.1 && n <= 0.2) ? String(Math.round(n * 1000) / 1000) : undefined; },
     af: v => {
       const arr = Array.isArray(v) ? v : (typeof v === "string" ? v.split(",") : null);
       if (!arr) return undefined;
@@ -145,8 +148,10 @@
     cand.style.setProperty("--quote-w", state.qw);
     cand.style.setProperty("--quote-s", state.qi ? "italic" : "normal");
     cand.style.setProperty("--cite-s", state.ci ? "italic" : "normal");
+    cand.style.setProperty("--as", tf === "umschrift" ? "1" : state.as);
+    cand.style.setProperty("--ay", tf === "umschrift" ? "0" : state.ay);
     // real Unicode for candidates, keyboard-encoded for Umschrift
-    cand.querySelector(".t1").textContent = tf === "umschrift" ? "Ink Ok#" : "Ink Ḥkꜣ";
+    cand.querySelector(".t1").innerHTML = tf === "umschrift" ? "Ink Ok#" : 'Ink Ḥk<span class="aleph">ꜣ</span>';
     cand.querySelector(".t2").textContent = tf === "umschrift" ? "{.Órg}" : "{.org}";
     $("cand-cap").textContent = `Candidate: title ${byName[tf].family}, quote ${byName[qf].family}`;
     status($("title-status"), tf, state.tw, state.ti);
@@ -236,6 +241,7 @@
     h += `</div><p class="legend">Listed A-Z; the rank (#) and score come from aleph-report.md (shape and proportion about equally, formula there). Same font size and baseline in each row: ꜣ in the candidate (left of each pair) against Umschrift's # (right). Guides: baseline (grey), x-height (blue) and cap height (green) of the cell's own font; Umschrift's x-height and cap height are repeated as red dashes inside the candidate cells. Rank is by score, not by eye: look. A face without bold shows its regular.</p>`;
     h += `<div class="acell-key">Umschrift reference (${face === "bold" ? "SB" : "S"}): ꜣ ${U.components} pieces, h/x ${U.hOverX.toFixed(2)}, w/x ${U.wOverX.toFixed(2)}, top/cap ${U.topOverCap.toFixed(2)}</div>`;
     const ufam = `"lab-umschrift", serif`, uw = face === "bold" ? 700 : 400;
+    h += tuningBlock();
     const cell = (ff, w, size, text, m, um, extra) => `<div class="acell" style='font-family:${ff};font-weight:${w};font-size:${size}px' data-x="${m.xHeightEm}" data-c="${m.capHeightEm}"${um ? ` data-ux="${um.xHeightEm}" data-uc="${um.capHeightEm}"` : ""}><span class="bl"></span>${text}</div>`;
     for (const n of order) {
       if (!state.af.includes(n)) continue;
@@ -249,6 +255,48 @@
     el.innerHTML = h;
     $("aw").value = face;
     document.fonts.ready.then(() => requestAnimationFrame(placeGuides));
+  }
+  // ---- the enlarged ꜣ of the title: New Athena Unicode Bold against Umschrift SB, same size and baseline ----
+  function tuningBlock() {
+    const nau = aleph.fonts.find(f => f.name === "new-athena-unicode"), N = nau && nau.faces.bold, U = aleph.umschrift.bold;
+    if (!N) return "";
+    const nf = ff("new-athena-unicode"), uf = `"lab-umschrift", serif`;
+    const cell = (fam, size, text, m, um) => `<div class="acell" style='font-family:${fam};font-weight:700;font-size:${size}px' data-x="${m.xHeightEm}" data-c="${m.capHeightEm}"${um ? ` data-ux="${um.xHeightEm}" data-uc="${um.capHeightEm}"` : ""}><span class="bl"></span>${text}</div>`;
+    let h = `<div class="arow atune" style="--as:${state.as};--ay:${state.ay}"><div class="ainfo"><b>Site title: New Athena Unicode Bold</b> with the enlarged ꜣ (scale ${(+state.as).toFixed(2)}, shift ${(+state.ay).toFixed(3)} em, set in the panel) against Umschrift SB. Left to right: New Athena plain, New Athena with the enlarged ꜣ, Umschrift, then the ꜣ alone (enlarged) against Umschrift's #. Guides as above (grey baseline, blue x-height, green cap height of the cell's font, red dashes = Umschrift's).</div><div class="apair">`;
+    h += cell(nf, 96, "Ink Ḥkꜣ", N, U) + cell(nf, 96, 'Ink Ḥk<span class="aleph">ꜣ</span>', N, U) + cell(uf, 96, "Ink Ok#", U, null);
+    h += cell(nf, 240, '<span class="aleph">ꜣ</span>', N, U) + cell(uf, 240, "#", U, null);
+    h += `</div><div class="ainfo" id="atune-nums"></div></div>`;
+    return h;
+  }
+  // Ink bounds of the glyphs from canvas (measureText of the outline), in em of a 1000 px font.
+  const inkCache = {};
+  async function ink(fam, ch) {
+    const key = fam + ch;
+    if (inkCache[key]) return inkCache[key];
+    const font = `700 1000px ${fam}`;
+    await document.fonts.load(font, ch);
+    const c = document.createElement("canvas").getContext("2d");
+    c.font = font;
+    const t = c.measureText(ch);
+    return (inkCache[key] = { top: t.actualBoundingBoxAscent / 1000, bottom: -t.actualBoundingBoxDescent / 1000 });
+  }
+  async function measureAlephSpan() {
+    const nf = `"lab-new-athena-unicode"`, uf = `"lab-umschrift"`;
+    const [a, x, H, ua, ux, uE] = await Promise.all([ink(nf, "ꜣ"), ink(nf, "x"), ink(nf, "H"), ink(uf, "#"), ink(uf, "z"), ink(uf, "E")]);
+    const s = +state.as, y = +state.ay;
+    const top = a.top * s + y, bottom = a.bottom * s + y, h = top - bottom;
+    const r = {
+      scale: s, shift: y, xHeight: x.top, capHeight: H.top,
+      plainHeightX: (a.top - a.bottom) / x.top, plainTopCap: a.top / H.top,
+      top, bottom, height: h, heightX: h / x.top, topCap: top / H.top,
+      umHeightX: (ua.top - ua.bottom) / ux.top, umTopCap: ua.top / uE.top,
+      umTop: ua.top, umBottom: ua.bottom, umX: ux.top, umCap: uE.top,
+    };
+    window.alephMeasure = r;
+    const txt = `ꜣ enlarged: height ${r.height.toFixed(3)} em = ${r.heightX.toFixed(2)} x-heights (Umschrift ${r.umHeightX.toFixed(2)}), top ${r.top.toFixed(3)} em = ${r.topCap.toFixed(2)} cap (Umschrift ${r.umTopCap.toFixed(2)}), bottom ${r.bottom.toFixed(3)} em (Umschrift ${r.umBottom.toFixed(3)}). Plain NAU ꜣ: ${r.plainHeightX.toFixed(2)} x, top ${r.plainTopCap.toFixed(2)} cap.`;
+    const el = $("atune-nums"); if (el) el.textContent = txt;
+    $("aleph-status").textContent = `${r.heightX.toFixed(2)} x-heights tall (Umschrift ${r.umHeightX.toFixed(2)}); top ${r.topCap.toFixed(2)} cap (Umschrift ${r.umTopCap.toFixed(2)}); bottom ${r.bottom.toFixed(3)} em`;
+    return r;
   }
   function placeGuides() {
     for (const c of document.querySelectorAll("#aleph .acell")) {
@@ -265,7 +313,7 @@
   // ---- persistence ----
   function persist() {
     try {
-      const p = new URLSearchParams({ title: state.title, tw: state.tw, ti: +state.ti, quote: state.quote, qw: state.qw, qi: +state.qi, ci: +state.ci, width: state.width, side: +state.side, spec: state.spec, view: state.view, af: state.af.join(","), aw: state.aw });
+      const p = new URLSearchParams({ title: state.title, tw: state.tw, ti: +state.ti, quote: state.quote, qw: state.qw, qi: +state.qi, ci: +state.ci, width: state.width, side: +state.side, spec: state.spec, view: state.view, af: state.af.join(","), aw: state.aw, as: state.as, ay: state.ay });
       history.replaceState(null, "", "?" + p);
     } catch (e) { /* e.g. sandboxed URL */ }
     try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* private mode, quota */ }
@@ -280,7 +328,10 @@
     $("title-font").value = state.title; $("quote-font").value = state.quote; $("spec-font").value = state.spec;
     $("title-italic").checked = state.ti; $("quote-italic").checked = state.qi; $("cite-italic").checked = state.ci;
     $("card-width").value = state.width; $("side").checked = state.side;
+    $("as").value = state.as; $("ay").value = state.ay;
+    $("as-out").textContent = (+state.as).toFixed(2); $("ay-out").textContent = (+state.ay).toFixed(3);
     applyCard(); showView(); if (save) persist();
+    measureAlephSpan().catch(() => {});
   }
   $("reset").onclick = () => {
     try { localStorage.removeItem(STORE_KEY); } catch (e) { /* ignore */ }
@@ -302,6 +353,8 @@
     state.af = b.dataset.a === "top6" ? order.slice(0, 6) : b.dataset.a === "all" ? [...order] : [];
     setAll();
   });
+  $("as").oninput = e => { state.as = String(Math.round(+e.target.value * 100) / 100); setAll(); };
+  $("ay").oninput = e => { state.ay = String(Math.round(+e.target.value * 1000) / 1000); setAll(); };
   $("title-font").onchange = e => { state.title = e.target.value; setAll(); };
   $("quote-font").onchange = e => { state.quote = e.target.value; setAll(); };
   $("spec-font").onchange = e => { state.spec = e.target.value; setAll(); };
