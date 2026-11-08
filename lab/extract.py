@@ -15,5 +15,9 @@ if kind == "licence":
     open(out, "wb").write(data)
 else:
     f = TTFont(io.BytesIO(data))
+    # Browsers (OTS) reject a zero-length hinting table (BBAW Schoell ships an empty fpgm); dropping an empty table changes nothing.
+    for tag in ("fpgm", "prep", "cvt "):
+        if tag in f and len(f.getTableData(tag)) == 0:
+            del f[tag]
     f.flavor = "woff2"
     f.save(out)

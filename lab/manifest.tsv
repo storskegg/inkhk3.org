@@ -16,11 +16,6 @@ charis	bolditalic	https://github.com/silnrsi/font-charis/releases/download/v7.00
 charis	licence	https://github.com/silnrsi/font-charis/releases/download/v7.000/Charis-7.000.zip	e3237b1303c5d31af8f59b1d1914886c5e873b77c71390e4742fb3bc1c187666	Charis-7.000/OFL.txt
 doulos	regular	https://github.com/silnrsi/font-doulos/releases/download/v7.000/DoulosSIL-7.000.zip	3d63296575f1f834f785f4a9426a9da6bc3b9083fcc304a5490704f4398bf639	DoulosSIL-7.000/DoulosSIL-Regular.ttf
 doulos	licence	https://github.com/silnrsi/font-doulos/releases/download/v7.000/DoulosSIL-7.000.zip	3d63296575f1f834f785f4a9426a9da6bc3b9083fcc304a5490704f4398bf639	DoulosSIL-7.000/OFL.txt
-andika	regular	https://github.com/silnrsi/font-andika/releases/download/v7.000/Andika-7.000.zip	88ba6ea41ef4a8e5214b090df8fa2983be1babe4843efaa99cdb6078b0e2c070	Andika-7.000/Andika-Regular.ttf
-andika	italic	https://github.com/silnrsi/font-andika/releases/download/v7.000/Andika-7.000.zip	88ba6ea41ef4a8e5214b090df8fa2983be1babe4843efaa99cdb6078b0e2c070	Andika-7.000/Andika-Italic.ttf
-andika	bold	https://github.com/silnrsi/font-andika/releases/download/v7.000/Andika-7.000.zip	88ba6ea41ef4a8e5214b090df8fa2983be1babe4843efaa99cdb6078b0e2c070	Andika-7.000/Andika-Bold.ttf
-andika	bolditalic	https://github.com/silnrsi/font-andika/releases/download/v7.000/Andika-7.000.zip	88ba6ea41ef4a8e5214b090df8fa2983be1babe4843efaa99cdb6078b0e2c070	Andika-7.000/Andika-BoldItalic.ttf
-andika	licence	https://github.com/silnrsi/font-andika/releases/download/v7.000/Andika-7.000.zip	88ba6ea41ef4a8e5214b090df8fa2983be1babe4843efaa99cdb6078b0e2c070	Andika-7.000/OFL.txt
 junicode	regular	https://github.com/psb1558/Junicode-font/releases/download/v2.226/Junicode_2.226.zip	dae8ebc04a8592445c1878db8451838dd2f49d7c9912b3d4f3cab84c1516c5fe	Junicode/TTF/Junicode-Regular.ttf
 junicode	italic	https://github.com/psb1558/Junicode-font/releases/download/v2.226/Junicode_2.226.zip	dae8ebc04a8592445c1878db8451838dd2f49d7c9912b3d4f3cab84c1516c5fe	Junicode/TTF/Junicode-Italic.ttf
 junicode	bold	https://github.com/psb1558/Junicode-font/releases/download/v2.226/Junicode_2.226.zip	dae8ebc04a8592445c1878db8451838dd2f49d7c9912b3d4f3cab84c1516c5fe	Junicode/TTF/Junicode-Bold.ttf
@@ -54,3 +49,14 @@ cardo	licence	https://raw.githubusercontent.com/google/fonts/86aced91de05cd4f96a
 stix-two-text	regular	https://raw.githubusercontent.com/google/fonts/86aced91de05cd4f96a06838124cca45be337b2b/ofl/stixtwotext/STIXTwoText%5Bwght%5D.ttf	7962b8b7811e6a896c9a91a0bccbb5241047770eb24d4997c5cb5fe21d5c0df2	-
 stix-two-text	italic	https://raw.githubusercontent.com/google/fonts/86aced91de05cd4f96a06838124cca45be337b2b/ofl/stixtwotext/STIXTwoText-Italic%5Bwght%5D.ttf	88c0e2e316eaff56eddc9e51e4850317e2a1e490bbf758b2dec4793aedba9c74	-
 stix-two-text	licence	https://raw.githubusercontent.com/google/fonts/86aced91de05cd4f96a06838124cca45be337b2b/ofl/stixtwotext/OFL.txt	62c0967a997b9691326d35b1f90baf085a557327b711618bc4161325ce1bb1b2	-
+noto-serif-display	regular	https://raw.githubusercontent.com/google/fonts/86aced91de05cd4f96a06838124cca45be337b2b/ofl/notoserifdisplay/NotoSerifDisplay%5Bwdth,wght%5D.ttf	4b661adcf6a5d38bf5befdc4d976e8a7238a4aeb57e62c1c1a67775380a09df9	-
+noto-serif-display	italic	https://raw.githubusercontent.com/google/fonts/86aced91de05cd4f96a06838124cca45be337b2b/ofl/notoserifdisplay/NotoSerifDisplay-Italic%5Bwdth,wght%5D.ttf	daad4d314708839a5c343f26e75467edf6c05a3a726502c98974dd3e240e6516	-
+noto-serif-display	licence	https://raw.githubusercontent.com/google/fonts/86aced91de05cd4f96a06838124cca45be337b2b/ofl/notoserifdisplay/OFL.txt	5e0da210fb04058a8c0087985d2d456b931c2579811a49655721d3cf0c36b6d6	-
+tinos	regular	https://raw.githubusercontent.com/google/fonts/86aced91de05cd4f96a06838124cca45be337b2b/ofl/tinos/Tinos-Regular.ttf	60a0e8ef0c04dd5dd69ffe91025fa2ae5836cbd35600a82ba031977557e2cb61	-
+tinos	italic	https://raw.githubusercontent.com/google/fonts/86aced91de05cd4f96a06838124cca45be337b2b/ofl/tinos/Tinos-Italic.ttf	5942266ed398b155d7dc23e36833e7ec6be988f2439bdbeb8ef1bede808eaa91	-
+tinos	bold	https://raw.githubusercontent.com/google/fonts/86aced91de05cd4f96a06838124cca45be337b2b/ofl/tinos/Tinos-Bold.ttf	393269dbab8899f938db19783eca5eac92eb431f7ae0ab45b8349ca895f1a06b	-
+tinos	bolditalic	https://raw.githubusercontent.com/google/fonts/86aced91de05cd4f96a06838124cca45be337b2b/ofl/tinos/Tinos-BoldItalic.ttf	a5de79f0fe863ea0954757acb3d47b3ccd0a930ce3dd5b97230cd3866790a06e	-
+bbaw-schoell	regular	https://raw.githubusercontent.com/telota/bbaw-schoell/0bf167b9c94842addb487d8cac7f2f214ec199d3/BBAW-Schoell-regular.ttf	c35fa802a9b76872b94d7063c7e375e4c8368c4db754155fe0a94433ef73b58a	-
+bbaw-schoell	licence	https://raw.githubusercontent.com/telota/bbaw-schoell/0bf167b9c94842addb487d8cac7f2f214ec199d3/OFL-1.1.txt	faa99847eea42900d516b6c15aae66aadc56bd7e642bf56776f082f3a9cbd77f	-
+freeserif	regular	https://mirrors.kernel.org/gnu/freefont/freefont-ttf-20120503.zip	7c85baf1bf82a1a1845d1322112bc6ca982221b484e3b3925022e25b5cae89af	freefont-20120503/FreeSerif.ttf
+freeserif	licence	https://mirrors.kernel.org/gnu/freefont/freefont-ttf-20120503.zip	7c85baf1bf82a1a1845d1322112bc6ca982221b484e3b3925022e25b5cae89af	freefont-20120503/COPYING

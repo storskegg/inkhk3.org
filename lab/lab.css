@@ -83,7 +83,7 @@ main { flex: 1; min-width: 0; }
 .card.today { --title-ff: "lab-umschrift", serif; --title-w: 700; --title-s: normal; --quote-ff: serif; --quote-w: 900; --quote-s: normal; --cite-s: italic; }
 
 /* --- specimen --- */
-#specimen, #table { padding: 16px; background: #fff; color: #222; min-height: 100vh; }
+#specimen, #table, #aleph { padding: 16px; background: #fff; color: #222; min-height: 100vh; }
 .spec-head { margin: 0 0 6px; }
 .spec-head small { color: #666; font-weight: normal; }
 .spec-style { margin: 14px 0; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
@@ -112,3 +112,23 @@ main { flex: 1; min-width: 0; }
 #table .num { text-align: right; font-variant-numeric: tabular-nums; }
 #table .ok { color: #070; } #table .bad { color: #c00; }
 #table button { font-size: 11px; margin: 1px; cursor: pointer; }
+
+#reset { width: 100%; margin: 0 0 6px; padding: 5px; cursor: pointer; }
+
+/* --- aleph view --- */
+#aleph { font-synthesis: none; }
+.abar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+.abar label { font-size: 13px; color: #333; }
+.apick { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-bottom: 6px; }
+.achk { font-size: 12px; color: #333; display: flex; gap: 4px; align-items: center; }
+.acell-key { font-size: 12px; color: #444; margin: 2px 0 12px; }
+.arow { margin: 0 0 18px; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; }
+.ainfo { font-size: 12px; color: #444; margin-bottom: 4px; }
+.apair { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 36px; }
+.acell { position: relative; white-space: nowrap; line-height: 1.15; color: #111; }
+.acell .bl { display: inline-block; width: 0; height: 0; vertical-align: baseline; }
+.acell .gl { position: absolute; left: 0; right: 0; height: 0; border-top: 1px solid; pointer-events: none; opacity: .5; }
+.gl.base { border-color: #888; }
+.gl.x { border-color: #26f; }
+.gl.cap { border-color: #2a2; }
+.gl.ux, .gl.uc { border-top-style: dashed; border-color: #e22; }

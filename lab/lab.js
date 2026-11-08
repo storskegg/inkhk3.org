@@ -42,7 +42,7 @@
     for (const f of list) {
       const o = document.createElement("option");
       o.value = f.name;
-      o.textContent = `${f.family}${f.control ? " (sans control)" : ""}  [${score(f)}]${f.today ? "  (today)" : ""}`;
+      o.textContent = `${f.family}  [${score(f)}]${f.today ? "  (today)" : ""}`;
       sel.appendChild(o);
     }
   }
@@ -52,12 +52,54 @@
   fill($("quote-font"), quoteList);
   fill($("spec-font"), titleList);
 
-  const state = {
-    title: q.get("title") || "gentium", tw: q.get("tw") || "700", ti: q.get("ti") === "1",
-    quote: q.get("quote") || "gentium", qw: q.get("qw") || "900", qi: q.get("qi") === "1", ci: q.get("ci") !== "0",
-    width: q.get("width") || "765", side: q.get("side") === "1",
-    spec: q.get("spec") || q.get("title") || "gentium", view: q.get("view") || "card",
+  // ---- aleph data (optional: lab/aleph.json from measure-aleph.py) ----
+  let aleph = null;
+  try { const r = await fetch("aleph.json"); if (r.ok) aleph = await r.json(); } catch (e) { aleph = null; }
+  const alephNames = aleph ? aleph.fonts.map(f => f.name) : [];
+  const alephDefault = aleph ? aleph.rank_bold.slice(0, 6) : [];
+
+  // ---- state: URL params > localStorage > defaults; every value validated on its own ----
+  const STORE_KEY = "inkhk3-lab";
+  const DEFAULTS = {
+    title: "gentium", tw: "700", ti: false, quote: "gentium", qw: "900", qi: false, ci: true,
+    width: "765", side: false, spec: "gentium", view: "card", af: alephDefault, aw: "bold",
   };
+  const asBool = v => (v === true || v === "1") ? true : (v === false || v === "0") ? false : undefined;
+  const oneOf = list => v => list.includes(String(v)) ? String(v) : undefined;
+  const fontOk = pred => v => (typeof v === "string" && Object.prototype.hasOwnProperty.call(byName, v) && pred(byName[v])) ? v : undefined;
+  const hasFiles = f => !f.virtual && Object.keys(f.styles).length > 0;
+  const VALID = {
+    title: fontOk(hasFiles), quote: fontOk(f => f.virtual || hasFiles(f)), spec: fontOk(hasFiles),
+    tw: oneOf(["400", "700", "900"]), qw: oneOf(["400", "700", "900"]),
+    ti: asBool, qi: asBool, ci: asBool, side: asBool,
+    width: oneOf(["765", "918", "540", "340"]), view: oneOf(["card", "specimen", "table", "aleph"]),
+    aw: oneOf(["bold", "regular"]),
+    af: v => {
+      const arr = Array.isArray(v) ? v : (typeof v === "string" ? v.split(",") : null);
+      if (!arr) return undefined;
+      const ok = [...new Set(arr.filter(n => typeof n === "string" && alephNames.includes(n)))];
+      return (ok.length || !arr.filter(Boolean).length) ? ok : undefined;   // all stale names: back to the default
+    },
+  };
+  const defaults = () => ({ ...DEFAULTS, af: [...DEFAULTS.af] });
+  function loadState() {
+    const s = defaults(), keys = Object.keys(DEFAULTS);
+    let src = null;
+    if (keys.some(k => q.has(k))) src = Object.fromEntries(keys.filter(k => q.has(k)).map(k => [k, q.get(k)]));  // URL wins, storage ignored
+    else {
+      try {
+        const o = JSON.parse(localStorage.getItem(STORE_KEY));
+        if (o && typeof o === "object" && !Array.isArray(o)) src = o;
+      } catch (e) { src = null; }
+    }
+    let specOk = false;
+    if (src) for (const k of keys) {
+      try { const v = VALID[k](src[k]); if (v !== undefined) { s[k] = v; if (k === "spec") specOk = true; } } catch (e) { /* keep default */ }
+    }
+    if (!specOk) s.spec = s.title;
+    return s;
+  }
+  const state = loadState();
 
   function weightOptions(sel, name, current) {
     const c = caps(name), f = byName[name];
@@ -168,28 +210,94 @@
       const ext = r ? Object.values(r.extra).filter(Boolean).length : "-";
       const sizes = Object.entries(ss).map(([k, v]) => `${STYLE_NAMES[k]} ${kb(v.woff2Bytes)}`).join("<br>");
       const flag = f.webLicenceUnclear;
-      h += `<tr class="${flag ? "flag" : ""}"><td><b>${f.family}</b>${f.control ? " (sans control)" : ""}${f.today ? " (today)" : ""}<br><small>${f.notes}</small></td><td class="num">${c("regular")} / ${c("italic")} / ${c("bold")} / ${c("bolditalic")}${f.weightRange ? "<br><small>variable: bold from the axis</small>" : ""}</td><td class="num">${ext}/4</td><td>${r && r.basicLatin ? '<span class="ok">yes</span>' : '<span class="bad">no</span>'}</td><td>${r ? (r.gposMarkFeature ? "yes" : "no") : ""}</td><td>${caps(f.name).label}</td><td>${sizes}</td><td class="lic">${f.licence}</td><td>${f.source ? `<a href="${f.source}" target="_blank" rel="noreferrer">source</a>` : ""}</td><td><button data-t="${f.name}">title</button><button data-q="${f.name}">quote</button><button data-s="${f.name}">specimen</button></td></tr>`;
+      h += `<tr class="${flag ? "flag" : ""}"><td><b>${f.family}</b>${f.today ? " (today)" : ""}<br><small>${f.notes}</small></td><td class="num">${c("regular")} / ${c("italic")} / ${c("bold")} / ${c("bolditalic")}${f.weightRange ? "<br><small>variable: bold from the axis</small>" : ""}</td><td class="num">${ext}/4</td><td>${r && r.basicLatin ? '<span class="ok">yes</span>' : '<span class="bad">no</span>'}</td><td>${r ? (r.gposMarkFeature ? "yes" : "no") : ""}</td><td>${caps(f.name).label}</td><td>${sizes}</td><td class="lic">${f.licence}</td><td>${f.source ? `<a href="${f.source}" target="_blank" rel="noreferrer">source</a>` : ""}</td><td><button data-t="${f.name}">title</button><button data-q="${f.name}">quote</button><button data-s="${f.name}">specimen</button></td></tr>`;
     }
     h += `</table>`;
     $("table").innerHTML = h;
   }
 
-  // ---- wiring ----
-  function sync() {
-    const p = new URLSearchParams({ title: state.title, tw: state.tw, ti: +state.ti, quote: state.quote, qw: state.qw, qi: +state.qi, ci: +state.ci, width: state.width, side: +state.side, spec: state.spec, view: state.view });
-    history.replaceState(null, "", "?" + p);
+  // ---- aleph view ----
+  const faceRank = face => aleph["rank_" + face];
+  function renderAleph() {
+    const el = $("aleph");
+    if (!aleph) { el.innerHTML = '<p class="legend">No aleph.json: run lab/measure-aleph.py (see README).</p>'; return; }
+    const face = state.aw, order = faceRank(face), U = aleph.umschrift[face];
+    const ent = n => aleph.fonts.find(f => f.name === n);
+    let h = `<div class="abar"><label>Face <select id="aw"><option value="bold">Bold (the title face; Umschrift SB)</option><option value="regular">Regular (Umschrift S)</option></select></label>`;
+    h += ` <button data-a="top6">Top 6</button> <button data-a="all">All</button> <button data-a="none">None</button></div><div class="apick">`;
+    for (const n of order) {
+      const e = ent(n), m = e.faces[face];
+      h += `<label class="achk"><input type="checkbox" data-af="${n}"${state.af.includes(n) ? " checked" : ""}> #${m.rank} ${e.family}${face === "bold" && !m.realFace ? " (no bold)" : ""} <small>${m.score.toFixed(2)}</small></label>`;
+    }
+    h += `</div><p class="legend">Ranked by the score in aleph-report.md (shape and proportion about equally, formula there). Same font size and baseline in each row: ꜣ in the candidate (left of each pair) against Umschrift's # (right). Guides: baseline (grey), x-height (blue) and cap height (green) of the cell's own font; Umschrift's x-height and cap height are repeated as red dashes inside the candidate cells. Rank is by score, not by eye: look. A face without bold shows its regular.</p>`;
+    h += `<div class="acell-key">Umschrift reference (${face === "bold" ? "SB" : "S"}): ꜣ ${U.components} pieces, h/x ${U.hOverX.toFixed(2)}, w/x ${U.wOverX.toFixed(2)}, top/cap ${U.topOverCap.toFixed(2)}</div>`;
+    const ufam = `"lab-umschrift", serif`, uw = face === "bold" ? 700 : 400;
+    const cell = (ff, w, size, text, m, um, extra) => `<div class="acell" style='font-family:${ff};font-weight:${w};font-size:${size}px' data-x="${m.xHeightEm}" data-c="${m.capHeightEm}"${um ? ` data-ux="${um.xHeightEm}" data-uc="${um.capHeightEm}"` : ""}><span class="bl"></span>${text}</div>`;
+    for (const n of order) {
+      if (!state.af.includes(n)) continue;
+      const e = ent(n), m = e.faces[face], f = byName[n];
+      const w = face === "bold" && m.realFace ? 700 : 400;
+      h += `<div class="arow"><div class="ainfo"><b>${e.family}</b> #${m.rank}, score ${m.score.toFixed(3)} (shape ${m.score_shape.toFixed(2)}, proportion ${m.score_proportion.toFixed(2)}); ꜣ ${m.components} pieces, h/x ${m.hOverX.toFixed(2)}, w/x ${m.wOverX.toFixed(2)}, top/cap ${m.topOverCap.toFixed(2)}; ${f.licence.split(" (")[0]}${face === "bold" && !m.realFace ? "; no bold face, regular shown" : ""}</div><div class="apair">`;
+      h += cell(ff(n), w, 96, "Ink Ḥkꜣ", m, U) + cell(ufam, uw, 96, "Ink Ok#", U, null);
+      h += cell(ff(n), w, 240, "ꜣ", m, U) + cell(ufam, uw, 240, "#", U, null);
+      h += `</div></div>`;
+    }
+    el.innerHTML = h;
+    $("aw").value = face;
+    document.fonts.ready.then(() => requestAnimationFrame(placeGuides));
+  }
+  function placeGuides() {
+    for (const c of document.querySelectorAll("#aleph .acell")) {
+      c.querySelectorAll(".gl").forEach(n => n.remove());
+      const size = parseFloat(getComputedStyle(c).fontSize);
+      const base = c.querySelector(".bl").getBoundingClientRect().bottom - c.getBoundingClientRect().top;
+      const add = (em, cls) => { const d = document.createElement("i"); d.className = "gl " + cls; d.style.top = (base - em * size) + "px"; c.appendChild(d); };
+      add(0, "base"); add(+c.dataset.x, "x"); add(+c.dataset.c, "cap");
+      if (c.dataset.ux) { add(+c.dataset.ux, "ux"); add(+c.dataset.uc, "uc"); }
+    }
+  }
+  document.fonts.addEventListener("loadingdone", () => { if (state.view === "aleph") placeGuides(); });
+
+  // ---- persistence ----
+  function persist() {
+    try {
+      const p = new URLSearchParams({ title: state.title, tw: state.tw, ti: +state.ti, quote: state.quote, qw: state.qw, qi: +state.qi, ci: +state.ci, width: state.width, side: +state.side, spec: state.spec, view: state.view, af: state.af.join(","), aw: state.aw });
+      history.replaceState(null, "", "?" + p);
+    } catch (e) { /* e.g. sandboxed URL */ }
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* private mode, quota */ }
   }
   function showView() {
-    for (const v of ["card", "specimen", "table"]) $("view-" + v).classList.toggle("on", v === state.view);
+    for (const v of ["card", "specimen", "table", "aleph"]) $("view-" + v).classList.toggle("on", v === state.view);
     for (const b of document.querySelectorAll("#views button")) b.classList.toggle("on", b.dataset.view === state.view);
     if (state.view === "specimen") renderSpecimen();
+    if (state.view === "aleph") renderAleph();
   }
-  function setAll() {
+  function setAll(save = true) {
     $("title-font").value = state.title; $("quote-font").value = state.quote; $("spec-font").value = state.spec;
     $("title-italic").checked = state.ti; $("quote-italic").checked = state.qi; $("cite-italic").checked = state.ci;
     $("card-width").value = state.width; $("side").checked = state.side;
-    applyCard(); showView(); sync();
+    applyCard(); showView(); if (save) persist();
   }
+  $("reset").onclick = () => {
+    try { localStorage.removeItem(STORE_KEY); } catch (e) { /* ignore */ }
+    try { history.replaceState(null, "", location.pathname); } catch (e) { /* ignore */ }
+    Object.assign(state, defaults());
+    setAll(false);   // controls back to the defaults, nothing written until the next change
+  };
+  $("aleph").addEventListener("change", e => {
+    if (e.target.id === "aw") { state.aw = e.target.value; setAll(); }
+    else if (e.target.dataset.af) {
+      const n = e.target.dataset.af, on = e.target.checked;
+      state.af = faceRank(state.aw).filter(x => x === n ? on : state.af.includes(x));
+      setAll();
+    }
+  });
+  $("aleph").addEventListener("click", e => {
+    const b = e.target.closest("button[data-a]"); if (!b) return;
+    const order = faceRank(state.aw);
+    state.af = b.dataset.a === "top6" ? order.slice(0, 6) : b.dataset.a === "all" ? [...order] : [];
+    setAll();
+  });
   $("title-font").onchange = e => { state.title = e.target.value; setAll(); };
   $("quote-font").onchange = e => { state.quote = e.target.value; setAll(); };
   $("spec-font").onchange = e => { state.spec = e.target.value; setAll(); };

@@ -10,10 +10,11 @@ today's card (Umschrift title + system serif quote). Nothing here is built or de
 ```sh
 FONTTOOLS_PY=/path/to/venv/bin/python lab/fetch-fonts.sh   # once; idempotent, ~150 MB incl. download cache
 "$FONTTOOLS_PY" -I lab/check-coverage.py                   # writes lab/fonts.json from the cmap tables
+"$FONTTOOLS_PY" -I lab/measure-aleph.py                    # writes lab/aleph.json and lab/aleph-report.md
 npm run lab                                                # http://localhost:8081/
 ```
 
-`FONTTOOLS_PY` is any Python with `fontTools` and `brotli`. `npm run lab` runs
+`FONTTOOLS_PY` is any Python with `fontTools` and `brotli` (`measure-aleph.py` also needs `Pillow`, `numpy` and `scipy`). `npm run lab` runs
 `serve -host 127.0.0.1 -port 8081 -dir lab` (this machine's `serve` is the Go one at
 `/opt/homebrew/bin/serve`: it takes `-port`, not `-l`, and flags must come before the directory).
 `localhost:8080` (`serve dist`) is untouched.
@@ -33,11 +34,32 @@ npm run lab                                                # http://localhost:80
   shown as the nearest real face), card width, side-by-side toggle, a specimen view (missing glyphs boxed
   in red from the cmap data, with a monospace fallback behind each font) and a table of all candidates.
   State lives in the URL (`?title=junicode&quote=charis&side=1&view=specimen`).
+- Serifs only: the sans-serif control (Andika) and its "sans control" code were removed. Doulos SIL is a serif and stays.
+- **Aleph study** (`measure-aleph.py` -> `aleph.json`, `aleph-report.md`, both committed): for every serif with a real
+  U+A723 it measures the ꜣ against Umschrift's (the glyph at `#`) from the outlines (size relative to x-height, cap
+  height and the letter k, title width) and from a 400 px raster (number of ink pieces, gap between the hooks, stroke
+  thickness against the font's own `I` stem, silhouette IoU), in the bold face (the title face; the regular one where
+  there is no bold) and in regular, and ranks them by a documented score (formula in the report). Umschrift's `x` and
+  `H` are not plain Latin (h-breve-below, H with a dot below), so its x-height comes from `z` and its cap height from `E`.
+  The numbers are approximate; the score is a first filter, look at the Aleph view.
+- **Aleph view** (`view=aleph`, button "Aleph"): per candidate a row with "Ink Ḥkꜣ" at 96 px and the ꜣ alone at 240 px,
+  each next to Umschrift's "Ink Ok#" and "#" on the same baseline, with the baseline, x-height and cap height as faint
+  guides (Umschrift's two heights repeated as red dashes). Pick the fonts with the checkboxes (default: top 6 by bold
+  score), "Top 6" / "All" / "None", and a Bold / Regular toggle. URL: `af=<comma list>`, `aw=bold|regular`.
+- **Settings persist.** Every control is saved to `localStorage` under one key, `inkhk3-lab` (JSON), and to the URL.
+  On load, if the URL has any lab parameter the URL wins and storage is ignored (so shared links work); otherwise the
+  stored values are used; otherwise the defaults. Every stored value is validated on its own: a missing or invalid
+  value, or a font that is no longer in `fonts.json` (say a stale "andika"), falls back to that control's default and
+  the other values are kept. Storage reads and writes are in try/catch (private mode, quota, bad JSON). The "Reset
+  settings" button clears the key and the URL parameters and puts every control back to its default.
 - The title uses real Unicode ("Ink Ḥkꜣ {.org}") for candidates and the keyboard-encoded string
   ("Ink Ok# {.Órg}") for Umschrift.
 
 ## Adding a font
 
 Add its rows to `manifest.tsv` (pin a release, run `shasum -a 256` once) and an entry to
-`fonts-meta.json`, then rerun the two scripts. Brill is listed in the meta file only: its download page
-refuses scripted fetches and its licence is restricted for web use.
+`fonts-meta.json`, then rerun the two scripts. Fonts that cannot be shipped are listed in the meta file only
+(no manifest rows): Brill (download refused, restricted web licence), Quivira (redistribution only unaltered),
+Palemonas (no download or terms found), TITUS Cyberbit Basic (non-commercial), Andron Scriptor Web (proprietary) and
+Linguistics Pro (OFL, but no U+A722-A725). `extract.py` drops an empty `fpgm`/`prep`/`cvt ` table when converting
+(BBAW Schoell ships an empty `fpgm`, which Chrome's sanitiser rejects).

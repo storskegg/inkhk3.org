@@ -48,7 +48,10 @@
     <button data-view="card">Card</button>
     <button data-view="specimen">Specimen</button>
     <button data-view="table">All candidates</button>
+    <button data-view="aleph">Aleph</button>
   </nav>
+  <button id="reset" title="Clear the saved settings and the URL, back to the defaults">Reset settings</button>
+  <p class="hint">Settings are saved in this browser (localStorage "inkhk3-lab") and in the URL; a URL with parameters wins over the saved ones.</p>
   <p class="hint">font-synthesis is off: a missing bold or italic is shown as the nearest real face, never faked. Missing glyphs fall back to a monospace face and are boxed in red.</p>
 </aside>
 
@@ -78,6 +81,7 @@
 
 <section id="view-specimen" class="view"><div id="specimen"></div></section>
 <section id="view-table" class="view"><div id="table"></div></section>
+<section id="view-aleph" class="view"><div id="aleph"></div></section>
 </main>
 </body>
 </html>
