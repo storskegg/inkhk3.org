@@ -14,6 +14,7 @@
     "watch:vite:js": "onchange 'src/*.js' -- npm run build:vite",
     "watch:vite": "npm-run-all --parallel watch:vite:*",
     "serve": "browser-sync start --server dist --files dist",
+    "lab": "serve -host 127.0.0.1 -port 8081 -dir lab",
     "start": "npm run vite:serve",
     "build": "npm run build:vite",
     "postbuild": "postcss dist/*.css -u autoprefixer cssnano -r --no-map",

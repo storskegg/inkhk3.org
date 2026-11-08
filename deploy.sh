@@ -57,6 +57,12 @@ fi
 npm run build
 [[ -f dist/index.html ]] || die "dist/index.html missing after build"
 
+# The local font lab (lab/, `npm run lab`) must never reach the bucket: it holds downloaded font
+# files whose web licences are not all cleared. Abort if anything lab-like is in dist/.
+lab_hits="$(find dist \( -iname lab -o -path '*/lab/*' \) -print | head -n 5)"
+[[ -z "$lab_hits" ]] || die "dist/ contains lab files, refusing to upload:
+$lab_hits"
+
 # --- upload (no deletes) -----------------------------------------------------
 # aws s3 sync guesses content types from file extensions and has no per-file
 # header rules, so dist/ is synced in disjoint passes. Each pass filters with

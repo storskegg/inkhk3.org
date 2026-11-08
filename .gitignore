@@ -284,3 +284,11 @@ http-client.private.env.json
 
 # Github Copilot persisted session migrations, see: https://github.com/microsoft/copilot-intellij-feedback/issues/712#issuecomment-3322062215
 .idea/**/copilot.data.migration.*.xml
+
+# lab: downloaded fonts and copies of site assets (see lab/fetch-fonts.sh)
+lab/fonts/
+lab/hierojax.js
+lab/NewGardiner.woff2
+lab/paper_fff.jpg
+lab/binding_dark2.png
+lab/hierojax.css

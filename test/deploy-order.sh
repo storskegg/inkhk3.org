@@ -15,6 +15,9 @@ cat > "$TMP/bin/npm" <<'NPM'
 if [[ "$1" == run ]]; then
   rm -rf dist; mkdir -p dist/fonts
   for f in index.html index-NEW1.js index-NEW1.css favicon.png fonts/a.woff2 fonts/b.ttf site.webmanifest; do echo x > "dist/$f"; done
+  # FAKE_LAB=dir|file: smuggle something lab-like into dist/ to test deploy.sh's guard
+  if [[ "${FAKE_LAB:-}" == dir ]]; then mkdir -p dist/lab; echo x > dist/lab/fonts.json; fi
+  if [[ "${FAKE_LAB:-}" == file ]]; then echo x > dist/fonts/lab; fi
 fi
 NPM
 printf '#!/usr/bin/env bash\necho TFDIST1\n' > "$TMP/bin/terraform"
@@ -47,4 +50,16 @@ check "previous hashed pair kept" '! grep -q "PREV1" <(grep "s3 rm" "$FAKE_AWS_L
 check "older hashed files deleted" 'grep -q "s3 rm s3://static-site-inkhk3-org/index-OLDER1.js" "$FAKE_AWS_LOG" && grep -q "s3 rm s3://static-site-inkhk3-org/index-OLDER1.css" "$FAKE_AWS_LOG"'
 check "strays deleted" 'grep -q "s3 rm s3://static-site-inkhk3-org/style.css" "$FAKE_AWS_LOG" && grep -q "s3 rm s3://static-site-inkhk3-org/old dir/stray file.png" "$FAKE_AWS_LOG"'
 check "files in dist/ not deleted" '! grep "s3 rm" "$FAKE_AWS_LOG" | grep -q -E "index.html|index-NEW1"'
+
+echo; echo "=== lab guard ==="
+for kind in dir file; do
+  : > "$FAKE_AWS_LOG"
+  rc=0; FAKE_LAB=$kind ./deploy.sh --live > "$TMP/guard-$kind.out" 2>&1 || rc=$?
+  check "guard ($kind named lab in dist/): deploy.sh --live exits non-zero" '[[ $rc -ne 0 ]]'
+  check "guard ($kind): error message names the lab file" 'grep -q "dist/ contains lab files" "$TMP/guard-$kind.out" && grep -q "lab" "$TMP/guard-$kind.out"'
+  check "guard ($kind): nothing uploaded, invalidated or deleted" '! grep -q -E "s3 sync|s3 rm|create-invalidation" "$FAKE_AWS_LOG"'
+done
+: > "$FAKE_AWS_LOG"
+rc=0; ./deploy.sh > "$TMP/guard-dry.out" 2>&1 || rc=$?
+check "guard: a dist/ without lab still deploys (dry run ok)" '[[ $rc -eq 0 ]]'
 exit $fail

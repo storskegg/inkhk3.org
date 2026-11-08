@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="egy-mdctrans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ink Ḥkꜣ font lab (local only)</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="hierojax.css">
+<link rel="stylesheet" href="lab.css">
+<script type="module" src="hierojax.js"></script>
+<script src="lab.js" defer></script>
+</head>
+<body>
+<aside id="panel">
+  <h1>Font lab</h1>
+  <p class="hint">Local only. Not part of the site build.</p>
+
+  <fieldset><legend>Title ("Ink Ḥkꜣ {.org}")</legend>
+    <select id="title-font"></select>
+    <label>Weight <select id="title-weight"></select></label>
+    <label class="chk"><input type="checkbox" id="title-italic"> Italic</label>
+    <div class="status" id="title-status"></div>
+  </fieldset>
+
+  <fieldset><legend>Quote and citation</legend>
+    <select id="quote-font"></select>
+    <label>Weight <select id="quote-weight"></select></label>
+    <label class="chk"><input type="checkbox" id="quote-italic"> Italic</label>
+    <div class="status" id="quote-status"></div>
+  </fieldset>
+
+  <fieldset><legend>Card</legend>
+    <label>Width <select id="card-width">
+      <option value="765">765 px (1440x900 desktop)</option>
+      <option value="918">918 px (1920x1080)</option>
+      <option value="540">540 px</option>
+      <option value="340">340 px (phone)</option>
+    </select></label>
+    <label class="chk"><input type="checkbox" id="side"> Side by side with today's card</label>
+  </fieldset>
+
+  <fieldset><legend>Specimen font</legend>
+    <select id="spec-font"></select>
+  </fieldset>
+
+  <nav id="views">
+    <button data-view="card">Card</button>
+    <button data-view="specimen">Specimen</button>
+    <button data-view="table">All candidates</button>
+  </nav>
+  <p class="hint">font-synthesis is off: a missing bold or italic is shown as the nearest real face, never faked. Missing glyphs fall back to a monospace face and are boxed in red.</p>
+</aside>
+
+<main>
+<section id="view-card" class="view">
+  <div id="stage">
+    <figure class="cardwrap" id="cand-wrap"><figcaption id="cand-cap">Candidate</figcaption>
+      <div class="card" id="cand">
+        <article>
+          <header><h1 class="egypt"><span class="hierojax" data-type="svg" data-standalone="true">𓏌𓐰𓎡𓎛𓂓𓐰𓏝𓀭</span><span class="title-text"><span class="t1"></span> <span class="t2"></span></span></h1></header>
+          <blockquote><p>May your words occur; may your magic shine.</p><cite>Ritner 1993, p. 30; Hornung &amp; Abt 2007, p. 152</cite></blockquote>
+          <div class="amduat"><span class="hierojax" data-type="svg" data-standalone="true">𓐍𓐱𓊪𓐰𓂋𓈖𓌃𓅱𓏛𓐰𓏥𓍿𓐰𓈖𓐰𓏥𓊏𓐰𓊪𓇳𓈖𓎛𓎡𓄿𓅱𓏛𓐰𓏥𓍿𓐰𓈖𓐰𓏥</span></div>
+        </article>
+      </div>
+    </figure>
+    <figure class="cardwrap" id="today-wrap"><figcaption>Today (Umschrift title, system serif quote)</figcaption>
+      <div class="card today" id="today">
+        <article>
+          <header><h1 class="egypt"><span class="hierojax" data-type="svg" data-standalone="true">𓏌𓐰𓎡𓎛𓂓𓐰𓏝𓀭</span><span class="title-text"><span>Ink Ok#</span> <span>{.Órg}</span></span></h1></header>
+          <blockquote><p>May your words occur; may your magic shine.</p><cite>Ritner 1993, p. 30; Hornung &amp; Abt 2007, p. 152</cite></blockquote>
+          <div class="amduat"><span class="hierojax" data-type="svg" data-standalone="true">𓐍𓐱𓊪𓐰𓂋𓈖𓌃𓅱𓏛𓐰𓏥𓍿𓐰𓈖𓐰𓏥𓊏𓐰𓊪𓇳𓈖𓎛𓎡𓄿𓅱𓏛𓐰𓏥𓍿𓐰𓈖𓐰𓏥</span></div>
+        </article>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<section id="view-specimen" class="view"><div id="specimen"></div></section>
+<section id="view-table" class="view"><div id="table"></div></section>
+</main>
+</body>
+</html>
