@@ -30,18 +30,11 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.s3_origin_id
 
-    forwarded_values {
-      query_string = false
-
-      cookies {
-        forward = "none"
-      }
-    }
-
+    # CloudFront serves Brotli only through a cache policy, not legacy forwarded_values;
+    # the TTLs and cache key match what they were (no query string, no cookies, no headers).
+    cache_policy_id        = aws_cloudfront_cache_policy.site.id
+    compress               = true
     viewer_protocol_policy = "redirect-to-https"
-    min_ttl                = 0
-    default_ttl            = 3600
-    max_ttl                = 86400
 
     response_headers_policy_id = aws_cloudfront_response_headers_policy.security_headers.id
   }
@@ -67,6 +60,28 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   ]
 }
 
+
+# Cache policy with the old TTLs and cache key, plus gzip and Brotli at the edge
+resource "aws_cloudfront_cache_policy" "site" {
+  name        = "inkhk3-org-compressed"
+  min_ttl     = 0
+  default_ttl = 3600
+  max_ttl     = 86400
+
+  parameters_in_cache_key_and_forwarded_to_origin {
+    cookies_config {
+      cookie_behavior = "none"
+    }
+    headers_config {
+      header_behavior = "none"
+    }
+    query_strings_config {
+      query_string_behavior = "none"
+    }
+    enable_accept_encoding_gzip   = true
+    enable_accept_encoding_brotli = true
+  }
+}
 
 resource "aws_cloudfront_origin_access_control" "oac" {
   name                              = var.oac_name

@@ -49,6 +49,10 @@ and only then deletes stale keys, keeping hashed `index-*.js/css` uploaded in th
 `test/deploy-order.sh` runs `deploy.sh` and `--live` against a fake `aws` (`test/fake-aws.sh`) and checks that order;
 it needs node 24 and calls no AWS.
 
+CloudFront compresses at the edge with Brotli and gzip, through the cache policy `inkhk3-org-compressed`
+(`modules/cloudfront/main.tf`). woff2 fonts and images are not compressed. The SRI hashes below check the decoded bytes,
+so compression doesn't affect them.
+
 ### Subresource Integrity
 
 `npm run build` ends with `bin/sri.mjs` (in `postbuild`, after postcss/cssnano, so it hashes the final bytes). In every
