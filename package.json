@@ -3,22 +3,23 @@
   "version": "1.0.0",
   "description": "Source for inkhk3.org website.",
   "main": "src/index.html",
+  "bin": {
+    "serve": "bin/serve.mjs",
+    "serve-dist": "bin/serve-dist.mjs"
+  },
   "engines": {
     "npm": ">=11.6.2 <12.0.0",
     "node": ">=24.12.0 <25.0.0"
   },
   "scripts": {
     "build:vite": "npx vite build",
-    "watch:vite:html": "onchange 'src/*.html' -- npm run build:vite",
-    "watch:vite:sass": "onchange 'src/*.scss' -- npm run build:vite",
-    "watch:vite:js": "onchange 'src/*.js' -- npm run build:vite",
-    "watch:vite": "npm-run-all --parallel watch:vite:*",
-    "serve": "browser-sync start --server dist --files dist",
-    "lab": "serve -host 127.0.0.1 -port 8081 -dir lab",
-    "start": "npm run vite:serve",
+    "serve": "vite",
+    "serve-dist": "npm run build && vite preview",
+    "dev": "npm run serve",
+    "start": "npm run serve",
+    "lab": "serve -host 127.0.0.1 -port 8082 -dir lab",
     "build": "npm run build:vite",
-    "postbuild": "postcss dist/*.css -u autoprefixer cssnano -r --no-map",
-    "vite:serve": "npm-run-all --parallel watch:vite serve"
+    "postbuild": "postcss dist/*.css -u autoprefixer cssnano -r --no-map"
   },
   "repository": {
     "type": "git",

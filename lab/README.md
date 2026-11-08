@@ -11,13 +11,13 @@ today's card (Umschrift title + system serif quote). Nothing here is built or de
 FONTTOOLS_PY=/path/to/venv/bin/python lab/fetch-fonts.sh   # once; idempotent, ~150 MB incl. download cache
 "$FONTTOOLS_PY" -I lab/check-coverage.py                   # writes lab/fonts.json from the cmap tables
 "$FONTTOOLS_PY" -I lab/measure-aleph.py                    # writes lab/aleph.json and lab/aleph-report.md
-npm run lab                                                # http://localhost:8081/
+npm run lab                                                # http://localhost:8082/
 ```
 
 `FONTTOOLS_PY` is any Python with `fontTools` and `brotli` (`measure-aleph.py` also needs `Pillow`, `numpy` and `scipy`). `npm run lab` runs
-`serve -host 127.0.0.1 -port 8081 -dir lab` (this machine's `serve` is the Go one at
+`serve -host 127.0.0.1 -port 8082 -dir lab` (this machine's `serve` is the Go one at
 `/opt/homebrew/bin/serve`: it takes `-port`, not `-l`, and flags must come before the directory).
-`localhost:8080` (`serve dist`) is untouched.
+The dev server uses 8081 and `serve-dist` uses 8080; the lab stays off both.
 
 ## What is where
 

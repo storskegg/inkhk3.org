@@ -1,18 +1,33 @@
 import type { UserConfig } from 'vite';
 import cleanPlugin from 'vite-plugin-clean';
 
-export default {
+export default ({ command }: { command: 'build' | 'serve' }) => ({
     plugins: [
-        // @ts-ignore
-        cleanPlugin({
-            targetFiles: ['dist'],
-        }),
+        // Wipe dist/ only for builds; the dev server must never touch it.
+        {
+            // @ts-ignore
+            ...cleanPlugin({
+                targetFiles: ['dist'],
+            }),
+            apply: 'build' as const,
+        },
     ],
     root: './src',
-    base: '../dist',
+    // '../dist' is only meant for the build output; the dev server serves from '/'.
+    base: command === 'build' ? '../dist' : '/',
     publicDir: '../public',
     build: {
         outDir: '../dist',
         assetsDir: '.'
-    }
-} satisfies UserConfig
+    },
+    server: {
+        host: '127.0.0.1',
+        port: 8081,
+        strictPort: true,
+    },
+    preview: {
+        host: '127.0.0.1',
+        port: 8080,
+        strictPort: true,
+    },
+}) satisfies (env: { command: 'build' | 'serve' }) => UserConfig
