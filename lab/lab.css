@@ -135,7 +135,7 @@ main { flex: 1; min-width: 0; }
 
 /* --- the enlarged title ꜣ: a transform changes neither the line box nor the advance. The scale and shift
    (em of the span's own font-size) come from --as / --ay; the origin is the baseline (see --aleph-oy). */
-.aleph { display: inline-block; line-height: 0; transform-origin: var(--aleph-ox, 0.017em) var(--aleph-oy, 0.2835em); transform: translateY(calc(var(--ay, 0) * -1em)) scale(var(--as, 1)); }
+.aleph { display: inline-block; line-height: 0; margin-left: 0.03em; transform-origin: var(--aleph-ox, 0.017em) var(--aleph-oy, 0.2835em); transform: translateY(calc(var(--ay, 0) * -1em)) scale(var(--as, 1)); }
 
 .atune { background: #fffbe6; }
 #atune-nums { margin-top: 6px; }

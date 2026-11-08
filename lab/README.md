@@ -24,8 +24,10 @@ the site's `npm run dev` 8083.
 
 - `manifest.tsv`: every font file, its pinned release URL and sha256. `fetch-fonts.sh` verifies the hash,
   converts each style to woff2 (lossless, no subsetting) into `fonts/<name>/<style>.woff2` and keeps the
-  licence file as `licence.lic`. It also copies today's `UMSCH_*.woff2` into `fonts/umschrift/` and copies
-  `hierojax.js`, `NewGardiner.woff2`, `paper_fff.jpg`, `binding_dark2.png` and the hierojax CSS to `lab/`.
+  licence file as `licence.lic`. It also recovers Umschrift (the former site title font, kept as the "Today"
+  reference) from git history into `fonts/umschrift/`: `git show 7f519e9:public/UMSCH_*.woff2`, the last commit
+  that had them in `public/`, each checked against its sha256 (needs the full history, not a shallow clone), and
+  copies `hierojax.js`, `NewGardiner.woff2`, `paper_fff.jpg`, `binding_dark2.png` and the hierojax CSS to `lab/`.
   The hieroglyph lines are rendered by the real hierojax, exactly like the site.
 - `fonts-meta.json`: hand-written source, licence and notes per font. `check-coverage.py` merges it with
   what it reads from the font files into `fonts.json` (coverage per style, woff2 sizes, name-table licence,
@@ -49,6 +51,15 @@ the site's `npm run dev` 8083.
   each next to Umschrift's "Ink Ok#" and "#" on the same baseline, with the baseline, x-height and cap height as faint
   guides (Umschrift's two heights repeated as red dashes). Pick the fonts with the checkboxes (default: top 6 by bold
   score; the checkboxes and rows are listed A-Z by family, with each font's rank and score kept in its label), "Top 6" (the top 6 by score) / "All" / "None", and a Bold / Regular toggle. URL: `af=<comma list>`, `aw=bold|regular`.
+- **Enlarged title ꜣ** (panel, "Title ꜣ (enlarged)"): scale (1.00-1.40) and shift up in em (-0.10-0.20), URL `as`, `ay`.
+  They are applied to a `<span class="aleph">` around the ꜣ in the candidate's title (and in the Aleph view's
+  tuning block at the top: New Athena Bold plain, with the enlarged ꜣ, and Umschrift SB, same size and baseline,
+  with the guides; below it the measured ink in em, x-heights and cap heights, from canvas `measureText`, against
+  Umschrift's). The span is `inline-block; line-height: 0` with `transform: translateY() scale()`, so the line
+  box and the advance do not change. The transform origin is New Athena Bold's (the ꜣ's left side bearing, 0.017em,
+  and the baseline, 0.2835em below the zero-height box), so for other title fonts the scale is approximate.
+  Tuned values for the site: scale 1.18, shift 0.037 em (the defaults; `src/style.scss` has the same numbers).
+  New Athena Unicode is the default title and quote font.
 - **Settings persist.** Every control is saved to `localStorage` under one key, `inkhk3-lab` (JSON), and to the URL.
   On load, if the URL has any lab parameter the URL wins and storage is ignored (so shared links work); otherwise the
   stored values are used; otherwise the defaults. Every stored value is validated on its own: a missing or invalid

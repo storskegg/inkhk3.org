@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Downloads the candidate fonts listed in manifest.tsv (pinned release URLs, sha256 verified),
 # converts each style to woff2 (lossless, no subsetting) into lab/fonts/<name>/<style>.woff2, and
-# copies today's site fonts and assets for comparison. Idempotent: cached downloads and finished
+# copies the site's assets and recovers Umschrift (today's reference) from git history. Idempotent: cached downloads and finished
 # outputs are reused. Needs FONTTOOLS_PY (a python with fontTools + brotli), e.g.
 #   FONTTOOLS_PY=/path/to/venv/bin/python lab/fetch-fonts.sh
 # Downloads are untrusted data: they are only hashed, unzipped by Python's zipfile and read with
@@ -42,12 +42,28 @@ while IFS=$'\t' read -r name style url sha member; do
   fi
 done < manifest.tsv
 
-# Today's site fonts (Umschrift) and the card's assets, for the side-by-side card.
+# Umschrift, the site's title font until the switch to New Athena Unicode, stays in the lab as the "Today"
+# reference. Its woff2 files left public/ with that switch, so they are taken from git history, from the
+# last commit that had them (UMSCH_COMMIT), and checked against their sha256. (Not kept as lab copies:
+# lab/fonts/ is gitignored, and committing the binaries again would put them back in the tree.)
+UMSCH_COMMIT=7f519e9
 mkdir -p fonts/umschrift
-cp "$PUB/UMSCH_S.woff2"  fonts/umschrift/regular.woff2
-cp "$PUB/UMSCH_SB.woff2" fonts/umschrift/bold.woff2
-cp "$PUB/UMSCH_I.woff2"  fonts/umschrift/italic.woff2
-cp "$PUB/UMSCH_IB.woff2" fonts/umschrift/bolditalic.woff2
+umsch() {  # umsch <file in public/ at UMSCH_COMMIT> <output> <sha256>
+  [[ -s "fonts/umschrift/$2.woff2" && "$(sha_of "fonts/umschrift/$2.woff2")" == "$3" ]] && return 0
+  if git cat-file -e "$UMSCH_COMMIT:public/$1" 2>/dev/null \
+     && git show "$UMSCH_COMMIT:public/$1" > "fonts/umschrift/$2.woff2.part" \
+     && [[ "$(sha_of "fonts/umschrift/$2.woff2.part")" == "$3" ]]; then
+    mv "fonts/umschrift/$2.woff2.part" "fonts/umschrift/$2.woff2"; echo "ok  fonts/umschrift/$2.woff2 (git $UMSCH_COMMIT)"
+  else
+    rm -f "fonts/umschrift/$2.woff2.part"
+    echo "FAILED: Umschrift $1 from git $UMSCH_COMMIT (history missing, e.g. a shallow clone, or hash mismatch)" >&2; fail=1
+  fi
+}
+umsch UMSCH_S.woff2  regular    1500f41388c6d56b69198dfae30cf920fce3eeb442fe2c87c74e82d5e430bef4
+umsch UMSCH_SB.woff2 bold       dfe0a17240463431280d163f59d2d4e64920aea859ca680a7c2cfd09dc11ae2e
+umsch UMSCH_I.woff2  italic     7817e9e1af2befb343bad22e7c6cf79fbf70ed933136d9a392338baedc2e6b18
+umsch UMSCH_IB.woff2 bolditalic a5a9c6d53ba2d1dca59f3f8bda35f444f0edeea7938771d6bd674ca1c05b394f
+# The card's assets, for the side-by-side card.
 # hierojax.js asks for /NewGardiner.woff2 at the server root, so these live at lab/ root.
 cp "$PUB/NewGardiner.woff2" "$PUB/paper_fff.jpg" "$PUB/binding_dark2.png" ../src/hierojax.js .
 cp ../src/_hierojax.scss hierojax.css   # plain CSS despite the extension
