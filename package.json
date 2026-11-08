@@ -13,11 +13,11 @@
   },
   "scripts": {
     "build:vite": "npx vite build",
-    "serve": "vite",
+    "serve": "vite --config vite.lab.config.ts",
     "serve-dist": "npm run build && vite preview",
-    "dev": "npm run serve",
-    "start": "npm run serve",
-    "lab": "serve -host 127.0.0.1 -port 8082 -dir lab",
+    "dev": "vite",
+    "start": "vite",
+    "lab": "npm run serve",
     "build": "npm run build:vite",
     "postbuild": "postcss dist/*.css -u autoprefixer cssnano -r --no-map"
   },

@@ -20,16 +20,17 @@ I'm entertained that, given the utter simplicity of the website itself, the terr
 
 Needs node 24.x. Run these from the project root:
 
-    npx serve        # Vite dev server with live reload: http://127.0.0.1:8081/
-    npx serve-dist   # builds, then serves the built dist/ (vite preview): http://127.0.0.1:8080/
+    npx serve        # the font lab (lab/) with live reload: http://127.0.0.1:8081/
+    npx serve-dist   # builds, then serves the built site (vite preview): http://127.0.0.1:8080/
+    npm run dev      # the site's own dev server (src/, public/): http://127.0.0.1:8083/
 
-The dev server serves `src/` and `public/`: SCSS changes are hot-swapped, HTML and JS changes reload the page. It never
-touches `dist/`. `npx serve` and `npx serve-dist` work because `package.json` has a `bin` field (`bin/serve.mjs`,
-`bin/serve-dist.mjs`) that runs the npm scripts of the same name, so they only work in this project's root; elsewhere
-`npx serve` would fetch the public `serve` package. The npm scripts do the same: `npm run serve` (aliases `npm run dev`,
-`npm start`) and `npm run serve-dist`. Extra flags pass through, e.g. `npx serve --port 8090`.
-
-The lab (`npm run lab`) uses port 8082.
+`npx serve` runs `vite --config vite.lab.config.ts`: CSS changes in `lab/` are hot-swapped, HTML and JS changes reload
+the page. The lab is never built or deployed (see `lab/README.md`). `npm run dev` (alias `npm start`) is the site's dev
+server: SCSS is hot-swapped, HTML and JS reload. Neither touches `dist/`. `npx serve` and `npx serve-dist` work because
+`package.json` has a `bin` field (`bin/serve.mjs`, `bin/serve-dist.mjs`) that runs the npm scripts of the same name, so
+they only work in this project's root (Node 24); elsewhere `npx serve` would fetch the public `serve` package. The npm
+scripts do the same: `npm run serve` (alias `npm run lab`) and `npm run serve-dist`. Extra flags pass through, e.g.
+`npx serve --port 8090`.
 
 ## Deploying
 

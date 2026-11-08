@@ -11,13 +11,14 @@ today's card (Umschrift title + system serif quote). Nothing here is built or de
 FONTTOOLS_PY=/path/to/venv/bin/python lab/fetch-fonts.sh   # once; idempotent, ~150 MB incl. download cache
 "$FONTTOOLS_PY" -I lab/check-coverage.py                   # writes lab/fonts.json from the cmap tables
 "$FONTTOOLS_PY" -I lab/measure-aleph.py                    # writes lab/aleph.json and lab/aleph-report.md
-npm run lab                                                # http://localhost:8082/
+npx serve                                                  # http://127.0.0.1:8081/ , live reload
 ```
 
-`FONTTOOLS_PY` is any Python with `fontTools` and `brotli` (`measure-aleph.py` also needs `Pillow`, `numpy` and `scipy`). `npm run lab` runs
-`serve -host 127.0.0.1 -port 8082 -dir lab` (this machine's `serve` is the Go one at
-`/opt/homebrew/bin/serve`: it takes `-port`, not `-l`, and flags must come before the directory).
-The dev server uses 8081 and `serve-dist` uses 8080; the lab stays off both.
+`FONTTOOLS_PY` is any Python with `fontTools` and `brotli` (`measure-aleph.py` also needs `Pillow`, `numpy` and `scipy`).
+`npx serve` (Node 24, from the project root; `npm run serve` and `npm run lab` do the same) runs Vite's dev server
+with `vite.lab.config.ts` (root `lab/`, no plugins, no public dir, no build): CSS edits are hot-swapped, JS and HTML
+edits reload the page, and fonts, `hierojax.js` and the JSON files are served as they are. `serve-dist` uses 8080 and
+the site's `npm run dev` 8083.
 
 ## What is where
 

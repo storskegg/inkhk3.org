@@ -22,7 +22,7 @@ export default ({ command }: { command: 'build' | 'serve' }) => ({
     },
     server: {
         host: '127.0.0.1',
-        port: 8081,
+        port: 8083,
         strictPort: true,
     },
     preview: {
