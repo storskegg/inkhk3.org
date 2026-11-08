@@ -77,9 +77,9 @@ form to suit the needs of this project.
   Modified Versions of `newathuBold5_8.ttf` and `newathuItalic5_8.ttf`, so they carry another name, the reserved
   one not being usable. What changed: the family renamed (the `name` table, plus a modification note in name ID 10),
   and the conversion to woff2 (DSIG dropped, glyf and loca rebuilt, head flag and modified date changed). No
-  subsetting, no other change: outlines, hinting, metrics and all other tables are the original's (byte-identical, except
-  glyf and loca, which are the same outlines stored again by the converter). `fonts/make-inkhk3-serif.py` makes them from the zip (checks its sha256 and that no table of the output
-  contains the old name):
+  subsetting, no other change: outlines, hinting, metrics and all other tables are the original's (byte-identical,
+  except glyf and loca, which are the same outlines stored again by the converter). `fonts/make-inkhk3-serif.py` makes
+  them from the zip (checks its sha256 and that no table of the output contains the old name):
   `python3 -I fonts/make-inkhk3-serif.py NAU5_008.zip public/` (needs fontTools and brotli). The licence text, as the
   original states it, plus the list of changes, is `public/InkHk3Serif-OFL.txt`, served at
   <https://inkhk3.org/InkHk3Serif-OFL.txt>. It sets the title, the quote and the citation (real Unicode

@@ -14,7 +14,7 @@ cat > "$TMP/bin/npm" <<'NPM'
 # fake npm: `ci` is a no-op, `run build` writes a small dist/
 if [[ "$1" == run ]]; then
   rm -rf dist; mkdir -p dist/fonts
-  for f in index.html index-NEW1.js index-NEW1.css favicon.png fonts/a.woff2 fonts/b.ttf site.webmanifest; do echo x > "dist/$f"; done
+  for f in index.html index-NEW1.js index-NEW1.css favicon.png fonts/a.woff2 fonts/b.ttf site.webmanifest license.txt; do echo x > "dist/$f"; done
   # FAKE_LAB=dir|file: smuggle something lab-like into dist/ to test deploy.sh's guard
   if [[ "${FAKE_LAB:-}" == dir ]]; then mkdir -p dist/lab; echo x > dist/lab/fonts.json; fi
   if [[ "${FAKE_LAB:-}" == file ]]; then echo x > dist/fonts/lab; fi
@@ -41,8 +41,9 @@ echo; echo "=== live run ==="; : > "$FAKE_AWS_LOG"
 ./deploy.sh --live | tee "$TMP/live.out"
 echo "--- call log ---"; cat "$FAKE_AWS_LOG"
 check "no sync uses --delete" '! grep -q -- "--delete" "$FAKE_AWS_LOG"'
-check "five sync passes" '[[ $(grep -c "s3 sync" "$FAKE_AWS_LOG") == 5 ]]'
+check "six sync passes" '[[ $(grep -c "s3 sync" "$FAKE_AWS_LOG") == 6 ]]'
 check "index.html uploaded in the last pass, after other passes" '[[ $(grep -n "s3 sync" "$FAKE_AWS_LOG" | tail -1 | cut -d: -f1) == $(lastline "s3 sync") ]] && grep "s3 sync" "$FAKE_AWS_LOG" | tail -1 | grep -q -- "--cache-control public, max-age=300" && ! grep "s3 sync" "$FAKE_AWS_LOG" | tail -1 | grep -q -- "--include"'
+check "a .txt goes through its own pass with a utf-8 charset, before the last pass" '[[ $(grep -c -- "--include \*.txt.*--content-type text/plain; charset=utf-8" "$FAKE_AWS_LOG") == 1 ]] && grep -q "upload: dist/license.txt" "$TMP/live.out" && [[ $(grep -n "upload: dist/license.txt" "$TMP/live.out" | cut -d: -f1) -lt $(grep -n "upload: dist/index.html" "$TMP/live.out" | cut -d: -f1) ]]'
 check "index.html upload printed after index-NEW1.js and fonts" '[[ $(grep -n "upload: dist/index.html" "$TMP/live.out" | cut -d: -f1) -gt $(grep -n "upload: dist/fonts/b.ttf" "$TMP/live.out" | cut -d: -f1) && $(grep -n "upload: dist/index.html" "$TMP/live.out" | cut -d: -f1) -gt $(grep -n "upload: dist/index-NEW1.js" "$TMP/live.out" | cut -d: -f1) ]]'
 check "invalidation then wait, both after last sync" '[[ $(line create-invalidation) -gt $(lastline "s3 sync") && $(line "cloudfront wait") -gt $(line create-invalidation) ]]'
 check "all deletes after the wait" '[[ $(line "s3 rm") -gt $(line "cloudfront wait") ]]'

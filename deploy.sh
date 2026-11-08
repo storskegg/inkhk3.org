@@ -99,10 +99,13 @@ sync_pass --exclude '*' --include '*.webmanifest' \
 # 4. TrueType fonts (lowercase .ttf and uppercase .TTF)
 sync_pass --exclude '*' --include '*.ttf' --include '*.TTF' \
   --content-type font/ttf --cache-control "$SHORT_CACHE"
-# 5. everything else (index.html, images, ...), short cache. Last on purpose.
+# 5. text files (the font licence text is UTF-8 and has a non-ASCII character), with an explicit charset
+sync_pass --exclude '*' --include '*.txt' \
+  --content-type 'text/plain; charset=utf-8' --cache-control "$SHORT_CACHE"
+# 6. everything else (index.html, images, ...), short cache. Last on purpose.
 sync_pass \
   --exclude 'index-*.js' --exclude 'index-*.css' --exclude '*.woff2' \
-  --exclude '*.webmanifest' --exclude '*.ttf' --exclude '*.TTF' \
+  --exclude '*.webmanifest' --exclude '*.ttf' --exclude '*.TTF' --exclude '*.txt' \
   --cache-control "$SHORT_CACHE"
 
 # --- stale objects -----------------------------------------------------------

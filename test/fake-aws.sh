@@ -15,7 +15,8 @@ case "$1 $2" in
         *"--include *.woff2"*)    [[ "$f" == *.woff2 ]] || continue ;;
         *"--include *.webmanifest"*) [[ "$f" == *.webmanifest ]] || continue ;;
         *"--include *.ttf"*)      [[ "$f" == *.ttf || "$f" == *.TTF ]] || continue ;;
-        *) [[ "$f" == index-*.js || "$f" == index-*.css || "$f" == *.woff2 || "$f" == *.webmanifest || "$f" == *.ttf || "$f" == *.TTF ]] && continue ;;
+        *"--include *.txt"*)      [[ "$f" == *.txt ]] || continue ;;
+        *) [[ "$f" == index-*.js || "$f" == index-*.css || "$f" == *.woff2 || "$f" == *.webmanifest || "$f" == *.ttf || "$f" == *.TTF || "$f" == *.txt ]] && continue ;;
       esac
       printf '%supload: dist/%s to s3://static-site-inkhk3-org/%s\n' "$dry" "$f" "$f"
     done < <(find . -type f | LC_ALL=C sort)
