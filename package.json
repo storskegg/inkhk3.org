@@ -19,7 +19,7 @@
     "start": "vite",
     "lab": "npm run serve",
     "build": "npm run build:vite",
-    "postbuild": "postcss dist/*.css -u autoprefixer cssnano -r --no-map"
+    "postbuild": "postcss dist/*.css -u autoprefixer cssnano -r --no-map && node bin/sri.mjs"
   },
   "repository": {
     "type": "git",

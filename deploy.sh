@@ -57,6 +57,10 @@ fi
 npm run build
 [[ -f dist/index.html ]] || die "dist/index.html missing after build"
 
+# Subresource Integrity: every script/stylesheet in dist/ must carry a hash that matches the bytes about to be
+# uploaded (the build writes them in `postbuild`; this re-checks, changes nothing). Before any upload.
+node bin/sri.mjs --check || die "SRI check failed; nothing was uploaded."
+
 # The local font lab (lab/, `npm run lab`) must never reach the bucket: it holds downloaded font
 # files whose web licences are not all cleared. Abort if anything lab-like is in dist/.
 lab_hits="$(find dist \( -iname lab -o -path '*/lab/*' \) -print | head -n 5)"

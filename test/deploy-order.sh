@@ -11,10 +11,22 @@ mkdir -p "$TMP/bin"
 cp test/fake-aws.sh "$TMP/bin/aws"
 cat > "$TMP/bin/npm" <<'NPM'
 #!/usr/bin/env bash
-# fake npm: `ci` is a no-op, `run build` writes a small dist/
+# fake npm: `ci` is a no-op, `run build` writes a small dist/ and runs the real bin/sri.mjs (the postbuild step)
 if [[ "$1" == run ]]; then
   rm -rf dist; mkdir -p dist/fonts
-  for f in index.html index-NEW1.js index-NEW1.css favicon.png fonts/a.woff2 fonts/b.ttf site.webmanifest license.txt; do echo x > "dist/$f"; done
+  for f in index-NEW1.js index-NEW1.css favicon.png fonts/a.woff2 fonts/b.ttf site.webmanifest license.txt; do echo x > "dist/$f"; done
+  cat > dist/index.html <<'HTML'
+<!DOCTYPE html>
+<html><head>
+<link rel="preload" href="/fonts/a.woff2" as="font" type="font/woff2" crossorigin>
+<script type="module" crossorigin src="/index-NEW1.js"></script>
+<link rel="stylesheet" crossorigin href="/index-NEW1.css">
+</head><body>x</body></html>
+HTML
+  node bin/sri.mjs || exit 1
+  # FAKE_TAMPER=js|nohash: change a file after hashing / strip the hash, to test that deploy.sh refuses
+  if [[ "${FAKE_TAMPER:-}" == js ]]; then echo tampered >> dist/index-NEW1.js; fi
+  if [[ "${FAKE_TAMPER:-}" == nohash ]]; then sed -i.bak 's/ integrity="[^"]*"//' dist/index.html; rm dist/index.html.bak; fi
   # FAKE_LAB=dir|file: smuggle something lab-like into dist/ to test deploy.sh's guard
   if [[ "${FAKE_LAB:-}" == dir ]]; then mkdir -p dist/lab; echo x > dist/lab/fonts.json; fi
   if [[ "${FAKE_LAB:-}" == file ]]; then echo x > dist/fonts/lab; fi
@@ -51,6 +63,16 @@ check "previous hashed pair kept" '! grep -q "PREV1" <(grep "s3 rm" "$FAKE_AWS_L
 check "older hashed files deleted" 'grep -q "s3 rm s3://static-site-inkhk3-org/index-OLDER1.js" "$FAKE_AWS_LOG" && grep -q "s3 rm s3://static-site-inkhk3-org/index-OLDER1.css" "$FAKE_AWS_LOG"'
 check "strays deleted" 'grep -q "s3 rm s3://static-site-inkhk3-org/style.css" "$FAKE_AWS_LOG" && grep -q "s3 rm s3://static-site-inkhk3-org/old dir/stray file.png" "$FAKE_AWS_LOG"'
 check "files in dist/ not deleted" '! grep "s3 rm" "$FAKE_AWS_LOG" | grep -q -E "index.html|index-NEW1"'
+
+echo; echo "=== SRI guard ==="
+check "live run: dist/index.html carries integrity on the js and css (fake build ran bin/sri.mjs)" 'grep -c "integrity=\"sha384-" dist/index.html | grep -q "^2$"'
+for kind in js nohash; do
+  : > "$FAKE_AWS_LOG"
+  rc=0; FAKE_TAMPER=$kind ./deploy.sh --live > "$TMP/sri-$kind.out" 2>&1 || rc=$?
+  check "SRI ($kind): deploy.sh --live exits non-zero" '[[ $rc -ne 0 ]]'
+  check "SRI ($kind): error says the SRI check failed" 'grep -q "SRI check failed" "$TMP/sri-$kind.out"'
+  check "SRI ($kind): nothing uploaded, invalidated or deleted" '! grep -q -E "s3 sync|s3 rm|create-invalidation" "$FAKE_AWS_LOG"'
+done
 
 echo; echo "=== lab guard ==="
 for kind in dir file; do

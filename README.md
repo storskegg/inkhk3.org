@@ -49,6 +49,26 @@ and only then deletes stale keys, keeping hashed `index-*.js/css` uploaded in th
 `test/deploy-order.sh` runs `deploy.sh` and `--live` against a fake `aws` (`test/fake-aws.sh`) and checks that order;
 it needs node 24 and calls no AWS.
 
+### Subresource Integrity
+
+`npm run build` ends with `bin/sri.mjs` (in `postbuild`, after postcss/cssnano, so it hashes the final bytes). In every
+`dist/*.html` it adds `integrity="sha384-..."` to each local `<script src>` and stylesheet link (and any
+`modulepreload`, or `preload` of a script or style), and keeps `crossorigin`. Everything else in the HTML stays as it
+was. The stylesheet is also renamed to `index-<8 chars of its sha384>.css`: Vite names it before postcss rewrites it,
+so a name from the pre-postcss bytes could stay the same when cssnano changes, and a browser holding the old immutable
+copy would then fail the new hash. The JS keeps its Vite name (nothing rewrites it after the build).
+
+The build fails if a referenced file is missing, a script or stylesheet tag points at another origin, or a `*.js` /
+`*.css` in `dist/` is not referenced by such a tag (a future dynamic chunk would otherwise ship unhashed).
+`node bin/sri.mjs --check` changes nothing and fails on any wrong or missing hash; `deploy.sh` runs it before any upload.
+`test/sri.sh` tests the script on small fake builds.
+
+Fonts are not hashed. `integrity` on a font `<link rel=preload>` was tried (a scratch copy, Playwright engines):
+Chromium checks it and blocks the font on a mismatch (the later `@font-face` / `new FontFace(...)` request reuses the
+failed preload, so the site falls back to system serif and hierojax gets no NewGardiner, i.e. no SVGs), but WebKit
+and Firefox ignore it: a font with the wrong bytes still renders. It protects one engine and adds a way to break the site
+there, so the preloads stay without it.
+
 ### One-time migration
 
 The S3 objects used to be Terraform resources. A `removed` block in `modules/S3/main.tf` (with `destroy = false`)
