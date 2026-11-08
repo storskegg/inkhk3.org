@@ -1,46 +1,46 @@
-// New Athena Unicode 5.008 (Society for Classical Studies, OFL-1.1): real Unicode Egyptological
-// transliteration for the title ("Ink Ḥkꜣ {.org}"), the quote and the citation. Only the two faces
-// the page uses are shipped, as lossless woff2 conversions (no subsetting).
+// InkHk3 Serif: real Unicode Egyptological transliteration for the title ("Ink Ḥkꜣ {.org}"), the quote and the
+// citation. A renamed woff2 conversion of a font by the Society for Classical Studies (OFL-1.1; README.md,
+// "Credits"; licence text: /InkHk3Serif-OFL.txt). Only the two faces the page uses are shipped, no subsetting.
 //
 // font-display and the two families: see README.md, "Fonts".
 //
-// 'NewAthenaUnicode' is the title (h1: the bold face). font-display: block, because the title's width
-// is reserved in em (style.scss) and its fallback below has New Athena's vertical metrics: while the
+// 'InkHk3Serif' is the title (h1: the bold face). font-display: block, because the title's width
+// is reserved in em (style.scss) and its fallback below has InkHk3 Serif's vertical metrics: while the
 // font loads the title is invisible (never a wrong-looking title), and when it arrives nothing moves.
 @font-face {
-  font-family: 'NewAthenaUnicode';
+  font-family: 'InkHk3Serif';
   font-weight: 700;
   font-style: normal;
   font-display: block;
-  src: url("/NewAthenaUnicode-Bold.woff2") format('woff2');
+  src: url("/InkHk3Serif-Bold.woff2") format('woff2');
 }
 
-// 'NewAthenaUnicodeText' is the quote (weight 900 asked for; the bold face is the nearest real one) and
+// 'InkHk3SerifText' is the quote (weight 900 asked for; the bold face is the nearest real one) and
 // the citation (<cite> is italic by default). font-display: optional, because the quote's line breaks
 // depend on the font, so a late swap would re-wrap it and move the card. If the faces are not ready in
 // the first ~100 ms (preloaded, so on a warm cache or a fast line they are) this page view keeps the
-// system serif (what the quote used before) and the next view, from the cache, gets New Athena.
+// system serif (what the quote used before) and the next view, from the cache, gets InkHk3 Serif.
 @font-face {
-  font-family: 'NewAthenaUnicodeText';
+  font-family: 'InkHk3SerifText';
   font-weight: 700;
   font-style: normal;
   font-display: optional;
-  src: url("/NewAthenaUnicode-Bold.woff2") format('woff2');
+  src: url("/InkHk3Serif-Bold.woff2") format('woff2');
 }
 
 @font-face {
-  font-family: 'NewAthenaUnicodeText';
+  font-family: 'InkHk3SerifText';
   font-weight: 400;
   font-style: italic;
   font-display: optional;
-  src: url("/NewAthenaUnicode-Italic.woff2") format('woff2');
+  src: url("/InkHk3Serif-Italic.woff2") format('woff2');
 }
 
-// What shows (or, under block, takes the title's place) before New Athena is there: Times with New
-// Athena's ascent, descent and line gap (hhea/typo: 732, 284, 25 of 1000), so the baseline sits where it
+// What shows (or, under block, takes the title's place) before InkHk3 Serif is there: Times with
+// InkHk3 Serif's ascent, descent and line gap (hhea/typo: 732, 284, 25 of 1000), so the baseline sits where it
 // will sit, and the hieroglyph row that is baseline-aligned to it does not jump.
 @font-face {
-  font-family: 'NewAthenaUnicodeFallback';
+  font-family: 'InkHk3SerifFallback';
   font-weight: 700;
   font-style: normal;
   src: local('Times New Roman Bold'), local('TimesNewRomanPS-BoldMT'), local('Times Bold'),

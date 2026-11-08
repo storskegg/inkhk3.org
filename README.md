@@ -69,13 +69,21 @@ Please find, below, a list of open source projects that I've used in this projec
 respective owners. Anything listed below that is incorporated into this repo may have been modified from its original
 form to suit the needs of this project.
 
-- [New Athena Unicode](https://apagreekkeys.org/NAUdownload.html) 5.008 (`NewAthenaUnicode-Bold.woff2` and
-  `NewAthenaUnicode-Italic.woff2` in `public/`), by the Society for Classical Studies (formerly the American
-  Philological Association), licensed under the SIL Open Font License 1.1, with Reserved Font Name "New Athena
-  Unicode". Copyright (c) 2004-2015 Society for Classical Studies. Source:
-  <https://apagreekkeys.org/fonts/NAU5_008.zip>. The two files are lossless woff2 conversions of
-  `newathuBold5_8.ttf` and `newathuItalic5_8.ttf` (no subsetting, no other change); the name table is untouched.
-  It sets the title, the quote and the citation (real Unicode transliteration: "Ink Ḥkꜣ", U+1E24 and U+A723).
+- InkHk3 Serif (`InkHk3Serif-Bold.woff2` and `InkHk3Serif-Italic.woff2` in `public/`) is derived from
+  [New Athena Unicode](https://apagreekkeys.org/NAUdownload.html) 5.008 by the Society for Classical Studies (formerly the
+  American Philological Association), licensed under the SIL Open Font License 1.1, with Reserved Font Name "New Athena
+  Unicode". Copyright (c) 2004-2015 Society for Classical Studies (the licence file's line; the font's name table says
+  2016-2021). Source: <https://apagreekkeys.org/fonts/NAU5_008.zip> (sha256 `cdfe5c38...6e7bbf1`). The files are
+  Modified Versions of `newathuBold5_8.ttf` and `newathuItalic5_8.ttf`, so they carry another name, the reserved
+  one not being usable. What changed: the family renamed (the `name` table, plus a modification note in name ID 10),
+  and the conversion to woff2 (DSIG dropped, glyf and loca rebuilt, head flag and modified date changed). No
+  subsetting, no other change: outlines, hinting, metrics and all other tables are the original's (byte-identical, except
+  glyf and loca, which are the same outlines stored again by the converter). `fonts/make-inkhk3-serif.py` makes them from the zip (checks its sha256 and that no table of the output
+  contains the old name):
+  `python3 -I fonts/make-inkhk3-serif.py NAU5_008.zip public/` (needs fontTools and brotli). The licence text, as the
+  original states it, plus the list of changes, is `public/InkHk3Serif-OFL.txt`, served at
+  <https://inkhk3.org/InkHk3Serif-OFL.txt>. It sets the title, the quote and the citation (real Unicode
+  transliteration: "Ink Ḥkꜣ", U+1E24 and U+A723).
 - Mark-Jan Nederhof's [hierojax](https://github.com/nederhof/hierojax) renders the hieroglyphs; see below.
 
 The title's ꜣ is enlarged (see "The enlarged ꜣ" below). The earlier fonts (Umschrift, and the ResJS fonts
@@ -84,17 +92,17 @@ and no longer credited; Umschrift stays in git history and in the lab (`lab/READ
 
 ### Fonts
 
-- **The enlarged ꜣ.** New Athena's ꜣ is small next to the title's capitals (1.30 x-heights tall, top at 0.80 of the cap
+- **The enlarged ꜣ.** InkHk3 Serif's ꜣ is small next to the title's capitals (1.30 x-heights tall, top at 0.80 of the cap
   height); Umschrift's was 1.48 and 0.98. The title's ꜣ is `<span class="aleph">ꜣ</span>`, scaled 1.18 and lifted
   0.037em with a CSS transform (origin: the glyph's left side bearing and the baseline), which does not touch the
   line box or the advance width, so the baseline does not move and ".org" only moves by the span's 0.03em left margin (added because the larger hook otherwise touched the k). Result (ink, measured): 0.63 em, 1.54
   x-heights tall, top at 1.01 of the cap height, bottom 0.03 em above the baseline. Tuned in the lab (`lab/README.md`).
-- **font-display.** The title uses the family `NewAthenaUnicode` with `font-display: block`: its width is reserved in
-  em (`.title-text`, 5.79em, measured from the rendered title) and its fallback face has New Athena's ascent and
-  descent, so the invisible-then-swapped title moves nothing. The quote and the citation use `NewAthenaUnicodeText`
+- **font-display.** The title uses the family `InkHk3Serif` with `font-display: block`: its width is reserved in
+  em (`.title-text`, 5.79em, measured from the rendered title) and its fallback face has InkHk3 Serif's ascent and
+  descent, so the invisible-then-swapped title moves nothing. The quote and the citation use `InkHk3SerifText`
   (same files, so one download each) with `font-display: optional`: their line breaks depend on the font, and a
   late swap would re-wrap them and shift the card. Both faces are preloaded; if they are not ready in about 100 ms
-  the quote and citation stay in the system serif for that page view (as before this change) and get New Athena from
+  the quote and citation stay in the system serif for that page view (as before this change) and get InkHk3 Serif from
   the next view on. Switch `optional` to `swap` in `src/_fonts.scss` to trade that for a small shift on slow loads.
 - Only two faces are shipped (Bold: title and quote, the quote's 900 resolves to it; Italic: `<cite>`), 400 KB in all.
 

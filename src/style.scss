@@ -31,13 +31,13 @@ body {
   background: gray url("/binding_dark2.png");
 }
 
-// New Athena Unicode has no heavier face and no regular upright one in use: never fake one.
+// InkHk3 Serif has no heavier face and no regular upright one in use: never fake one.
 body {
   font-synthesis: none;
 }
 
 .egypt {
-  font-family: 'NewAthenaUnicode', 'NewAthenaUnicodeFallback', serif;
+  font-family: 'InkHk3Serif', 'InkHk3SerifFallback', serif;
   font-weight: 700;
 }
 
@@ -81,7 +81,7 @@ h1 {
   }
 
   // "Ink Ḥkꜣ {.org}" stays on one line.
-  // Its width is reserved in em of New Athena Unicode Bold's "Ink Ḥkꜣ {.org}" (measured on the rendered
+  // Its width is reserved in em of InkHk3 Serif Bold's "Ink Ḥkꜣ {.org}" (measured on the rendered
   // title: 5.788em at 360, 768 and 1920 px, with the ꜣ's 0.03em margin), like the hierojax boxes, so the fallback font's different
   // width cannot move anything when the web font arrives.
   .title-text {
@@ -90,7 +90,7 @@ h1 {
     width: 5.79em;
   }
 
-  // The enlarged ꜣ (New Athena's is 1.30 x-heights tall and tops out at 0.80 of the cap height; Umschrift's
+  // The enlarged ꜣ (InkHk3 Serif's is 1.30 x-heights tall and tops out at 0.80 of the cap height; Umschrift's
   // was 1.48 and 0.98). Tuned in lab/ (see README.md, "Fonts"): scaled 1.18 about the baseline and the
   // ink's left edge, lifted 0.037em, so its top meets the cap height and it is 1.53 x-heights tall.
   // A transform changes neither the line box nor the advance width, so ".org" and the baseline stay put.
@@ -167,7 +167,7 @@ blockquote {
   flex: 1;
   align-content: center;
   padding: 2cqi 0;
-  font-family: 'NewAthenaUnicodeText', serif;
+  font-family: 'InkHk3SerifText', serif;
 
   // Opening mark | quote | closing mark, with the citation under the quote.
   display: grid;
