@@ -124,10 +124,9 @@ and no longer credited; Umschrift stays in git history and in the lab (`lab/READ
 ### Fonts
 
 - **The enlarged ꜣ.** InkHk3 Serif's ꜣ is small next to the title's capitals (1.30 x-heights tall, top at 0.80 of the cap
-  height); Umschrift's was 1.48 and 0.98. The title's ꜣ is `<span class="aleph">ꜣ</span>`, scaled 1.18 and lifted
-  0.037em with a CSS transform (origin: the glyph's left side bearing and the baseline), which does not touch the
-  line box or the advance width, so the baseline does not move and ".org" only moves by the span's 0.03em left margin (added because the larger hook otherwise touched the k). Result (ink, measured): 0.63 em, 1.54
-  x-heights tall, top at 1.01 of the cap height, bottom 0.03 em above the baseline. Tuned in the lab (`lab/README.md`).
+  height); Umschrift's was 1.48 and 0.98. The title's ꜣ is `<span class="aleph">ꜣ</span>`, scaled 1.18
+  with a CSS transform (origin: the glyph's left side bearing and the baseline), which does not touch the
+  line box or the advance width, so the baseline does not move and ".org" only moves by the span's 0.03em left margin (added because the larger hook otherwise touched the k). The lift was removed at the user's request on 2026-11-09. Tuned in the lab (`lab/README.md`).
 - **font-display.** The title uses the family `InkHk3Serif` with `font-display: block`: its width is reserved in
   em (`.title-text`, 5.79em, measured from the rendered title) and its fallback face has InkHk3 Serif's ascent and
   descent, so the invisible-then-swapped title moves nothing. The quote and the citation use `InkHk3SerifText`

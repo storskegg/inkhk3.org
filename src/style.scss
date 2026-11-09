@@ -91,18 +91,17 @@ h1 {
 
   // The enlarged ꜣ (InkHk3 Serif's is 1.30 x-heights tall and tops out at 0.80 of the cap height; Umschrift's
   // was 1.48 and 0.98). Tuned in lab/ (see README.md, "Fonts"): scaled 1.18 about the baseline and the
-  // ink's left edge, lifted 0.037em, so its top meets the cap height and it is 1.53 x-heights tall.
+  // ink's left edge.
   // A transform changes neither the line box nor the advance width, so ".org" and the baseline stay put.
   // The origin is NAU Bold's: x = the glyph's left side bearing (0.017em), y = the baseline measured
   // from the top of a zero-height (line-height: 0) inline-block (0.2835em).
   .aleph {
     --aleph-scale: 1.18;
-    --aleph-lift: 0.037em;
     display: inline-block;
     line-height: 0;
     margin-left: 0.03em;   // the enlarged hook would otherwise touch the k's arm (the only change to the advance)
     transform-origin: 0.017em 0.2835em;
-    transform: translateY(calc(var(--aleph-lift) * -1)) scale(var(--aleph-scale));
+    transform: scale(var(--aleph-scale));
   }
 }
 
