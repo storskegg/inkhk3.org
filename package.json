@@ -1,6 +1,6 @@
 {
   "name": "inkhk3.org",
-  "version": "2026.46.1",
+  "version": "2026.46.2",
   "description": "Source for inkhk3.org website.",
   "main": "src/index.html",
   "bin": {
