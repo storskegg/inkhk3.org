@@ -1,6 +1,6 @@
 // The card is a US business card, 3.5 x 2 in (aspect-ratio 7 / 4), at every size. Its width is the
 // original rule (85% of the shorter viewport side, about 918px at 1920x1080, matching the reference;
-// never wider than 92vw) and also never more than the viewport's height (less the body's padding)
+// never wider than 92vw; the 20.7rem floor lets a 360px phone reach that cap) and also never more than the viewport's height (less the body's padding)
 // allows, so a short landscape screen gets a smaller card that fits without scrolling.
 $card-pad-y: max(0.5rem, 3vmin);
-$card-width: min(92vw, max(85vmin, 20rem), calc((100dvh - 2 * #{$card-pad-y}) * 1.75));
+$card-width: min(92vw, max(85vmin, 20.7rem), calc((100dvh - 2 * #{$card-pad-y}) * 1.75));
