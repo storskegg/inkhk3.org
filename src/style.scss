@@ -131,6 +131,14 @@ h1 {
     display: block;
     flex: none;
   }
+
+  // The overlay spans above the svg hold the copyable text. Selected, their glyphs would be painted in the
+  // selection colour, misplaced over the drawing, so the text stays transparent; the highlight is translucent
+  // because the overlay sits above the svg.
+  ::selection {
+    color: transparent;
+    background: rgba(0, 110, 255, 0.25);
+  }
 }
 
 h1 .hierojax {

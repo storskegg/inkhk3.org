@@ -145,7 +145,7 @@ that repo, `NewGardiner.otf` is its `docs/NewGardiner.otf`; rerunning on a fille
 
 `test/prerender.sh` (run after `npm run build`) checks that `dist/` has no script, no JS file and no NewGardiner, that
 there are two spans with one `<svg>` each, that `data-text` is the right Unicode, and that the built blocks are the
-source's bytes. The CSS the filled spans need is the `.hierojax` rule in `src/style.scss`.
+source's bytes. The CSS the filled spans need is the `.hierojax` rule in `src/style.scss`. The invisible overlay text in each span (it is what gets copied) has its selection highlight set to a translucent blue with transparent text, so selecting a line shows no misplaced ghost signs.
 
 `vendor/` holds upstream's files for the font lab only (`lab/fetch-fonts.sh` copies them into `lab/`); the site does not
 ship them, and nothing under `src/` or `public/` uses them.

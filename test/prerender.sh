@@ -34,4 +34,5 @@ dt() { node -e 'const b=JSON.parse(process.argv[1]); const m=/data-text="([^"]*)
 check "title data-text is the title's Unicode" '[[ "$(dt 0)" == "$TITLE" ]]'
 check "Amduat data-text is the Amduat line's Unicode" '[[ "$(dt 1)" == "$AMDUAT" ]]'
 check "the blocks in dist are byte-identical to src/index.html's" '[[ "$B_DIST" == "$B_SRC" && "$(count "$B_SRC")" == 2 ]]'
+check "the built css has a .hierojax ::selection rule with a transparent colour" 'grep -Eqh "\.hierojax ::selection\{[^}]*color:transparent" "$DIST"/index-*.css'
 exit $fail
