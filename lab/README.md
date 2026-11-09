@@ -58,7 +58,8 @@ the site's `npm run dev` 8083.
   Umschrift's). The span is `inline-block; line-height: 0` with `transform: translateY() scale()`, so the line
   box and the advance do not change. The transform origin is New Athena Bold's (the ꜣ's left side bearing, 0.017em,
   and the baseline, 0.2835em below the zero-height box), so for other title fonts the scale is approximate.
-  Tuned values for the site: scale 1.18, shift 0.037 em (the defaults; `src/style.scss` has the same numbers).
+  Defaults: scale 1.18, shift 0.037 em. The site uses scale 1.18 with no shift (`src/style.scss`; the lift was removed
+  at the user's request on 2026-11-09).
   New Athena Unicode is the default title and quote font.
 - **Settings persist.** Every control is saved to `localStorage` under one key, `inkhk3-lab` (JSON), and to the URL.
   On load, if the URL has any lab parameter the URL wins and storage is ignored (so shared links work); otherwise the
