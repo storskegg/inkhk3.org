@@ -1,6 +1,5 @@
 @use "vars";
 @use "fonts";
-@use "hierojax";
 
 *,
 *::before,
@@ -107,21 +106,21 @@ h1 {
   }
 }
 
-// Space for the asynchronously rendered SVG is reserved in em of its own
-// font-size, so nothing moves when hierojax swaps text for the drawing.
+// The hieroglyph lines are path SVGs drawn ahead of time (README, "hierojax"). The box is sized in em
+// of its own font-size, so the drawing scales with the card.
 .hierojax {
+  position: relative;
+  text-indent: 0;
   display: inline-flex;
   justify-content: center;
   align-items: center;
   vertical-align: baseline;
 
   // --hj-w / --hj-h are the rendered SVG's size in em of the element's own
-  // font-size, so the box is the same before and after rendering. To remeasure:
-  // svg.getBoundingClientRect() / getComputedStyle(span).fontSize. Not clipped,
-  // so a larger render (fallback font, user scaling) is shown, not cut.
+  // font-size. To remeasure: svg.getBoundingClientRect() / getComputedStyle(span).fontSize.
+  // Not clipped, so a larger drawing is shown, not cut.
   flex: none;
-  // Layout containment makes the baseline the box's bottom edge, so it is the
-  // same before and after the SVG replaces the text (no vertical shift).
+  // Layout containment makes the baseline the box's bottom edge.
   contain: layout;
   white-space: nowrap;
   line-height: 1;
@@ -132,14 +131,6 @@ h1 {
     display: block;
     flex: none;
   }
-}
-
-// Until hierojax has drawn the SVG, hide the raw glyph text. This must not
-// touch `color`: hierojax reads the computed colour to fill the SVG, whereas
-// -webkit-text-fill-color leaves it alone.
-.hierojax:not(:has(svg)) {
-  -webkit-text-fill-color: transparent;
-  overflow: clip; // the raw text is much wider than the box; only until drawn
 }
 
 h1 .hierojax {

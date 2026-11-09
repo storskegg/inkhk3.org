@@ -49,6 +49,3 @@
   descent-override: 28.4%;
   line-gap-override: 2.5%;
 }
-
-// 'Hieroglyphic' (/NewGardiner.woff2) is registered by hierojax.js itself (FontFace in
-// startLoadingFonts). A second @font-face here would make the browser fetch it twice.
