@@ -53,9 +53,14 @@ CloudFront compresses at the edge with Brotli and gzip, through the cache policy
 (`modules/cloudfront/main.tf`). woff2 fonts and images are not compressed. The SRI hashes below check the decoded bytes,
 so compression doesn't affect them.
 
+### Version
+
+The version lives only in `package.json` (`version`), as `YYYY.WW.PATCH` (see the team's calendar versioning). The build puts it into the script's first console log, `inkhk3.org <version>`, and it is bumped by hand before a release (`npm version <version> --no-git-tag-version`).
+The copyright notice on the next line uses the pen name only, never the author's real name.
+
 ### Subresource Integrity
 
-The built page has one script, `credits.js` (it only logs the credit and licence text to the console, see "hierojax" below), and one stylesheet. The `<script type="module">` is the last element in `<body>`: Vite injects it into `<head>` whatever the source says, so a small plugin in `vite.config.ts` (`entry-script-to-body-end`) moves it, and fails the build if it finds not exactly one `<script src>`. The stylesheet stays in `<head>`.
+The built page has one script, `credits.js` (it only logs the version, a copyright notice and the credit and licence text to the console, see "Version" and "hierojax" below), and one stylesheet. The `<script type="module">` is the last element in `<body>`: Vite injects it into `<head>` whatever the source says, so a small plugin in `vite.config.ts` (`entry-script-to-body-end`) moves it, and fails the build if it finds not exactly one `<script src>`. The stylesheet stays in `<head>`.
 
 `npm run build` ends with `bin/sri.mjs` (in `postbuild`, after postcss/cssnano, so it hashes the final bytes). In every
 `dist/*.html` it adds `integrity="sha384-..."` to each local `<script src>` and stylesheet link (and any
@@ -135,8 +140,8 @@ and no longer credited; Umschrift stays in git history and in the lab (`lab/READ
 ### hierojax
 
 The two hieroglyph lines (the title's and the Amduat line) are path SVGs written into `src/index.html`, so the site
-ships no hieroglyph font and no hieroglyph code. The page's only script, `src/credits.js`, logs the credit and licence
-text in `src/credits.txt` to the browser console; nothing is shown on the page, and the page works without the script. They were drawn by `hieroxide fill` from
+ships no hieroglyph font and no hieroglyph code. The page's only script, `src/credits.js`, logs the version and a copyright notice, then the credit and licence
+text in `src/credits.txt`, to the browser console; nothing is shown on the page, and the page works without the script. They were drawn by `hieroxide fill` from
 [storskegg/rust-hierojax-wasm32](https://github.com/storskegg/rust-hierojax-wasm32) (a Rust port of hierojax), built at
 commit 11b2f32, with its `docs/NewGardiner.otf`. Each `<span class="hierojax" data-type="svg" data-standalone="true">`
 keeps the line's Unicode in `data-text` and holds one `<svg>`. To regenerate them in place (`hieroxide` is built from
@@ -144,7 +149,7 @@ that repo, `NewGardiner.otf` is its `docs/NewGardiner.otf`; rerunning on a fille
 
     hieroxide fill --font NewGardiner.otf src/index.html -o src/index.html.new && mv src/index.html.new src/index.html
 
-`test/prerender.sh` (run after `npm run build`) checks that `dist/` has exactly one script (last in `<body>`, with integrity), one small JS file that prints `src/credits.txt`, and no NewGardiner font, that
+`test/prerender.sh` (run after `npm run build`) checks that `dist/` has exactly one script (last in `<body>`, with integrity), one small JS file whose output is the version line, the copyright line and then `src/credits.txt` (in that order), no NewGardiner font, a `YYYY.WW.PATCH` version in `package.json`, and no trace of `package.json`'s `author` (whole or any word of it) in any file of `dist/`, nor `"author"` or the repository URL in the JS, that
 there are two spans with one `<svg>` each, that `data-text` is the right Unicode, and that the built blocks are the
 source's bytes. The CSS the filled spans need is the `.hierojax` rule in `src/style.scss`. The invisible overlay text in each span (it is what gets copied) has its selection highlight set to a translucent blue with transparent text, so selecting a line shows no misplaced ghost signs.
 

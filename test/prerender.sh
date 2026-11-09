@@ -6,6 +6,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 export PATH="$HOME/.nvm/versions/node/v24.12.0/bin:$PATH"
 DIST="${1:-dist}"
 fail=0
+TMPDIR_AUTH="$(mktemp)"; trap 'rm -f "$TMPDIR_AUTH"' EXIT
 check() { if eval "$2"; then echo "ok   - $1"; else echo "FAIL - $1"; fail=1; fi; }
 [[ -f "$DIST/index.html" ]] || { echo "no $DIST/index.html; run npm run build first" >&2; exit 1; }
 
@@ -19,10 +20,19 @@ check "the script is the last element in <body>, with integrity and crossorigin"
   process.exit(m && /\\sintegrity=\"sha384-/.test(m[0]) && /\\scrossorigin\\b/.test(m[0]) ? 0 : 1)" "$DIST/index.html"'
 JS="$(find "$DIST" -iname "*.js" -o -iname "*.mjs")"
 check "exactly one JS file in dist/, under 8 KB" '[[ -n "$JS" && "$(echo "$JS" | wc -l | tr -d " ")" == 1 && "$(wc -c < "$JS" | tr -d " ")" -lt 8192 ]]'
-check "running the JS prints exactly src/credits.txt" '[[ -n "$JS" ]] && node -e "
+check "running the JS prints the version and copyright notice first, then exactly src/credits.txt" '[[ -n "$JS" ]] && node -e "
   const {execFileSync} = require(\"child_process\"), fs = require(\"fs\");
   const out = execFileSync(process.execPath, [\"--input-type=module\"], {input: fs.readFileSync(process.argv[1]), stdio: [\"pipe\", \"pipe\", \"ignore\"]}).toString();
-  process.exit(out === fs.readFileSync(\"src/credits.txt\", \"utf8\") + \"\\n\" ? 0 : 1)" "$JS"'
+  const v = JSON.parse(fs.readFileSync(\"package.json\", \"utf8\")).version;
+  const want = \"inkhk3.org \" + v + \"\\nCopyright \\u00a9 2026 Fra. M.H.B.N.M. All rights reserved.\\n\" + fs.readFileSync(\"src/credits.txt\", \"utf8\") + \"\\n\";
+  process.exit(out === want ? 0 : 1)" "$JS"'
+check "package.json's version is YYYY.WW.PATCH" 'node -e "process.exit(/^20[0-9]{2}\\.[0-9]{2}\\.[0-9]+\$/.test(require(\"./package.json\").version) ? 0 : 1)"'
+check "package.json's author (whole, or any word of it) is in no file in dist/" 'node -e "
+  const a = require(\"./package.json\").author;
+  const words = [a, ...String(a).split(/[^\\p{L}\\p{N}]+/u)].filter((w) => w.length > 0);
+  if (!String(a).trim()) process.exit(2);
+  process.stdout.write(words.join(\"\\n\"));" > "$TMPDIR_AUTH" && [[ -s "$TMPDIR_AUTH" ]] && ! grep -raiqF -f "$TMPDIR_AUTH" "$DIST"'
+check "the built JS has no \"author\" key and no repository URL" '[[ -n "$JS" ]] && ! grep -qaF "\"author\"" "$JS" && ! grep -qaF "$(node -e "process.stdout.write(require(\"./package.json\").repository.url)")" "$JS"'
 check "credits.txt's OFL body is byte-identical to public/InkHk3Serif-OFL.txt lines 39 on" 'sed -n "39,\$p" public/InkHk3Serif-OFL.txt | cmp -s - <(tail -n "$(sed -n "39,\$p" public/InkHk3Serif-OFL.txt | wc -l)" src/credits.txt)'
 check "no NewGardiner or Hieroglyphic in index.html or the css" '! grep -il -e NewGardiner -e Hieroglyphic "$DIST/index.html" "$DIST"/*.css'
 check "no NewGardiner file" '[[ -z "$(find "$DIST" -iname "*gardiner*")" ]]'
