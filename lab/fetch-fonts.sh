@@ -65,8 +65,8 @@ umsch UMSCH_I.woff2  italic     7817e9e1af2befb343bad22e7c6cf79fbf70ed933136d9a3
 umsch UMSCH_IB.woff2 bolditalic a5a9c6d53ba2d1dca59f3f8bda35f444f0edeea7938771d6bd674ca1c05b394f
 # The card's assets, for the side-by-side card.
 # hierojax.js asks for /NewGardiner.woff2 at the server root, so these live at lab/ root.
-cp "$PUB/NewGardiner.woff2" "$PUB/paper_fff.jpg" "$PUB/binding_dark2.png" ../src/hierojax.js .
-cp ../src/_hierojax.scss hierojax.css   # plain CSS despite the extension
+cp "$PUB/paper_fff.jpg" "$PUB/binding_dark2.png" ../vendor/NewGardiner.woff2 ../vendor/hierojax.js .
+cp ../vendor/hierojax.css hierojax.css
 
 [[ $fail -eq 0 ]] || { echo "some fonts failed (see above); the rest are ready" >&2; exit 1; }
 echo "done"

@@ -1,8 +1,8 @@
 # Local changes to nederhof/hierojax docs/hierojax.js at da318801e00b10b4b5c5ec8d9cc6f8fddcc9eb5a (diff -u).
-# Apply: cp <upstream>/docs/hierojax.js src/hierojax.js && patch src/hierojax.js < vendor/hierojax.local.patch
-# Regenerate: diff -u (labels a/docs/hierojax.js, b/src/hierojax.js) of pristine upstream docs/hierojax.js against src/hierojax.js.
+# Apply: cp <upstream>/docs/hierojax.js vendor/hierojax.js && patch vendor/hierojax.js < vendor/hierojax.local.patch
+# Regenerate: diff -u (labels a/docs/hierojax.js, b/vendor/hierojax.js) of pristine upstream docs/hierojax.js against vendor/hierojax.js.
 --- a/docs/hierojax.js
-+++ b/src/hierojax.js
++++ b/vendor/hierojax.js
 @@ -1766,6 +1766,13 @@
  		this.svg = document.createElementNS(SVGns, 'svg');
  		this.svg.setAttribute('width', this.width());
