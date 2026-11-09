@@ -55,14 +55,14 @@ so compression doesn't affect them.
 
 ### Subresource Integrity
 
-The built page has no script at all (the hieroglyphs are pre-drawn SVG, see "hierojax" below), so its only integrity-bearing tag is the stylesheet, which stays in `<head>`. The tooling still handles scripts, in case one comes back.
+The built page has one script, `credits.js` (it only logs the credit and licence text to the console, see "hierojax" below), and one stylesheet. The `<script type="module">` is the last element in `<body>`: Vite injects it into `<head>` whatever the source says, so a small plugin in `vite.config.ts` (`entry-script-to-body-end`) moves it, and fails the build if it finds not exactly one `<script src>`. The stylesheet stays in `<head>`.
 
 `npm run build` ends with `bin/sri.mjs` (in `postbuild`, after postcss/cssnano, so it hashes the final bytes). In every
 `dist/*.html` it adds `integrity="sha384-..."` to each local `<script src>` and stylesheet link (and any
 `modulepreload`, or `preload` of a script or style), and keeps `crossorigin`. Everything else in the HTML stays as it
 was. The stylesheet is also renamed to `index-<8 chars of its sha384>.css`: Vite names it before postcss rewrites it,
 so a name from the pre-postcss bytes could stay the same when cssnano changes, and a browser holding the old immutable
-copy would then fail the new hash. A JS file, if there ever were one, would keep its Vite name (nothing rewrites it after the build). With no script, Vite emits no JS file, so the "unreferenced" check below has nothing to trip on.
+copy would then fail the new hash. The JS keeps its Vite name (nothing rewrites it after the build).
 
 The build fails if a referenced file is missing, a script or stylesheet tag points at another origin, or a `*.js` /
 `*.css` in `dist/` is not referenced by such a tag (a future dynamic chunk would otherwise ship unhashed).
@@ -135,7 +135,8 @@ and no longer credited; Umschrift stays in git history and in the lab (`lab/READ
 ### hierojax
 
 The two hieroglyph lines (the title's and the Amduat line) are path SVGs written into `src/index.html`, so the site
-ships no JavaScript and no hieroglyph font. They were drawn by `hieroxide fill` from
+ships no hieroglyph font and no hieroglyph code. The page's only script, `src/credits.js`, logs the credit and licence
+text in `src/credits.txt` to the browser console; nothing is shown on the page, and the page works without the script. They were drawn by `hieroxide fill` from
 [storskegg/rust-hierojax-wasm32](https://github.com/storskegg/rust-hierojax-wasm32) (a Rust port of hierojax), built at
 commit 11b2f32, with its `docs/NewGardiner.otf`. Each `<span class="hierojax" data-type="svg" data-standalone="true">`
 keeps the line's Unicode in `data-text` and holds one `<svg>`. To regenerate them in place (`hieroxide` is built from
@@ -143,7 +144,7 @@ that repo, `NewGardiner.otf` is its `docs/NewGardiner.otf`; rerunning on a fille
 
     hieroxide fill --font NewGardiner.otf src/index.html -o src/index.html.new && mv src/index.html.new src/index.html
 
-`test/prerender.sh` (run after `npm run build`) checks that `dist/` has no script, no JS file and no NewGardiner, that
+`test/prerender.sh` (run after `npm run build`) checks that `dist/` has exactly one script (last in `<body>`, with integrity), one small JS file that prints `src/credits.txt`, and no NewGardiner font, that
 there are two spans with one `<svg>` each, that `data-text` is the right Unicode, and that the built blocks are the
 source's bytes. The CSS the filled spans need is the `.hierojax` rule in `src/style.scss`. The invisible overlay text in each span (it is what gets copied) has its selection highlight set to a translucent blue with transparent text, so selecting a line shows no misplaced ghost signs.
 

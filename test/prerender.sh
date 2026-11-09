@@ -12,9 +12,19 @@ check() { if eval "$2"; then echo "ok   - $1"; else echo "FAIL - $1"; fail=1; fi
 TITLE='𓏌𓐰𓎡𓎛𓂓𓐰𓏝𓀭'
 AMDUAT='𓐍𓐱𓊪𓐰𓂋𓈖𓌃𓅱𓏛𓐰𓏥𓍿𓐰𓈖𓐰𓏥𓊏𓐰𓊪𓇳𓈖𓎛𓎡𓄿𓅱𓏛𓐰𓏥𓍿𓐰𓈖𓐰𓏥'
 
-check "no <script in index.html" '! grep -qi "<script" "$DIST/index.html"'
-check "no *.js in dist/" '[[ -z "$(find "$DIST" -iname "*.js" -o -iname "*.mjs")" ]]'
-check "no NewGardiner or Hieroglyphic in any text file" '! grep -rIil -e NewGardiner -e Hieroglyphic "$DIST"'
+check "exactly one <script in index.html" '[[ "$(grep -oi "<script" "$DIST/index.html" | wc -l | tr -d " ")" == 1 ]]'
+check "the script is the last element in <body>, with integrity and crossorigin" 'node -e "
+  const t = require(\"fs\").readFileSync(process.argv[1], \"utf8\");
+  const m = /<script\\b[^>]*><\\/script>\\s*<\\/body>/i.exec(t);
+  process.exit(m && /\\sintegrity=\"sha384-/.test(m[0]) && /\\scrossorigin\\b/.test(m[0]) ? 0 : 1)" "$DIST/index.html"'
+JS="$(find "$DIST" -iname "*.js" -o -iname "*.mjs")"
+check "exactly one JS file in dist/, under 8 KB" '[[ -n "$JS" && "$(echo "$JS" | wc -l | tr -d " ")" == 1 && "$(wc -c < "$JS" | tr -d " ")" -lt 8192 ]]'
+check "running the JS prints exactly src/credits.txt" '[[ -n "$JS" ]] && node -e "
+  const {execFileSync} = require(\"child_process\"), fs = require(\"fs\");
+  const out = execFileSync(process.execPath, [\"--input-type=module\"], {input: fs.readFileSync(process.argv[1]), stdio: [\"pipe\", \"pipe\", \"ignore\"]}).toString();
+  process.exit(out === fs.readFileSync(\"src/credits.txt\", \"utf8\") + \"\\n\" ? 0 : 1)" "$JS"'
+check "credits.txt's OFL body is byte-identical to public/InkHk3Serif-OFL.txt lines 39 on" 'sed -n "39,\$p" public/InkHk3Serif-OFL.txt | cmp -s - <(tail -n "$(sed -n "39,\$p" public/InkHk3Serif-OFL.txt | wc -l)" src/credits.txt)'
+check "no NewGardiner or Hieroglyphic in index.html or the css" '! grep -il -e NewGardiner -e Hieroglyphic "$DIST/index.html" "$DIST"/*.css'
 check "no NewGardiner file" '[[ -z "$(find "$DIST" -iname "*gardiner*")" ]]'
 
 # block extraction: each <span class="hierojax" ...> up to its </svg></span> (the filled span also has inner spans)
