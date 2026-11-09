@@ -16,15 +16,14 @@
 }
 
 // 'InkHk3SerifText' is the quote (weight 900 asked for; the bold face is the nearest real one) and
-// the citation (<cite> is italic by default). font-display: optional, because the quote's line breaks
-// depend on the font, so a late swap would re-wrap it and move the card. If the faces are not ready in
-// the first ~100 ms (preloaded, so on a warm cache or a fast line they are) this page view keeps the
-// system serif (what the quote used before) and the next view, from the cache, gets InkHk3 Serif.
+// the citation (<cite> is italic by default). font-display: swap (chosen 2026-11-09: under optional,
+// Firefox on macOS often kept the system serif). Until the faces arrive the quote shows in the system
+// serif, then swaps to InkHk3 Serif. The swap can re-wrap the quote; the size of the move is in README.md.
 @font-face {
   font-family: 'InkHk3SerifText';
   font-weight: 700;
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
   src: url("/InkHk3Serif-Bold.woff2") format('woff2');
 }
 
@@ -32,7 +31,7 @@
   font-family: 'InkHk3SerifText';
   font-weight: 400;
   font-style: italic;
-  font-display: optional;
+  font-display: swap;
   src: url("/InkHk3Serif-Italic.woff2") format('woff2');
 }
 

@@ -130,10 +130,13 @@ and no longer credited; Umschrift stays in git history and in the lab (`lab/READ
 - **font-display.** The title uses the family `InkHk3Serif` with `font-display: block`: its width is reserved in
   em (`.title-text`, 5.79em, measured from the rendered title) and its fallback face has InkHk3 Serif's ascent and
   descent, so the invisible-then-swapped title moves nothing. The quote and the citation use `InkHk3SerifText`
-  (same files, so one download each) with `font-display: optional`: their line breaks depend on the font, and a
-  late swap would re-wrap them and shift the card. Both faces are preloaded; if they are not ready in about 100 ms
-  the quote and citation stay in the system serif for that page view (as before this change) and get InkHk3 Serif from
-  the next view on. Switch `optional` to `swap` in `src/_fonts.scss` to trade that for a small shift on slow loads.
+  (same files, so one download each) with `font-display: swap`. Both faces are preloaded. Until they arrive the quote
+  and citation show in the system serif, then swap to InkHk3 Serif. `optional` was used before; swap was chosen on
+  2026-11-09 because Firefox on macOS often kept the fallback under `optional`, so the quote did not get the font.
+  The swap moves almost nothing: in Chromium, WebKit and Firefox, at 360 and 1920 px wide, the quote is two lines
+  before and after, the card keeps its height, and nothing below the quote moves more than 0.4 px (Firefox
+  sub-pixel rounding; Chromium and WebKit 0 px). The title and the hieroglyphs do not move. The quote has no metric-override
+  fallback of its own: it would have nothing to correct.
 - Only two faces are shipped (Bold: title and quote, the quote's 900 resolves to it; Italic: `<cite>`), 400 KB in all.
 
 ### hierojax
