@@ -143,7 +143,7 @@ The two hieroglyph lines (the title's and the Amduat line) are path SVGs written
 ships no hieroglyph font and no hieroglyph code. The page's only script, `src/credits.js`, logs the version and a copyright notice, then the credit and licence
 text in `src/credits.txt`, to the browser console; nothing is shown on the page, and the page works without the script. They were drawn by `hieroxide fill` from
 [storskegg/rust-hierojax-wasm32](https://github.com/storskegg/rust-hierojax-wasm32) (a Rust port of hierojax), built at
-commit 11b2f32, with its `docs/NewGardiner.otf`. Each `<span class="hierojax" data-type="svg" data-standalone="true">`
+commit 5205bd6, with its `docs/NewGardiner.otf`. Each `<span class="hierojax" data-type="svg" data-standalone="true">`
 keeps the line's Unicode in `data-text` and holds one `<svg>`. To regenerate them in place (`hieroxide` is built from
 that repo, `NewGardiner.otf` is its `docs/NewGardiner.otf`; rerunning on a filled file gives the same bytes):
 
@@ -151,7 +151,7 @@ that repo, `NewGardiner.otf` is its `docs/NewGardiner.otf`; rerunning on a fille
 
 `test/prerender.sh` (run after `npm run build`) checks that `dist/` has exactly one script (last in `<body>`, with integrity), one small JS file whose output is the version line, the copyright line and then `src/credits.txt` (in that order), no NewGardiner font, a `YYYY.WW.PATCH` version in `package.json`, and no trace of `package.json`'s `author` (whole or any word of it) in any file of `dist/`, nor `"author"` or the repository URL in the JS, that
 there are two spans with one `<svg>` each, that `data-text` is the right Unicode, and that the built blocks are the
-source's bytes. The CSS the filled spans need is the `.hierojax` rule in `src/style.scss`. The invisible overlay text in each span (it is what gets copied) has its selection highlight set to a translucent blue with transparent text, so selecting a line shows no misplaced ghost signs.
+source's bytes. The CSS the filled spans need is the `.hierojax` rule in `src/style.scss`.
 
 `vendor/` holds upstream's files for the font lab only (`lab/fetch-fonts.sh` copies them into `lab/`); the site does not
 ship them, and nothing under `src/` or `public/` uses them.
