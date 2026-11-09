@@ -41,6 +41,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "state" {
       sse_algorithm = "AES256"
     }
     bucket_key_enabled = false
+    # AWS sets this on new buckets; without it Terraform would remove the block.
+    blocked_encryption_types = ["SSE-C"]
   }
 }
 
