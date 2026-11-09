@@ -104,4 +104,18 @@ check "a script at the end of <body> gets its integrity, in place" '[[ $rc -eq 0
 echo '//evil' >> "$D/index-AAAA1111.js"
 node "$SRI" --check "$D" > "$TMP/c.out" 2>&1; rc=$?
 check "--check fails when the script in <body> was tampered with" '[[ $rc -ne 0 ]] && grep -q "integrity does not match" "$TMP/c.out"'
+
+# a build with a stylesheet and no script (the site since the hieroglyphs are pre-drawn SVG)
+rm -rf "$D"; mkdir -p "$D"
+echo 'body{color:red}' > "$D/index-BBBB2222.css"
+cat > "$D/index.html" <<'HTML'
+<!DOCTYPE html>
+<html><head>
+	<link rel="stylesheet" crossorigin href="/index-BBBB2222.css">
+</head><body><p>no script here</p></body></html>
+HTML
+node "$SRI" "$D" > /dev/null 2>&1; rc=$?
+check "no script: build mode passes, the stylesheet is hashed" '[[ $rc -eq 0 ]] && grep -q "integrity=\"sha384-$(b64 "$D"/index-*.css)\"" "$D/index.html" && [[ $(ls "$D"/*.js 2>/dev/null | wc -l) -eq 0 ]]'
+node "$SRI" --check "$D" > /dev/null 2>&1; rc=$?
+check "no script: --check passes" '[[ $rc -eq 0 ]]'
 exit $fail
