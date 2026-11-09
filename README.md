@@ -55,14 +55,14 @@ so compression doesn't affect them.
 
 ### Subresource Integrity
 
-The built entry `<script type="module">` is the last element in `<body>`: Vite injects it into `<head>` whatever the source says, so a small plugin in `vite.config.ts` (`entry-script-to-body-end`) moves it, and fails the build if it finds not exactly one `<script src>`. The stylesheet stays in `<head>`.
+The built page has no script at all (the hieroglyphs are pre-drawn SVG, see "hierojax" below), so its only integrity-bearing tag is the stylesheet, which stays in `<head>`. The tooling still handles scripts, in case one comes back.
 
 `npm run build` ends with `bin/sri.mjs` (in `postbuild`, after postcss/cssnano, so it hashes the final bytes). In every
 `dist/*.html` it adds `integrity="sha384-..."` to each local `<script src>` and stylesheet link (and any
 `modulepreload`, or `preload` of a script or style), and keeps `crossorigin`. Everything else in the HTML stays as it
 was. The stylesheet is also renamed to `index-<8 chars of its sha384>.css`: Vite names it before postcss rewrites it,
 so a name from the pre-postcss bytes could stay the same when cssnano changes, and a browser holding the old immutable
-copy would then fail the new hash. The JS keeps its Vite name (nothing rewrites it after the build).
+copy would then fail the new hash. A JS file, if there ever were one, would keep its Vite name (nothing rewrites it after the build). With no script, Vite emits no JS file, so the "unreferenced" check below has nothing to trip on.
 
 The build fails if a referenced file is missing, a script or stylesheet tag points at another origin, or a `*.js` /
 `*.css` in `dist/` is not referenced by such a tag (a future dynamic chunk would otherwise ship unhashed).
@@ -70,8 +70,8 @@ The build fails if a referenced file is missing, a script or stylesheet tag poin
 `test/sri.sh` tests the script on small fake builds.
 
 Fonts are not hashed. `integrity` on a font `<link rel=preload>` was tried (a scratch copy, Playwright engines):
-Chromium checks it and blocks the font on a mismatch (the later `@font-face` / `new FontFace(...)` request reuses the
-failed preload, so the site falls back to system serif and hierojax gets no NewGardiner, i.e. no SVGs), but WebKit
+Chromium checks it and blocks the font on a mismatch (the later `@font-face` request reuses the
+failed preload, so the site falls back to system serif), but WebKit
 and Firefox ignore it: a font with the wrong bytes still renders. It protects one engine and adds a way to break the site
 there, so the preloads stay without it.
 
@@ -110,7 +110,7 @@ form to suit the needs of this project.
   original states it, plus the list of changes, is `public/InkHk3Serif-OFL.txt`, served at
   <https://inkhk3.org/InkHk3Serif-OFL.txt>. It sets the title, the quote and the citation (real Unicode
   transliteration: "Ink Ḥkꜣ", U+1E24 and U+A723).
-- Mark-Jan Nederhof's [hierojax](https://github.com/nederhof/hierojax) renders the hieroglyphs; see below.
+- Mark-Jan Nederhof's [hierojax](https://github.com/nederhof/hierojax) and its NewGardiner font are what the hieroglyph lines are drawn from; only the pre-drawn SVG paths ship. See "hierojax" below.
 
 The title's ꜣ is enlarged (see "The enlarged ꜣ" below). The earlier fonts (Umschrift, and the ResJS fonts
 `CaslonRoman.ttf`, `DejaVuSans-Bold.ttf`, `HieroglyphicAux.ttf`, which nothing used any more) are no longer in `public/`
@@ -134,11 +134,27 @@ and no longer credited; Umschrift stays in git history and in the lab (`lab/READ
 
 ### hierojax
 
-`src/hierojax.js` is [hierojax](https://github.com/nederhof/hierojax/tree/da318801e00b10b4b5c5ec8d9cc6f8fddcc9eb5a)
-(`docs/hierojax.js` at commit da31880) by Mark-Jan Nederhof, licensed GPL-3.0. `src/_hierojax.scss` is its
-`docs/hierojax.css` at the same commit, with the `@font-face` rule removed: the `Hieroglyphic` font is registered only by `src/hierojax.js` (see (c)), so it loads once.
+The two hieroglyph lines (the title's and the Amduat line) are path SVGs written into `src/index.html`, so the site
+ships no JavaScript and no hieroglyph font. They were drawn by `hieroxide fill` from
+[storskegg/rust-hierojax-wasm32](https://github.com/storskegg/rust-hierojax-wasm32) (a Rust port of hierojax), built at
+commit 11b2f32, with its `docs/NewGardiner.otf`. Each `<span class="hierojax" data-type="svg" data-standalone="true">`
+keeps the line's Unicode in `data-text` and holds one `<svg>`. To regenerate them in place (`hieroxide` is built from
+that repo, `NewGardiner.otf` is its `docs/NewGardiner.otf`; rerunning on a filled file gives the same bytes):
 
-Local modifications to `src/hierojax.js`; the complete diff is `vendor/hierojax.local.patch` (the file header says how to
+    hieroxide fill --font NewGardiner.otf src/index.html -o src/index.html.new && mv src/index.html.new src/index.html
+
+`test/prerender.sh` (run after `npm run build`) checks that `dist/` has no script, no JS file and no NewGardiner, that
+there are two spans with one `<svg>` each, that `data-text` is the right Unicode, and that the built blocks are the
+source's bytes. The CSS the filled spans need is the `.hierojax` rule in `src/style.scss`.
+
+`vendor/` holds upstream's files for the font lab only (`lab/fetch-fonts.sh` copies them into `lab/`); the site does not
+ship them, and nothing under `src/` or `public/` uses them.
+
+`vendor/hierojax.js` is [hierojax](https://github.com/nederhof/hierojax/tree/da318801e00b10b4b5c5ec8d9cc6f8fddcc9eb5a)
+(`docs/hierojax.js` at commit da31880) by Mark-Jan Nederhof, licensed GPL-3.0. `vendor/hierojax.css` is its
+`docs/hierojax.css` at the same commit, with the `@font-face` rule removed: the `Hieroglyphic` font is registered only by `vendor/hierojax.js` (see (c)), so it loads once.
+
+Local modifications to `vendor/hierojax.js`; the complete diff is `vendor/hierojax.local.patch` (the file header says how to
 apply and regenerate it):
 
 - (a) `PrintedSVG` constructor, right after the `width`/`height` attributes are set: adds a `viewBox` of
@@ -150,5 +166,5 @@ apply and regenerate it):
   `startLoadingFonts()` is `/NewGardiner.woff2` (was `NewGardiner.otf`), `PrintedSVG.EXTERNAL_FONT` is
   `'/NewGardiner.woff2'` (was `'NewGardiner.otf'`), and `PrintedSVG.internalCSS()` says `format('woff2')` (was
   `format('opentype')`). The absolute path is deliberate.
-- (d) `public/NewGardiner.woff2` is upstream's `docs/NewGardiner.otf` converted to WOFF2 with fontTools
+- (d) `vendor/NewGardiner.woff2` is upstream's `docs/NewGardiner.otf` converted to WOFF2 with fontTools
   (`fonttools ttLib.woff2 compress`). No other changes to the font (no subsetting).
