@@ -34,10 +34,7 @@
   "homepage": "https://inkhk3.org",
   "devDependencies": {
     "autoprefixer": "^10.6.2",
-    "browser-sync": "^3.0.4",
     "cssnano": "^9.9.0",
-    "npm-run-all": "^4.1.5",
-    "onchange": "^7.1.0",
     "postcss-cli": "^12.0.0",
     "sass": "^1.108.1",
     "vite": "^8.3.7"
