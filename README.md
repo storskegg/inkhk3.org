@@ -24,7 +24,7 @@ Needs node 26.x. Run these from the project root:
     npx serve-dist   # builds, then serves the built site (vite preview): http://127.0.0.1:8080/
     npm run dev      # the site's own dev server (src/, public/): http://127.0.0.1:8083/
 
-`npx serve` runs `vite --config vite.lab.config.ts`: CSS changes in `lab/` are hot-swapped, HTML and JS changes reload
+`npx serve` runs `vite --config vite.lab.config.mts`: CSS changes in `lab/` are hot-swapped, HTML and JS changes reload
 the page. The lab is never built or deployed (see `lab/README.md`). `npm run dev` (alias `npm start`) is the site's dev
 server: SCSS is hot-swapped, HTML and JS reload. Neither touches `dist/`. `npx serve` and `npx serve-dist` work because
 `package.json` has a `bin` field (`bin/serve.mjs`, `bin/serve-dist.mjs`) that runs the npm scripts of the same name, so
@@ -63,7 +63,7 @@ The copyright notice on the next line uses the pen name only, never the author's
 
 ### Subresource Integrity
 
-The built page has one script, `credits.js` (it only logs the version, a copyright notice and the credit and licence text to the console, see "Version" and "hierojax" below), and one stylesheet. The `<script type="module">` is the last element in `<body>`: Vite injects it into `<head>` whatever the source says, so a small plugin in `vite.config.ts` (`entry-script-to-body-end`) moves it, and fails the build if it finds not exactly one `<script src>`. The stylesheet stays in `<head>`.
+The built page has one script, `credits.js` (it only logs the version, a copyright notice and the credit and licence text to the console, see "Version" and "hierojax" below), and one stylesheet. The `<script type="module">` is the last element in `<body>`: Vite injects it into `<head>` whatever the source says, so a small plugin in `vite.config.mts` (`entry-script-to-body-end`) moves it, and fails the build if it finds not exactly one `<script src>`. The stylesheet stays in `<head>`.
 
 `npm run build` ends with `bin/sri.mjs` (in `postbuild`, after postcss/cssnano, so it hashes the final bytes). In every
 `dist/*.html` it adds `integrity="sha384-..."` to each local `<script src>` and stylesheet link (and any

@@ -16,7 +16,7 @@ npx serve                                                  # http://127.0.0.1:80
 
 `FONTTOOLS_PY` is any Python with `fontTools` and `brotli` (`measure-aleph.py` also needs `Pillow`, `numpy` and `scipy`).
 `npx serve` (Node 24, from the project root; `npm run serve` and `npm run lab` do the same) runs Vite's dev server
-with `vite.lab.config.ts` (root `lab/`, no plugins, no public dir, no build): CSS edits are hot-swapped, JS and HTML
+with `vite.lab.config.mts` (root `lab/`, no plugins, no public dir, no build): CSS edits are hot-swapped, JS and HTML
 edits reload the page, and fonts, `hierojax.js` and the JSON files are served as they are. `serve-dist` uses 8080 and
 the site's `npm run dev` 8083.
 

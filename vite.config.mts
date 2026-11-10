@@ -1,7 +1,7 @@
 import type { UserConfig } from 'vite';
 import cleanPlugin from 'vite-plugin-clean';
 
-export default ({ command }: { command: 'build' | 'serve' }) => ({
+export default () => ({
     plugins: [
         // Wipe dist/ only for builds; the dev server must never touch it.
         {
@@ -34,11 +34,13 @@ export default ({ command }: { command: 'build' | 'serve' }) => ({
         },
     ],
     root: './src',
-    // '../dist' is only meant for the build output; the dev server serves from '/'.
-    base: command === 'build' ? '../dist' : '/',
+    // Assets are root-absolute (/index-*.css, /InkHk3Serif-Bold.woff2); the site lives at the domain root.
+    base: '/',
     publicDir: '../public',
     build: {
         outDir: '../dist',
+        // dist/ is outside the root, so Vite would warn; the clean plugin above already wipes it.
+        emptyOutDir: false,
         assetsDir: '.',
         // No modulepreload polyfill: it needs `document`, the page has no modulepreload links, and the one script
         // (credits.js) must run bare in node for test/prerender.sh.
@@ -57,4 +59,4 @@ export default ({ command }: { command: 'build' | 'serve' }) => ({
         port: 8080,
         strictPort: true,
     },
-}) satisfies (env: { command: 'build' | 'serve' }) => UserConfig
+}) satisfies () => UserConfig
