@@ -94,7 +94,7 @@ for c in "darwin x64 1" "darwin arm64 0" "linux x64 0"; do
   check "check-arch.mjs ($plat $arch): exit $want" '[[ $rc -eq $want ]]'
 done
 INKHK3_TEST_PLATFORM=darwin INKHK3_TEST_ARCH=x64 node bin/check-arch.mjs > "$TMP/arch.out" 2>&1 || true
-check "check-arch.mjs (darwin x64): message names the arch and arch -arm64 nvm install" 'grep -q "x64.*arch -arm64 nvm install" "$TMP/arch.out"'
+check "check-arch.mjs (darwin x64): message names the arch and nvm install 24" 'grep -q "x64.*nvm install 24" "$TMP/arch.out"'
 # deploy.sh with a fake node 24 that reports x64: must fail before any aws call (macOS only; elsewhere the check is off)
 if [[ "$(uname -s)" == Darwin ]]; then
   mkdir -p "$TMP/x64bin" "$TMP/home"
@@ -106,7 +106,7 @@ NODE
   : > "$FAKE_AWS_LOG"; rc=0
   HOME="$TMP/home" PATH="$TMP/x64bin:$PATH" ./deploy.sh --live > "$TMP/x64.out" 2>&1 || rc=$?   # empty HOME: no nvm to switch to arm64
   check "x64 node 24: deploy.sh --live exits non-zero" '[[ $rc -ne 0 ]]'
-  check "x64 node 24: error names the arch and says arch -arm64 nvm install" 'grep -q "arch x64" "$TMP/x64.out" && grep -q "arch -arm64 nvm install" "$TMP/x64.out"'
+  check "x64 node 24: error names the arch and says nvm install 24" 'grep -q "arch x64" "$TMP/x64.out" && grep -q "nvm install 24" "$TMP/x64.out"'
   check "x64 node 24: no aws call at all" '[[ ! -s "$FAKE_AWS_LOG" ]]'
 fi
 exit $fail

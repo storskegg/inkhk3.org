@@ -45,7 +45,7 @@ The script needs node 24.x (it tries `nvm use` itself) and the `aws` CLI. It set
 manifest, long immutable caching for the hashed `index-*.js/css`, and a short cache for everything else.
 
 On macOS, Node must be a native arm64 build, never x64 under Rosetta. `npm run build` (via `bin/check-arch.mjs`) and
-`deploy.sh` refuse any other; install one with `arch -arm64 nvm install`.
+`deploy.sh` refuse any other; in an arm64 shell (`uname -m` prints arm64), `nvm install 24` installs one.
 
 Order: it uploads without deleting (assets, fonts, then `index.html` last), invalidates CloudFront and waits for that,
 and only then deletes stale keys, keeping hashed `index-*.js/css` uploaded in the last 24 hours (the previous deploy's pair).

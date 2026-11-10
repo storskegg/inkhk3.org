@@ -4,6 +4,6 @@ const platform = process.env.INKHK3_TEST_PLATFORM || process.platform;
 const arch = process.env.INKHK3_TEST_ARCH || process.arch;
 if (platform === 'darwin' && arch !== 'arm64') {
   console.error(`error: this Node is a ${arch} build; on macOS it must be a native arm64 build, not Rosetta. ` +
-    `Install an arm64 Node 24 ('arch -arm64 nvm install') and retry.`);
+    `Open an arm64 shell ('uname -m' prints arm64) and run 'nvm install 24'; nvm installs an arm64 Node there.`);
   process.exit(1);
 }

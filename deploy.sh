@@ -43,7 +43,7 @@ if ! node_ok; then
     nvm use || true
     set -u
   fi
-  node_ok || die "an arm64 node 24.x is required (see .nvmrc); found $(node -v 2>/dev/null || echo none), arch $(node -p process.arch 2>/dev/null || echo unknown). On macOS node must be a native arm64 build: run 'arch -arm64 nvm install' (then 'nvm use') and retry."
+  node_ok || die "an arm64 node 24.x is required (see .nvmrc); found $(node -v 2>/dev/null || echo none), arch $(node -p process.arch 2>/dev/null || echo unknown). On macOS node must be a native arm64 build: open an arm64 shell ('uname -m' prints arm64) and run 'nvm install 24'; nvm installs an arm64 Node there."
 fi
 echo "using node $(node -v)"
 
