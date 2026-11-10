@@ -1,16 +1,7 @@
 import type { UserConfig } from 'vite';
-import cleanPlugin from 'vite-plugin-clean';
 
 export default () => ({
     plugins: [
-        // Wipe dist/ only for builds; the dev server must never touch it.
-        {
-            // @ts-ignore
-            ...cleanPlugin({
-                targetFiles: ['dist'],
-            }),
-            apply: 'build' as const,
-        },
         // Vite injects the built entry <script> into <head> wherever the source tag sits. Move it to the end
         // of <body>. Only the tag moves (plus the whitespace around it); no match or more than one fails the build.
         {
@@ -39,8 +30,9 @@ export default () => ({
     publicDir: '../public',
     build: {
         outDir: '../dist',
-        // dist/ is outside the root, so Vite would warn; the clean plugin above already wipes it.
-        emptyOutDir: false,
+        // Empty dist/ before each `vite build`. dist/ is outside the root, so Vite only does this (and stays quiet)
+        // when it is set explicitly. It applies to builds only; the dev server never touches dist/.
+        emptyOutDir: true,
         assetsDir: '.',
         // No modulepreload polyfill: it needs `document`, the page has no modulepreload links, and the one script
         // (credits.js) must run bare in node for test/prerender.sh.
