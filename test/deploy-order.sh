@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Runs ./deploy.sh and ./deploy.sh --live against a fake aws (no AWS calls) and checks the
 # order: all uploads, index.html last, invalidate + wait, then deletes; the previous hashed
-# pair is kept; the dry run deletes nothing. Needs node 24 (nvm path below) for the build check.
+# pair is kept; the dry run deletes nothing. Needs node 26 (nvm path below) for the build check.
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 ROOT="$PWD"
@@ -35,7 +35,7 @@ NPM
 printf '#!/usr/bin/env bash\necho TFDIST1\n' > "$TMP/bin/terraform"
 chmod +x "$TMP/bin/"*
 mkdir -p node_modules; [[ $HAD_NM == 1 ]] || touch node_modules/.package-lock.json   # skip npm ci
-export PATH="$TMP/bin:$HOME/.nvm/versions/node/v24.12.0/bin:$PATH"
+export PATH="$TMP/bin:$HOME/.nvm/versions/node/v26.13.0/bin:$PATH"
 export FAKE_AWS_LOG="$TMP/log"
 fail=0
 check() { if eval "$2"; then echo "ok   - $1"; else echo "FAIL - $1"; fail=1; fi; }
@@ -94,19 +94,19 @@ for c in "darwin x64 1" "darwin arm64 0" "linux x64 0"; do
   check "check-arch.mjs ($plat $arch): exit $want" '[[ $rc -eq $want ]]'
 done
 INKHK3_TEST_PLATFORM=darwin INKHK3_TEST_ARCH=x64 node bin/check-arch.mjs > "$TMP/arch.out" 2>&1 || true
-check "check-arch.mjs (darwin x64): message names the arch and nvm install 24" 'grep -q "x64.*nvm install 24" "$TMP/arch.out"'
-# deploy.sh with a fake node 24 that reports x64: must fail before any aws call (macOS only; elsewhere the check is off)
+check "check-arch.mjs (darwin x64): message names the arch and nvm install 26" 'grep -q "x64.*nvm install 26" "$TMP/arch.out"'
+# deploy.sh with a fake node 26 that reports x64: must fail before any aws call (macOS only; elsewhere the check is off)
 if [[ "$(uname -s)" == Darwin ]]; then
   mkdir -p "$TMP/x64bin" "$TMP/home"
   cat > "$TMP/x64bin/node" <<'NODE'
 #!/usr/bin/env bash
-case "$*" in -v) echo v24.12.0 ;; "-p process.arch") echo x64 ;; *) exit 1 ;; esac
+case "$*" in -v) echo v26.13.0 ;; "-p process.arch") echo x64 ;; *) exit 1 ;; esac
 NODE
   chmod +x "$TMP/x64bin/node"
   : > "$FAKE_AWS_LOG"; rc=0
   HOME="$TMP/home" PATH="$TMP/x64bin:$PATH" ./deploy.sh --live > "$TMP/x64.out" 2>&1 || rc=$?   # empty HOME: no nvm to switch to arm64
-  check "x64 node 24: deploy.sh --live exits non-zero" '[[ $rc -ne 0 ]]'
-  check "x64 node 24: error names the arch and says nvm install 24" 'grep -q "arch x64" "$TMP/x64.out" && grep -q "nvm install 24" "$TMP/x64.out"'
-  check "x64 node 24: no aws call at all" '[[ ! -s "$FAKE_AWS_LOG" ]]'
+  check "x64 node 26: deploy.sh --live exits non-zero" '[[ $rc -ne 0 ]]'
+  check "x64 node 26: error names the arch and says nvm install 26" 'grep -q "arch x64" "$TMP/x64.out" && grep -q "nvm install 26" "$TMP/x64.out"'
+  check "x64 node 26: no aws call at all" '[[ ! -s "$FAKE_AWS_LOG" ]]'
 fi
 exit $fail

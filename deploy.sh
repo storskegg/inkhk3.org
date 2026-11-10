@@ -27,15 +27,15 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 
 die() { echo "error: $*" >&2; exit 1; }
 
-# --- node 24.x -------------------------------------------------------------
+# --- node 26.x -------------------------------------------------------------
 # On macOS the node must also be a native arm64 build (not x64 under Rosetta).
 node_ok() {
-  command -v node >/dev/null 2>&1 && [[ "$(node -v)" == v24.* ]] || return 1
+  command -v node >/dev/null 2>&1 && [[ "$(node -v)" == v26.* ]] || return 1
   [[ "$(uname -s)" != Darwin || "$(node -p process.arch)" == arm64 ]]
 }
 
 if ! node_ok; then
-  echo "node 24.x not active (found: $(node -v 2>/dev/null || echo none)); trying nvm..."
+  echo "node 26.x not active (found: $(node -v 2>/dev/null || echo none)); trying nvm..."
   if [[ -s "$HOME/.nvm/nvm.sh" ]]; then
     set +u
     # shellcheck source=/dev/null
@@ -43,7 +43,7 @@ if ! node_ok; then
     nvm use || true
     set -u
   fi
-  node_ok || die "an arm64 node 24.x is required (see .nvmrc); found $(node -v 2>/dev/null || echo none), arch $(node -p process.arch 2>/dev/null || echo unknown). On macOS node must be a native arm64 build: open an arm64 shell ('uname -m' prints arm64) and run 'nvm install 24'; nvm installs an arm64 Node there."
+  node_ok || die "an arm64 node 26.x is required (see .nvmrc); found $(node -v 2>/dev/null || echo none), arch $(node -p process.arch 2>/dev/null || echo unknown). On macOS node must be a native arm64 build: open an arm64 shell ('uname -m' prints arm64) and run 'nvm install 26'; nvm installs an arm64 Node there."
 fi
 echo "using node $(node -v)"
 

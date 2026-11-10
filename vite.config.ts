@@ -43,6 +43,9 @@ export default ({ command }: { command: 'build' | 'serve' }) => ({
         // No modulepreload polyfill: it needs `document`, the page has no modulepreload links, and the one script
         // (credits.js) must run bare in node for test/prerender.sh.
         modulePreload: { polyfill: false },
+        // Vite 8 minifies CSS with lightningcss, which rewrites grid-template-areas ".    cite  cite" to ".cite cite"
+        // (an invalid area name). postcss/cssnano minify the css in `postbuild` anyway, so skip Vite's pass.
+        cssMinify: false,
     },
     server: {
         host: '127.0.0.1',

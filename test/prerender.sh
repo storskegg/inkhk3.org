@@ -3,7 +3,7 @@
 # font, two filled spans with the right text, and their bytes identical to src/index.html's.
 set -uo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
-export PATH="$HOME/.nvm/versions/node/v24.12.0/bin:$PATH"
+export PATH="$HOME/.nvm/versions/node/v26.13.0/bin:$PATH"
 DIST="${1:-dist}"
 fail=0
 TMPDIR_AUTH="$(mktemp)"; trap 'rm -f "$TMPDIR_AUTH"' EXIT

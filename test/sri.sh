@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Tests bin/sri.mjs on small fake builds in a temp dir (no vite, no network, no AWS). Needs node 24 (nvm path below).
+# Tests bin/sri.mjs on small fake builds in a temp dir (no vite, no network, no AWS). Needs node 26 (nvm path below).
 set -uo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
-export PATH="$HOME/.nvm/versions/node/v24.12.0/bin:$PATH"
+export PATH="$HOME/.nvm/versions/node/v26.13.0/bin:$PATH"
 SRI="$PWD/bin/sri.mjs"
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 fail=0

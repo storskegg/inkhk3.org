@@ -18,7 +18,7 @@ I'm entertained that, given the utter simplicity of the website itself, the terr
 
 ## Developing
 
-Needs node 24.x. Run these from the project root:
+Needs node 26.x. Run these from the project root:
 
     npx serve        # the font lab (lab/) with live reload: http://127.0.0.1:8081/
     npx serve-dist   # builds, then serves the built site (vite preview): http://127.0.0.1:8080/
@@ -28,7 +28,7 @@ Needs node 24.x. Run these from the project root:
 the page. The lab is never built or deployed (see `lab/README.md`). `npm run dev` (alias `npm start`) is the site's dev
 server: SCSS is hot-swapped, HTML and JS reload. Neither touches `dist/`. `npx serve` and `npx serve-dist` work because
 `package.json` has a `bin` field (`bin/serve.mjs`, `bin/serve-dist.mjs`) that runs the npm scripts of the same name, so
-they only work in this project's root (Node 24); elsewhere `npx serve` would fetch the public `serve` package. The npm
+they only work in this project's root (Node 26); elsewhere `npx serve` would fetch the public `serve` package. The npm
 scripts do the same: `npm run serve` (alias `npm run lab`) and `npm run serve-dist`. Extra flags pass through, e.g.
 `npx serve --port 8090`.
 
@@ -41,16 +41,16 @@ Route53, certificates).
     ./deploy.sh          # builds, then shows a dry run of the S3 sync; changes nothing
     ./deploy.sh --live   # builds, syncs to S3, then invalidates the changed paths in CloudFront
 
-The script needs node 24.x (it tries `nvm use` itself) and the `aws` CLI. It sets content types for fonts and the web
+The script needs node 26.x (it tries `nvm use` itself) and the `aws` CLI. It sets content types for fonts and the web
 manifest, long immutable caching for the hashed `index-*.js/css`, and a short cache for everything else.
 
 On macOS, Node must be a native arm64 build, never x64 under Rosetta. `npm run build` (via `bin/check-arch.mjs`) and
-`deploy.sh` refuse any other; in an arm64 shell (`uname -m` prints arm64), `nvm install 24` installs one.
+`deploy.sh` refuse any other; in an arm64 shell (`uname -m` prints arm64), `nvm install 26` installs one.
 
 Order: it uploads without deleting (assets, fonts, then `index.html` last), invalidates CloudFront and waits for that,
 and only then deletes stale keys, keeping hashed `index-*.js/css` uploaded in the last 24 hours (the previous deploy's pair).
 `test/deploy-order.sh` runs `deploy.sh` and `--live` against a fake `aws` (`test/fake-aws.sh`) and checks that order;
-it needs node 24 and calls no AWS.
+it needs node 26 and calls no AWS.
 
 CloudFront compresses at the edge with Brotli and gzip, through the cache policy `inkhk3-org-compressed`
 (`modules/cloudfront/main.tf`). woff2 fonts and images are not compressed. The SRI hashes below check the decoded bytes,
