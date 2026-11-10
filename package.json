@@ -18,6 +18,7 @@
     "dev": "vite",
     "start": "vite",
     "lab": "npm run serve",
+    "prebuild": "node bin/check-arch.mjs",
     "build": "npm run build:vite",
     "postbuild": "postcss dist/*.css -u autoprefixer cssnano -r --no-map && node bin/sri.mjs"
   },

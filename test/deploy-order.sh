@@ -85,4 +85,28 @@ done
 : > "$FAKE_AWS_LOG"
 rc=0; ./deploy.sh > "$TMP/guard-dry.out" 2>&1 || rc=$?
 check "guard: a dist/ without lab still deploys (dry run ok)" '[[ $rc -eq 0 ]]'
+
+echo; echo "=== arch guard ==="
+# bin/check-arch.mjs with a forced platform/arch (INKHK3_TEST_* env, tests only)
+for c in "darwin x64 1" "darwin arm64 0" "linux x64 0"; do
+  read -r plat arch want <<< "$c"; rc=0
+  INKHK3_TEST_PLATFORM=$plat INKHK3_TEST_ARCH=$arch node bin/check-arch.mjs > "$TMP/arch.out" 2>&1 || rc=$?
+  check "check-arch.mjs ($plat $arch): exit $want" '[[ $rc -eq $want ]]'
+done
+INKHK3_TEST_PLATFORM=darwin INKHK3_TEST_ARCH=x64 node bin/check-arch.mjs > "$TMP/arch.out" 2>&1 || true
+check "check-arch.mjs (darwin x64): message names the arch and arch -arm64 nvm install" 'grep -q "x64.*arch -arm64 nvm install" "$TMP/arch.out"'
+# deploy.sh with a fake node 24 that reports x64: must fail before any aws call (macOS only; elsewhere the check is off)
+if [[ "$(uname -s)" == Darwin ]]; then
+  mkdir -p "$TMP/x64bin" "$TMP/home"
+  cat > "$TMP/x64bin/node" <<'NODE'
+#!/usr/bin/env bash
+case "$*" in -v) echo v24.12.0 ;; "-p process.arch") echo x64 ;; *) exit 1 ;; esac
+NODE
+  chmod +x "$TMP/x64bin/node"
+  : > "$FAKE_AWS_LOG"; rc=0
+  HOME="$TMP/home" PATH="$TMP/x64bin:$PATH" ./deploy.sh --live > "$TMP/x64.out" 2>&1 || rc=$?   # empty HOME: no nvm to switch to arm64
+  check "x64 node 24: deploy.sh --live exits non-zero" '[[ $rc -ne 0 ]]'
+  check "x64 node 24: error names the arch and says arch -arm64 nvm install" 'grep -q "arch x64" "$TMP/x64.out" && grep -q "arch -arm64 nvm install" "$TMP/x64.out"'
+  check "x64 node 24: no aws call at all" '[[ ! -s "$FAKE_AWS_LOG" ]]'
+fi
 exit $fail

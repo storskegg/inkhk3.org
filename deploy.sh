@@ -28,7 +28,11 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 die() { echo "error: $*" >&2; exit 1; }
 
 # --- node 24.x -------------------------------------------------------------
-node_ok() { command -v node >/dev/null 2>&1 && [[ "$(node -v)" == v24.* ]]; }
+# On macOS the node must also be a native arm64 build (not x64 under Rosetta).
+node_ok() {
+  command -v node >/dev/null 2>&1 && [[ "$(node -v)" == v24.* ]] || return 1
+  [[ "$(uname -s)" != Darwin || "$(node -p process.arch)" == arm64 ]]
+}
 
 if ! node_ok; then
   echo "node 24.x not active (found: $(node -v 2>/dev/null || echo none)); trying nvm..."
@@ -39,7 +43,7 @@ if ! node_ok; then
     nvm use || true
     set -u
   fi
-  node_ok || die "node 24.x is required (see .nvmrc). Run 'nvm install && nvm use' and retry."
+  node_ok || die "an arm64 node 24.x is required (see .nvmrc); found $(node -v 2>/dev/null || echo none), arch $(node -p process.arch 2>/dev/null || echo unknown). On macOS node must be a native arm64 build: run 'arch -arm64 nvm install' (then 'nvm use') and retry."
 fi
 echo "using node $(node -v)"
 
