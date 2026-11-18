@@ -27,11 +27,21 @@ check "running the JS prints the version and copyright notice first, then exactl
   const want = \"inkhk3.org \" + v + \"\\nCopyright \\u00a9 2026 Fra. M.H.B.N.M. All rights reserved.\\n\" + fs.readFileSync(\"src/credits.txt\", \"utf8\") + \"\\n\";
   process.exit(out === want ? 0 : 1)" "$JS"'
 check "package.json's version is YYYY.WW.PATCH" 'node -e "process.exit(/^20[0-9]{2}\\.[0-9]{2}\\.[0-9]+\$/.test(require(\"./package.json\").version) ? 0 : 1)"'
-check "package.json's author (whole, or any word of it) is in no file in dist/" 'node -e "
-  const a = require(\"./package.json\").author;
-  const words = [a, ...String(a).split(/[^\\p{L}\\p{N}]+/u)].filter((w) => w.length > 0);
-  if (!String(a).trim()) process.exit(2);
-  process.stdout.write(words.join(\"\\n\"));" > "$TMPDIR_AUTH" && [[ -s "$TMPDIR_AUTH" ]] && ! grep -raiqF -f "$TMPDIR_AUTH" "$DIST"'
+# Protected names: INKHK3_LEAK_NAMES (newline- or comma-separated) if set and non-empty, else .leak-names at the repo
+# root (one per line; blank lines and # lines ignored). Never in the repo. No names at all is a failure, not a skip.
+# The pen name (package.json's author) is public and is not protected.
+if [[ -n "${INKHK3_LEAK_NAMES:-}" ]]; then LEAK_SRC="$INKHK3_LEAK_NAMES"; LEAK_SPLIT=1
+elif [[ -f .leak-names ]]; then LEAK_SRC="$(cat .leak-names)"; LEAK_SPLIT=0
+else LEAK_SRC=""; LEAK_SPLIT=0; fi
+LEAK_SRC="$LEAK_SRC" LEAK_SPLIT="$LEAK_SPLIT" node -e '
+  const split = process.env.LEAK_SPLIT === "1";
+  const names = process.env.LEAK_SRC.split(split ? /[\n,]/ : /\n/).map((l) => l.trim()).filter((l) => l && !l.startsWith("#"));
+  const words = names.flatMap((n) => [n, ...n.split(/[^\p{L}\p{N}]+/u)]).filter((w) => w.length > 0);
+  process.stdout.write(words.join("\n"));' > "$TMPDIR_AUTH"
+if [[ ! -s "$TMPDIR_AUTH" ]]; then
+  echo "FAIL - no protected names: set INKHK3_LEAK_NAMES (names separated by newlines or commas) or create .leak-names at the repo root (one name per line; it is gitignored)"
+fi
+check "no protected name (whole, or any word of it) is in any file in dist/" '[[ -s "$TMPDIR_AUTH" ]] && ! grep -raiqF -f "$TMPDIR_AUTH" "$DIST"'
 check "the built JS has no \"author\" key and no repository URL" '[[ -n "$JS" ]] && ! grep -qaF "\"author\"" "$JS" && ! grep -qaF "$(node -e "process.stdout.write(require(\"./package.json\").repository.url)")" "$JS"'
 check "credits.txt's OFL body is byte-identical to public/InkHk3Serif-OFL.txt lines 39 on" 'sed -n "39,\$p" public/InkHk3Serif-OFL.txt | cmp -s - <(tail -n "$(sed -n "39,\$p" public/InkHk3Serif-OFL.txt | wc -l)" src/credits.txt)'
 check "no NewGardiner or Hieroglyphic in index.html or the css" '! grep -il -e NewGardiner -e Hieroglyphic "$DIST/index.html" "$DIST"/*.css'

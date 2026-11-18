@@ -294,3 +294,6 @@ lab/paper_fff.jpg
 lab/binding_dark2.png
 lab/hierojax.css
 shots/
+
+# the names the leak check in test/prerender.sh looks for; local only, never committed
+.leak-names

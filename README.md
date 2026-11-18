@@ -158,9 +158,11 @@ that repo, `NewGardiner.otf` is its `docs/NewGardiner.otf`; rerunning on a fille
 
     hieroxide fill --font NewGardiner.otf src/index.html -o src/index.html.new && mv src/index.html.new src/index.html
 
-`test/prerender.sh` (run after `npm run build`) checks that `dist/` has exactly one script (last in `<body>`, with integrity), one small JS file whose output is the version line, the copyright line and then `src/credits.txt` (in that order), no NewGardiner font, a `YYYY.WW.PATCH` version in `package.json`, and no trace of `package.json`'s `author` (whole or any word of it) in any file of `dist/`, nor `"author"` or the repository URL in the JS, that
+`test/prerender.sh` (run after `npm run build`) checks that `dist/` has exactly one script (last in `<body>`, with integrity), one small JS file whose output is the version line, the copyright line and then `src/credits.txt` (in that order), no NewGardiner font, a `YYYY.WW.PATCH` version in `package.json`, and no trace of the protected real name (whole or any word of it) in any file of `dist/`, nor `"author"` or the repository URL in the JS, that
 there are two spans with one `<svg>` each, that `data-text` is the right Unicode, and that the built blocks are the
 source's bytes. The CSS the filled spans need is the `.hierojax` rule in `src/style.scss`.
+
+The protected name comes from outside the repo: the environment variable `INKHK3_LEAK_NAMES` (names separated by newlines or commas) if set, else the gitignored file `.leak-names` at the repo root (one name per line; blank lines and `#` lines ignored). Without either, the check fails and says what to create. `package.json`'s `author` is the public pen name and is not protected. There is no CI in this repo; if CI is added, it must set `INKHK3_LEAK_NAMES` from a secret of that name.
 
 `vendor/` holds upstream's files for the font lab only (`lab/fetch-fonts.sh` copies them into `lab/`); the site does not
 ship them, and nothing under `src/` or `public/` uses them.
