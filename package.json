@@ -1,6 +1,7 @@
 {
   "name": "inkhk3.org",
   "version": "2026.46.3",
+  "private": true,
   "description": "Source for inkhk3.org website.",
   "main": "src/index.html",
   "bin": {
@@ -27,7 +28,7 @@
     "url": "git+https://github.com/storskegg/inkhk3.org.git"
   },
   "author": "Liam Conrad",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/storskegg/inkhk3.org/issues"
   },

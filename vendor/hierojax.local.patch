@@ -3,7 +3,21 @@
 # Regenerate: diff -u (labels a/docs/hierojax.js, b/vendor/hierojax.js) of pristine upstream docs/hierojax.js against vendor/hierojax.js.
 --- a/docs/hierojax.js
 +++ b/vendor/hierojax.js
-@@ -1766,6 +1766,13 @@
+@@ -1,3 +1,13 @@
++/*
++ * hierojax by Mark-Jan Nederhof (https://github.com/nederhof/hierojax),
++ * docs/hierojax.js at commit da318801e00b10b4b5c5ec8d9cc6f8fddcc9eb5a.
++ * Licensed under the GNU General Public License version 3; full text in
++ * vendor/LICENSE-hierojax.
++ *
++ * Modified by the inkhk3.org project, 2026-11-18: the changes are listed in
++ * vendor/hierojax.local.patch (see README.md, "hierojax").
++ */
++
+ function $(id) {
+ 	return document.getElementById(id);
+ }
+@@ -1766,6 +1776,13 @@
  		this.svg = document.createElementNS(SVGns, 'svg');
  		this.svg.setAttribute('width', this.width());
  		this.svg.setAttribute('height', this.height());
@@ -17,7 +31,7 @@
  		if (this.options.border && !this.options.separated)
  			this.svg.classList.add('hierojax-border');
  		if (options.standalone) {
-@@ -1886,7 +1893,7 @@
+@@ -1886,7 +1903,7 @@
  		return `
  @font-face {
  	font-family: 'NewGardiner';
@@ -26,7 +40,7 @@
  }
  .hierojax-svg-sign {
  	font-family: NewGardiner;
-@@ -1914,7 +1921,7 @@
+@@ -1914,7 +1931,7 @@
  }`;
  	}
  }
@@ -35,7 +49,7 @@
  
  class Group {
  	scale;
-@@ -4594,7 +4601,7 @@
+@@ -4594,7 +4611,7 @@
  
  	startLoadingFonts() {
  		const hierojax = this;
@@ -44,7 +58,7 @@
  		this.nFonts = this.fonts.length;
  		this.nFontsLoaded = 0;
  		this.fonts.forEach(f => { f.load().then((font) => {
-@@ -4660,3 +4667,8 @@
+@@ -4660,3 +4677,8 @@
  }
  
  const hierojax = new HieroJax();

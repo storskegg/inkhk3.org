@@ -1,3 +1,13 @@
+/*
+ * hierojax by Mark-Jan Nederhof (https://github.com/nederhof/hierojax),
+ * docs/hierojax.js at commit da318801e00b10b4b5c5ec8d9cc6f8fddcc9eb5a.
+ * Licensed under the GNU General Public License version 3; full text in
+ * vendor/LICENSE-hierojax.
+ *
+ * Modified by the inkhk3.org project, 2026-11-18: the changes are listed in
+ * vendor/hierojax.local.patch (see README.md, "hierojax").
+ */
+
 function $(id) {
 	return document.getElementById(id);
 }

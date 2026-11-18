@@ -119,10 +119,14 @@ form to suit the needs of this project.
   <https://inkhk3.org/InkHk3Serif-OFL.txt>. It sets the title, the quote and the citation (real Unicode
   transliteration: "Ink Ḥkꜣ", U+1E24 and U+A723).
 - Mark-Jan Nederhof's [hierojax](https://github.com/nederhof/hierojax) and its NewGardiner font are what the hieroglyph lines are drawn from; only the pre-drawn SVG paths ship. See "hierojax" below.
+- The two background images, `public/paper_fff.jpg` and `public/binding_dark2.png`: their original source and licence
+  are not known. The site's author has used them for decades.
 
-The title's ꜣ is enlarged (see "The enlarged ꜣ" below). The earlier fonts (Umschrift, and the ResJS fonts
-`CaslonRoman.ttf`, `DejaVuSans-Bold.ttf`, `HieroglyphicAux.ttf`, which nothing used any more) are no longer in `public/`
-and no longer credited; Umschrift stays in git history and in the lab (`lab/README.md`).
+The title's ꜣ is enlarged (see "The enlarged ꜣ" below). The earlier fonts (Umschrift and others, which nothing used any
+more) are no longer in `public/` and no longer credited. Umschrift stays in git history and in the lab
+(`lab/README.md`). Six old font files (Caslon Roman, Hieroglyphic Aux and the four Umschrift files) were removed from
+`fonts/` on 2026-11-18 because their licences were unknown. All rights reserved: see `LICENSE`; third-party files keep
+their own licences (`vendor/LICENSE-hierojax`, `vendor/OFL-NewGardiner.txt`, `fonts/OFL-NewGardiner.txt`).
 
 ### Fonts
 
@@ -179,3 +183,6 @@ apply and regenerate it):
   `format('opentype')`). The absolute path is deliberate.
 - (d) `vendor/NewGardiner.woff2` is upstream's `docs/NewGardiner.otf` converted to WOFF2 with fontTools
   (`fonttools ttLib.woff2 compress`). No other changes to the font (no subsetting).
+- (e) A notice block at the top of `vendor/hierojax.js` and `vendor/hierojax.css` (upstream author, source commit, GPL-3.0,
+  modified by this project on 2026-11-18). In the `.js` it is part of `vendor/hierojax.local.patch`; the `.css` has
+  no patch (its only other change is the removed `@font-face` rule). The licence text is `vendor/LICENSE-hierojax`.
