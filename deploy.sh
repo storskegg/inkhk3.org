@@ -58,6 +58,9 @@ if [[ ! -d node_modules || ! -f node_modules/.package-lock.json \
       || package-lock.json -nt node_modules/.package-lock.json ]]; then
   npm ci
 fi
+# Team rule "Clean before every build": remove dist/ here too (the npm build does it as well), and check.
+node bin/clean.mjs
+[[ ! -e dist ]] || die "dist/ still exists after clean; clean before every build"
 npm run build
 [[ -f dist/index.html ]] || die "dist/index.html missing after build"
 

@@ -32,6 +32,8 @@ they only work in this project's root (Node 26); elsewhere `npx serve` would fet
 scripts do the same: `npm run serve` (alias `npm run lab`) and `npm run serve-dist`. Extra flags pass through, e.g.
 `npx serve --port 8090`.
 
+Every build starts by removing `dist/` (`bin/clean.mjs`, run by `build:vite` and again by `deploy.sh`), by the team rule "Clean before every build". `node_modules` stays installed.
+
 ## Deploying
 
 Content is published by `deploy.sh`, not Terraform. Terraform manages only the infrastructure (bucket, CloudFront,

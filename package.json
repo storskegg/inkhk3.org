@@ -13,7 +13,7 @@
     "node": ">=26.13.0 <27.0.0"
   },
   "scripts": {
-    "build:vite": "npx vite build",
+    "build:vite": "node bin/clean.mjs && vite build",
     "serve": "vite --config vite.lab.config.mts",
     "serve-dist": "npm run build && vite preview",
     "dev": "vite",
